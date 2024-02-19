@@ -31,10 +31,12 @@ const PREDEFINED_SITELIST = [
     'https://secure.fnac.com/identity/server/gateway/*',
     'https://*.openai.com/u/login/*',
     'https://www.patreon.com/login',
-    'https://*.wordpress.com/log-in/'
+    'https://*.wordpress.com/log-in/',
+    'https://*.afip.gob.ar/*'
 ];
 
 const googleUrl = 'https://accounts.google.com';
+const afipUrl = 'https://auth.afip.gob.ar';
 
 const kpxcSites = {};
 kpxcSites.googlePasswordFormUrl = 'https://accounts.google.com/signin/v2/challenge/password';
@@ -49,6 +51,12 @@ kpxcSites.detectUsernameFromPage = function() {
         const profileIdentifier = document.querySelector('[data-profile-identifier]');
         if (profileIdentifier) {
             return profileIdentifier.textContent.trim();
+        }
+    }
+    if (document.location.origin === afipUrl) {
+        const usernameIdentifier = document.getElementById('F1:username');
+        if (usernameIdentifier) {
+            return usernameIdentifier.value.trim();
         }
     }
     return undefined;

@@ -467,9 +467,8 @@ kpxc.prepareCredentials = async function() {
         return;
     }
 
-    if (kpxc.settings.autoFillSingleEntry && kpxc.credentials.length === 1) {
+    if (kpxc.settings.autoFillSingleEntry) {
         kpxcFill.fillFromAutofill();
-        return;
     }
 
     kpxc.initLoginPopup();

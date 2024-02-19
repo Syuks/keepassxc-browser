@@ -153,8 +153,12 @@ kpxcForm.onSubmit = async function(e) {
     let usernameValue = '';
     let passwordValue = '';
 
+    const hiddenUsername = kpxcSites.detectUsernameFromPage()
+
     if (usernameField) {
         usernameValue = usernameField.value || usernameField.placeholder;
+    } else if (hiddenUsername) {
+        usernameValue = hiddenUsername
     } else if (kpxc.credentials.length === 1) {
         // Single entry found for the page, use the username of it instead of an empty one
         usernameValue = kpxc.credentials[0].login;

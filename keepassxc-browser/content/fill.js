@@ -83,19 +83,26 @@ kpxcFill.fillFromCombination = async function(elem, passOnly) {
 
 // Fill requested by Auto-Fill
 kpxcFill.fillFromAutofill = async function() {
-    if (kpxc.credentials.length !== 1 || kpxc.combinations.length === 0) {
-        logDebug('Error: Credential list is empty or contains more than one entry.');
+    if (kpxc.credentials.length === 0 || kpxc.combinations.length === 0) {
+        logDebug('Error: No credentials or combinations found.');
         return;
     }
 
     const index = kpxc.combinations.length - 1;
-    await sendMessage('page_set_login_id', kpxc.credentials[0].uuid);
-    kpxcFill.fillInCredentials(kpxc.combinations[index], kpxc.credentials[0].login, kpxc.credentials[0].uuid);
+    if (kpxc.credentials.length === 1) {
+        await sendMessage('page_set_login_id', kpxc.credentials[0].uuid);
+        kpxcFill.fillInCredentials(kpxc.combinations[index], kpxc.credentials[0].login, kpxc.credentials[0].uuid);
+        return;
+    }
 
-    // Generate popup-list of usernames + descriptions
-    sendMessage('popup_login', [
-        { text: `${kpxc.credentials[0].login} (${kpxc.credentials[0].name})`, uuid: kpxc.credentials[0].uuid },
-    ]);
+    const pageUuid = await sendMessage('page_get_login_id');
+
+    if (pageUuid) {
+        const credsFromUuid = kpxc.credentials.find(c => c.uuid === pageUuid);
+        if (credsFromUuid) {
+            kpxcFill.fillInCredentials(kpxc.combinations[index], credsFromUuid.login, pageUuid);
+        }
+    }
 };
 
 // Fill requested by selecting credentials from the popup

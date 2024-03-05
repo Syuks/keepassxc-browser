@@ -138,12 +138,12 @@ kpxcEvent.onGetKeePassXCVersions = async function(tab) {
 };
 
 kpxcEvent.onCheckUpdateKeePassXC = async function() {
-    keepass.checkForNewKeePassXCVersion();
+    await keepass.checkForNewKeePassXCVersion();
     return { current: keepass.currentKeePassXC, latest: keepass.latestKeePassXC.version };
 };
 
 kpxcEvent.onUpdateAvailableKeePassXC = async function() {
-    return (Number(page.settings.checkUpdateKeePassXC) !== CHECK_UPDATE_NEVER) ? keepass.keePassXCUpdateAvailable() : false;
+    return (Number(page.settings.checkUpdateKeePassXC) !== CHECK_UPDATE_NEVER) ? await keepass.keePassXCUpdateAvailable() : false;
 };
 
 kpxcEvent.onRemoveCredentialsFromTabInformation = async function(tab) {
@@ -154,12 +154,12 @@ kpxcEvent.onRemoveCredentialsFromTabInformation = async function(tab) {
 
 kpxcEvent.onLoginPopup = async function(tab, logins) {
     const popupData = {
-        iconType: 'questionmark',
+        iconType: 'normal',
         popup: 'popup_login'
     };
 
     page.tabs[tab.id].loginList = logins;
-    browserAction.show(tab, popupData);
+    await browserAction.show(tab, popupData);
 };
 
 kpxcEvent.initHttpAuth = async function() {
@@ -168,12 +168,12 @@ kpxcEvent.initHttpAuth = async function() {
 
 kpxcEvent.onHTTPAuthPopup = async function(tab, data) {
     const popupData = {
-        iconType: 'questionmark',
+        iconType: 'normal',
         popup: 'popup_httpauth'
     };
 
     page.tabs[tab.id].loginList = data;
-    browserAction.show(tab, popupData);
+    await browserAction.show(tab, popupData);
 };
 
 kpxcEvent.onUsernameFieldDetected = async function(tab, detected) {

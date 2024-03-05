@@ -1,5 +1,5 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "KeePassXC-Browser",
     "version": "1.9.0",
     "version_name": "1.9.0",
@@ -13,7 +13,7 @@
         "96": "icons/keepassxc_96x96.png",
         "128": "icons/keepassxc_128x128.png"
     },
-    "browser_action": {
+    "action": {
         "default_icon": {
             "16": "icons/keepassxc_16x16.png",
             "18": "icons/keepassxc_18x18.png",
@@ -31,20 +31,7 @@
         "open_in_tab": true
     },
     "background": {
-        "scripts": [
-            "common/browser-polyfill.min.js",
-            "common/global.js",
-            "common/sites.js",
-            "background/nacl.min.js",
-            "background/nacl-util.min.js",
-            "background/client.js",
-            "background/keepass.js",
-            "background/httpauth.js",
-            "background/browserAction.js",
-            "background/page.js",
-            "background/event.js",
-            "background/init.js"
-        ]
+        "service_worker": "background/background_service.js"
     },
     "content_scripts": [
         {
@@ -54,6 +41,7 @@
             "js": [
                 "common/browser-polyfill.min.js",
                 "common/global.js",
+                "common/global_ui.js",
                 "common/sites.js",
                 "content/ui.js",
                 "content/banner.js",
@@ -124,28 +112,33 @@
             "description": "__MSG_popupReloadButton__"
         }
     },
-    "web_accessible_resources": [
-        "icons/disconnected.svg",
-        "icons/help.svg",
-        "icons/keepassxc.svg",
-        "icons/key.svg",
-        "icons/locked.svg",
-        "icons/otp.svg",
-        "css/autocomplete.css",
-        "css/banner.css",
-        "css/button.css",
-        "css/colors.css",
-        "css/define.css",
-        "css/notification.css",
-        "css/pwgen.css",
-        "css/username.css",
-        "css/totp.css",
-        "content/passkeys.js"
-    ],
+    "web_accessible_resources": [{
+        "resources": [
+            "icons/disconnected.svg",
+            "icons/help.svg",
+            "icons/keepassxc.svg",
+            "icons/key.svg",
+            "icons/locked.svg",
+            "icons/otp.svg",
+            "css/autocomplete.css",
+            "css/banner.css",
+            "css/button.css",
+            "css/colors.css",
+            "css/define.css",
+            "css/notification.css",
+            "css/pwgen.css",
+            "css/username.css",
+            "css/totp.css",
+            "content/passkeys.js"
+        ],
+        "matches": [
+            "https://*/*",
+            "http://*/*"
+        ]
+    }],
     "permissions": [
         "activeTab",
         "contextMenus",
-        "cookies",
         "clipboardWrite",
         "nativeMessaging",
         "notifications",
@@ -153,17 +146,15 @@
         "tabs",
         "webNavigation",
         "webRequest",
-        "webRequestBlocking",
-        "https://*/*",
-        "http://*/*",
-        "https://api.github.com/"
+        "webRequestAuthProvider",
+        "webRequestBlocking"
     ],
-    "content_security_policy": "script-src 'self' 'sha256-o4BRBtP28Aof7Hm1dUp+wlMic7aYLfwjS3E5vTxthQU=' 'sha256-4nJ8uLezzRE3SiBFdkVN/uNwV9YTOGCqRXg6AvB5rCY='; object-src 'none'",
-    "applications": {
-        "gecko": {
-            "id": "keepassxc-browser@keepassxc.org",
-            "strict_min_version": "96.0"
-        }
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'"
     },
+    "host_permissions": [
+        "https://*/*",
+        "http://*/*"
+    ],
     "default_locale": "en"
 }

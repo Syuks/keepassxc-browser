@@ -116,7 +116,7 @@ code {
     text-align: start;
 }
 
-#filter-block,
+/*#filter-block,*/
 #not-configured,
 #need-reconfigure,
 #configured-not-associated,

@@ -77,4 +77,24 @@
             args: [ false, true ] // Set forcePopup to true
         });
     });
+
+    $('#filter-block').addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            const children = ll.children;
+
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                if (child.style.display !== "none") {
+                    browser.tabs.sendMessage(tab?.id, {
+                        action: 'fill_user_pass_with_specific_login',
+                        id: Number(child.id),
+                        uuid: logins[child.id].uuid
+                    });
+
+                    close();
+                    break;
+                }
+            }
+        }
+    });
 })();

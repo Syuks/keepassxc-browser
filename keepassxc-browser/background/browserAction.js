@@ -17,7 +17,13 @@ browserAction.show = async function(tab, popupData) {
             popup: `popups/${popupData.popup}.html`
         });
 
-        const badgeText = popupData.popup === 'popup_login' ? String(page.tabs[tab.id]?.loginList?.length) : '';
+        let badgeText = '';
+        if (popupData.popup === 'popup_login') {
+            badgeText = String(page.tabs[tab.id]?.loginList?.length);
+        } else if (popupData.popup === 'popup_httpauth') {
+            badgeText = String(page.tabs[tab.id]?.loginList?.logins?.length);
+        }
+
         browserAction.setBadgeText(tab?.id, badgeText);
     }
 };
@@ -83,7 +89,7 @@ browserAction.generateIconName = async function(iconType) {
     let style = 'colored';
     if (page.settings.useMonochromeToolbarIcon) {
         if (page.settings.colorTheme === 'system') {
-            style = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            style = await retrieveColorScheme();
         } else {
             style = page.settings.colorTheme;
         }

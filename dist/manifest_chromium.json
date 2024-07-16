@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
     "name": "KeePassXC-Browser",
-    "version": "1.9.0.1",
-    "version_name": "1.9.0.1",
+    "version": "1.9.1.1",
+    "version_name": "1.9.1.1",
     "minimum_chrome_version": "93",
     "description": "__MSG_extensionDescription__",
     "author": "KeePassXC Team",
@@ -75,8 +75,8 @@
         "fill_password": {
             "description": "__MSG_contextMenuFillPassword__",
             "suggested_key": {
-                "default": "Alt+Shift+I",
-                "mac": "MacCtrl+Shift+I"
+                "default": "Alt+Shift+P",
+                "mac": "MacCtrl+Shift+P"
             }
         },
         "fill_totp": {
@@ -143,6 +143,7 @@
         "cookies",
         "nativeMessaging",
         "notifications",
+        "offscreen",
         "storage",
         "tabs",
         "webNavigation",

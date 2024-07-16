@@ -3,6 +3,58 @@
         "message": "KeePassXC за съвременни мрежови четци",
         "description": "Name of the extension."
     },
+    "addSitePreferenceButtonTitle": {
+        "message": "Добавете Предпочитания за сайтове за този адрес.",
+        "description": "Add button title text on Site Preferences tab."
+    },
+    "allowIframeButtonTitle": {
+        "message": "Разрешава рамки с ограничение по Cross-Origin за текущата страница.",
+        "description": "Allow Cross-Origin iframes button title text."
+    },
+    "connectButtonTitle": {
+        "message": "Свързване на KeePassXC-Browser с текущото хранилище.",
+        "description": "Connect button title text."
+    },
+    "copyDebugInfoButtonTitle": {
+        "message": "Копира информацията за отстраняване на дефекти.",
+        "description": "Copy debug info button title text on About tab."
+    },
+    "dismissHttpAuthButtonTitle": {
+        "message": "Отказва Basic HTTP Auth.",
+        "description": "Dismiss HTTP Auth button title text."
+    },
+    "reconnectButtonTitle": {
+        "message": "Повторно свързване на KeePassXC-Browser с текущото хранилище.",
+        "description": "Reconnect button title text."
+    },
+    "redetectButtonTitle": {
+        "message": "Повторно открива текстовите полета на страницата.",
+        "description": "Redetect login fields button title text."
+    },
+    "reloadButtonTitle": {
+        "message": "Презарежда разширението и извършва повторно свързване с KeePassXC.",
+        "description": "Reload button title text."
+    },
+    "removeConnectedDatabaseButtonTitle": {
+        "message": "Премахване на свързаното хранилище от KeePassXC-Browser.",
+        "description": "Remove button title on Connected Databases tab."
+    },
+    "removeCustomLoginFieldsButtonTitle": {
+        "message": "Премахва потребителските полета за вход за този адрес.",
+        "description": "Remove button title on Custom Login Fields tab."
+    },
+    "removeSitePreferencesButtonTitle": {
+        "message": "Премахнете Предпочитания за сайтове за този адрес.",
+        "description": "Remove button title on Site Preferences tab."
+    },
+    "reopenDatabaseButtonTitle": {
+        "message": "Повторно отключване на текущото хранилище.",
+        "description": "Reopen database button title text."
+    },
+    "usernameButtonTitle": {
+        "message": "Добавяне на настройка за вход в страницата единствено с потребителско име",
+        "description": "Add Username-only detection button title text."
+    },
     "contextMenuFillUsernameAndPassword": {
         "message": "Попълване на потребител и парола",
         "description": "Context menu item for filling both username and password."
@@ -120,8 +172,8 @@
         "description": "No valid UUID provided."
     },
     "errorMessageAccessToAllEntriesDenied": {
-      "message": "Достъпът до всички записи е отказан.",
-      "description": "Access to all entries denied."
+        "message": "Достъпът до всички записи е отказан.",
+        "description": "Access to all entries denied."
     },
     "errorMessagePasskeysAttestationNotSupported": {
         "message": "Не се поддържа атестация.",
@@ -152,24 +204,24 @@
         "description": "Origin is empty or not allowed."
     },
     "errorMessagePasskeysDomainNotValid": {
-      "message": "Ефективният домейн не е приемлив домейн.",
-      "description": "Effective domain is not a valid domain."
+        "message": "Ефективният домейн не е приемлив домейн.",
+        "description": "Effective domain is not a valid domain."
     },
     "errorMessagePasskeysDomainRpIdMismatch": {
-      "message": "Източникът и RP ID не съвпадат.",
-      "description": "Origin and RP ID do not match."
+        "message": "Източникът и RP ID не съвпадат.",
+        "description": "Origin and RP ID do not match."
     },
     "errorMessagePasskeysNoSupportedAlgorithms": {
-      "message": "Не са предоставени поддържани алгоритми.",
-      "description": "No supported algorithms were provided."
+        "message": "Не са предоставени поддържани алгоритми.",
+        "description": "No supported algorithms were provided."
     },
     "errorMessagePasskeysWaitforLifeTimer": {
         "message": "Изчакайте отброяването да приключи.",
         "description": "Wait for timer to expire."
     },
     "errorMessagePasskeysUnknownError": {
-        "message": "Неочаквана грешка на Passkey.",
-        "description": "Unknown Passkeys error."
+        "message": "Неочаквана грешка на Passkeys.",
+        "description": "Unknown passkeys error."
     },
     "errorMessagePasskeysInvalidChallenge": {
         "message": "Предизвикването е по-късо от изискваната минимална дължина.",
@@ -186,10 +238,6 @@
     "errorNotConnected": {
         "message": "Няма връзка с KeePassXC.",
         "description": "Error notification shown when not connected to KeePassXC"
-    },
-    "passwordGeneratorIcon": {
-        "message": "Пиктограма за генератор на парола",
-        "description": "Alt attribute text of the password generator icon."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "Грешка: Генерираната парола е по-дълга от разрешената дължина!",
@@ -211,20 +259,20 @@
         "message": "Инсталираното издание на KeePassXC не поддържа отдалечено създаване на пароли. Обновете KeePassXC."
     },
     "usernameFieldText": {
-        "message": "Попълва регистрация от KeePassXC",
+        "message": "Попълва регистрация от KeePassXC.",
         "description": "Username field icon hover text."
     },
+    "usernameFieldTextNoCredentials": {
+        "message": "Липсват регистрации, които да бъдат попълнени.",
+        "description": "Username field icon hover text when no credentials are."
+    },
     "usernameLockedFieldText": {
-        "message": "Хранилището е заключено",
+        "message": "Хранилището е заключено.",
         "description": "Username field icon hover text when database is locked."
     },
     "usernameDisconnectedFieldText": {
-        "message": "Няма връзка с KeePassXC",
+        "message": "Няма връзка с KeePassXC.",
         "description": "Username field icon hover text when KeePassXC is disconnected."
-    },
-    "usernameFieldIcon": {
-        "message": "Пиктограма в полето за потребителско име",
-        "description": "Username field icon text."
     },
     "totp": {
         "message": "TOTP",
@@ -234,29 +282,25 @@
         "message": "Попълва TOTP от KeePassXC",
         "description": "OTP field icon hover text."
     },
-    "totpFieldIcon": {
-        "message": "Пиктограма в полето за TOTP",
-        "description": "OTP field icon text."
-    },
     "defineClose": {
         "message": "Затваряне",
-        "description": "Close button text when choosing custom login fields."
+        "description": "Close button text when choosing Custom Login Fields."
     },
     "defineSkip": {
         "message": "Пропускане",
-        "description": "Skip button text when choosing custom login fields."
+        "description": "Skip button text when choosing Custom Login Fields."
     },
     "defineMore": {
         "message": "Повече",
-        "description": "More button text when choosing custom login fields."
+        "description": "More button text when choosing Custom Login Fields."
     },
     "defineReset": {
         "message": "Нулиране",
-        "description": "Reset button text when choosing custom login fields."
+        "description": "Reset button text when choosing Custom Login Fields."
     },
     "defineConfirm": {
         "message": "Потвърждаване",
-        "description": "Confirm button text when choosing custom login fields."
+        "description": "Confirm button text when choosing Custom Login Fields."
     },
     "defineAlreadySelected": {
         "message": "Полетата за вход в тази страница вече са избрани и ще бъдат презаписани.",
@@ -264,7 +308,7 @@
     },
     "defineClearData": {
         "message": "Премахване на запазените данни",
-        "description": "Clear save data button text when choosing custom login fields."
+        "description": "Clear save data button text when choosing Custom Login Fields."
     },
     "defineStringField": {
         "message": "Поле за низ",
@@ -272,27 +316,27 @@
     },
     "defineChooseUsername": {
         "message": "Избиране поле за потребителското име",
-        "description": "Choosing a username field text when choosing custom login fields."
+        "description": "Choosing a username field text when choosing Custom Login Fields."
     },
     "defineChoosePassword": {
         "message": "Избиране на поле за парола",
-        "description": "Choosing a password field text when choosing custom login fields."
+        "description": "Choosing a password field text when choosing Custom Login Fields."
     },
     "defineChooseTOTP": {
         "message": "Избиране на поле за TOTP",
-        "description": "Choosing a TOTP field text when choosing custom login fields."
+        "description": "Choosing a TOTP field text when choosing Custom Login Fields."
     },
     "defineChooseStringFields": {
         "message": "Избиране на поле за низ",
-        "description": "Choose String Fields a selection text when choosing custom login fields."
+        "description": "Choose String Fields a selection text when choosing Custom Login Fields."
     },
     "defineHelpText": {
         "message": "Потвърдете избора си или изберете повече полета като полета за низ.",
-        "description": "Confirm a selection text when choosing custom login fields which contains string fields."
+        "description": "Confirm a selection text when choosing Custom Login Fields which contains string fields."
     },
     "defineKeyboardText": {
         "message": "Също можете да използвате цифрите, за да избирате полета посредством клавиатурата.",
-        "description": "Help text when choosing custom login fields."
+        "description": "Help text when choosing Custom Login Fields."
     },
     "defineChooseCustomLoginFieldText": {
         "message": "Изберете поле за вход",
@@ -363,7 +407,7 @@
         "description": "Popup Settings button text."
     },
     "popupChooseCredentialsText": {
-        "message": "Избиране на полета за вход",
+        "message": "Изберете потребителски полета за вход",
         "description": "Popup credential choosing button text."
     },
     "popupConnectButton": {
@@ -383,7 +427,7 @@
         "description": "Popup Reload button text."
     },
     "popupReopenButton": {
-        "message": "Отваряне на хранилището",
+        "message": "Отключване на хранилище",
         "description": "Popup reopen database button text."
     },
     "popupUsernameButton": {
@@ -542,10 +586,6 @@
         "message": "На тази страница е намерено повече от едно поле за парола. Щракнете с десния бутон на мишката върху някое от тях и изберете едно от следните:",
         "description": "A popup message shown when web page has multiple password fields."
     },
-    "popupURL": {
-        "message": "Адрес: ",
-        "description": "URL. Might not need any translation."
-    },
     "popupUsername": {
         "message": "Потребителско име:",
         "description": "A username field name shown on credential update."
@@ -558,9 +598,13 @@
         "message": "Обновяване",
         "description": "Update button text in popup when updating credentials."
     },
-    "popupButtonDismiss": {
-        "message": "Затваряне",
-        "description": "Dismiss button text in popup when updating credentials."
+    "popupButtonCancel": {
+        "message": "Отказ",
+        "description": "Cancel button text in popup when updating credentials."
+    },
+    "popupButtonBack": {
+        "message": "Назад",
+        "description": "Back button text in popup when updating credentials."
     },
     "popupButtonIgnore": {
         "message": "Спиране на въпроса за тази страница",
@@ -588,11 +632,11 @@
     },
     "optionsCustomFieldsTab": {
         "message": "Потребителски полета за вход",
-        "description": "Saved custom login fields tab text."
+        "description": "Saved Custom Login Fields tab text."
     },
     "optionsSitePreferencesTab": {
         "message": "Предпочитания за сайтове",
-        "description": "Site preferences fields tab text."
+        "description": "Site Preferences fields tab text."
     },
     "optionsAboutTab": {
         "message": "Относно",
@@ -607,12 +651,12 @@
         "description": "Connected Databases page header."
     },
     "optionsMenuCustomFields": {
-        "message": "Полета за вход",
-        "description": "Custom login fields page header."
+        "message": "Потребителски полета за вход",
+        "description": "Custom Login Fields page header."
     },
     "optionsMenuSitePreferences": {
         "message": "Предпочитания за сайтове",
-        "description": "Site preferences page header."
+        "description": "Site Preferences page header."
     },
     "optionsMenuAbout": {
         "message": "Относно",
@@ -644,11 +688,11 @@
     },
     "optionsButtonRemoveNow": {
         "message": "Премахване",
-        "description": "Confirm button text when removing database key or custom login fields."
+        "description": "Confirm button text when removing database key or Custom Login Fields."
     },
     "optionsButtonCancel": {
         "message": "Отмяна",
-        "description": "Cancel button text when removing database key or custom login fields."
+        "description": "Cancel button text when removing database key or Custom Login Fields."
     },
     "optionsButtonReset": {
         "message": "Нулиране",
@@ -699,7 +743,7 @@
         "description": "Activate OTP field icons textbox text."
     },
     "optionsCheckboxAutoRetrieveCredentials": {
-        "message": "Автоматично извличане на регистрации",
+        "message": "Автоматично извличане на регистрации.",
         "description": "Automatically retrieve credentials checkbox text."
     },
     "optionsCheckboxAutomaticReconnect": {
@@ -715,7 +759,7 @@
         "description": "Automatically fill-in single credential entry checkbox text."
     },
     "optionsCheckboxAutoFillSingleTotp": {
-        "message": "Автоматично попълване на единични записи за TOTP",
+        "message": "Автоматично попълване на единични съвпадения за TOTP",
         "description": "Automatically fill-in single TOTP entries checkbox text."
     },
     "optionsCheckboxAutoCompleteUsernames": {
@@ -739,8 +783,12 @@
         "description": "Show notifications checkbox text."
     },
     "optionsCheckboxUseMonochromeToolbarIcon": {
-        "message": "Едноцветна икона в лентата с инструменти",
+        "message": "Едноцветна пиктограма в лентата с инструменти",
         "description": "Use monochrome toolbar icon checkbox text."
+    },
+    "optionsCheckboxUseCompactMode": {
+        "message": "Умален режим",
+        "description": "Whether the compact mode (legacy dropdown) should be enabled."
     },
     "optionsSaveDomainOnly": {
         "message": "Запазване само на домейна",
@@ -759,7 +807,7 @@
         "description": "Redirect allowance help text."
     },
     "optionsCheckboxAutoFillAndSend": {
-        "message": "Попълване на HTTP Basic Auth",
+        "message": "Разрешава попълване на регистрации на HTTP Basic Auth",
         "description": "Allow filling HTTP Basic Auth credentials checkbox text."
     },
     "optionsDebugLogging": {
@@ -871,7 +919,7 @@
         "description": "Autocomplete Usernames option help text."
     },
     "optionsShowGroupNameInAutocompleteHelpText": {
-        "message": "При регистрации от различни групи името на групата е видимо в списъка.",
+        "message": "При регистрации от различни групи името на групата е видимо в списъка. Отнася се само за умаления режим.",
         "description": "Show group name in autocomplete help text."
     },
     "optionsShowNotificationsHelpText": {
@@ -881,6 +929,10 @@
     "optionsUseMonochromeToolbarIconHelpText": {
         "message": "Едноцветна икона с цветни значки в лентата с инструменти, която се адаптира към светла / тъмна тема на четеца.",
         "description": "Use monochrome toolbar icon option help text."
+    },
+    "optionsUseCompactModeHelpText": {
+      "message": "Използване на умален вариант на падащия списък за избор на регистрации.",
+      "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "При добавяне на регистрации да бъде запазван само домейна вместо целия адрес.",
@@ -1012,15 +1064,15 @@
     },
     "optionsColumnPageURL": {
         "message": "Адрес на страница",
-        "description": "Site preferences list column title."
+        "description": "Site Preferences list column title."
     },
     "optionsColumnIgnore": {
         "message": "Пренебрегване",
-        "description": "Site preferences list column title."
+        "description": "Site Preferences list column title."
     },
     "optionsColumnUsernameOnly": {
         "message": "Намиране на формуляри за вход единствено с потребителско име",
-        "description": "Site preferences list column title."
+        "description": "Site Preferences list column title."
     },
     "optionsColumnImprovedInputFieldDetection": {
         "message": "Подобрено откриване на полета за вход",
@@ -1032,23 +1084,23 @@
   },
     "optionsColumnDelete": {
         "message": "Премахване",
-        "description": "Site preferences list column title."
+        "description": "Site Preferences list column title."
     },
     "optionsSelectionNothing": {
         "message": "Включване на всички функции",
-        "description": "Site preferences option selection."
+        "description": "Site Preferences option selection."
     },
     "optionsSelectionNormal": {
         "message": " Пренебрегване на нови и променени регистрации",
-        "description": "Site preferences option selection."
+        "description": "Site Preferences option selection."
     },
     "optionsSelectionAutoSubmit": {
         "message": "Изключване на автоматично изпращане",
-        "description": "Site preferences option selection."
+        "description": "Site Preferences option selection."
     },
     "optionsSelectionFull": {
         "message": "Изключване на всички функции",
-        "description": "Site preferences option selection."
+        "description": "Site Preferences option selection."
     },
     "optionsSortByTitle": {
         "message": "Заглавие",
@@ -1096,35 +1148,35 @@
     },
     "optionsCustomFieldsTableCaption": {
         "message": "Можете да управлявате запазените потребителски полета за вход с помощта на таблицата.",
-        "description": "Table caption of Custom login fields page."
+        "description": "Table caption of Custom Login Fields page."
     },
     "optionsCustomFieldsTabHelpTextFirst": {
         "message": "Ако KeePassXC-Browser открие грешни полета за вход, ще можете да определите правилните полета сами.",
-        "description": "Saved custom login fields info text, first part."
+        "description": "Saved Custom Login Fields info text, first part."
     },
     "optionsCustomFieldsTabHelpTextSecond": {
         "message": "Отидете на страницата и щракнете върху пиктограмата на KeePassXC-Browser, след което да изберете ",
-        "description": "Saved custom login fields info text, second part."
+        "description": "Saved Custom Login Fields info text, second part."
     },
     "optionsCustomFieldsTabHelpTextThird": {
         "message": "На тази страница  управлявате запазените потребителски полета за вход.",
-        "description": "Saved custom login fields info text, third part."
+        "description": "Saved Custom Login Fields info text, third part."
     },
     "optionsCustomFieldsRemove": {
         "message": "Да бъдат ли премахнати запазените потребителски полета за вход?",
-        "description": "Confirmation text when removing saved custom login fields."
+        "description": "Confirmation text when removing saved Custom Login Fields."
     },
     "optionsCustomFieldsConfirmation": {
         "message": "Наистина ли желаете да бъдат премахнати запазените потребителски полета за вход в страницата: $1",
-        "description": "Confirmation text when removing saved custom login fields."
+        "description": "Confirmation text when removing saved Custom Login Fields."
     },
     "optionsCustomFieldsConfirmationHelpText": {
         "message": "KeePassXC-Browser автоматично ще открие полетата за вход следващия път, когато посетите тази страница.",
-        "description": "Part of confirmation text when removing saved custom login fields."
+        "description": "Part of confirmation text when removing saved Custom Login Fields."
     },
     "optionsSitePreferencesNotFound": {
-        "message": "Липсват предпочитания за сайтове.",
-        "description": "Shown when no site preferences are saved."
+        "message": "Липсват Предпочитания за сайтове.",
+        "description": "Shown when no Site Preferences are saved."
     },
     "optionsSitePreferencesRemove": {
         "message": "Премахване на сайт?",
@@ -1132,19 +1184,19 @@
     },
     "optionsSitePreferencesTabHelpTextFirst": {
         "message": "Сайтовете на тази страница имат специални методи за обработка свързани с тях.",
-        "description": "Site preferences info text, first part."
+        "description": "Site Preferences info text, first part."
     },
     "optionsSitePreferencesTabHelpTextSecond": {
         "message": "За да бъдат пренебрегнати новите и променените регистрации за определена страница я добавете по-долу или от лентата в страницата изберете <em>Спиране на въпроса за страницата</em>.",
-        "description": "Site preferences info text, second part."
+        "description": "Site Preferences info text, second part."
     },
     "optionsSitePreferencesTabHelpTextThird": {
         "message": "Ако даден сайт е напълно пренебрегнат (избрано е <em>Изключване на всички функции</em>), тогава добавката няма да направи нищо, когато посетите тази страница.",
-        "description": "Site preferences info text, third part."
+        "description": "Site Preferences info text, third part."
     },
     "optionsSitePreferencesTabHelpTextFourth": {
         "message": "Намирането на формуляри за вход единствено с потребителско име дава възможност на KeePassXC-Browser да попълва данни за вход в сайтове с отделни страници за потребителя и паролата.",
-        "description": "Site preferences info text, fourth part."
+        "description": "Site Preferences info text, fourth part."
     },
     "optionsSitePreferencesImprovedInputFieldDetectionHelpText": {
         "message": "Подобреното откриване на полета за вход дава възможност за по-внимателно, динамично откриване на полета за вход. Това обаче може да повлияе на бързодействието на страницата. Използвайте с повишено внимание.",
@@ -1156,22 +1208,22 @@
     },
     "optionsSitePreferencesManualAddText": {
         "message": "Ръчно добавяне на адрес",
-        "description": "Label for adding site manually on Site preferences tab."
+        "description": "Label for adding site manually on Site Preferences tab."
     },
     "optionsSitePreferencesManualAddHelp": {
         "message": "Адресът трябва да започва с <code>https://</code>, <code>http://</code>, <code>file://</code>, или <code>ftp://</code> и трябва да е с дължина най-малко 5 знака.",
-        "description": "Help text for adding site manually on Site preferences tab."
+        "description": "Help text for adding site manually on Site Preferences tab."
     },
     "optionsSitePreferencesConfirmation": {
         "message": "Наистина ли искате да премахнете указания сайт от списъка: $1",
-        "description": "Confirmation text when removing site from site preferences."
+        "description": "Confirmation text when removing site from Site Preferences."
     },
     "optionsSitePreferencesConfirmationHelpText": {
         "message": "KeePassXC-Browser ще използва всички свои възможности на тази страница и няма да търси формуляри за вход единствено с потребителско име.",
-        "description": "Part of confirmation text when removing site preferences."
+        "description": "Part of confirmation text when removing Site Preferences."
     },
     "optionsSitePreferencesTableCaption": {
-        "message": "Можете да управлявате предпочитанията за сайтиве с помощта на таблицата.",
+        "message": "Можете да управлявате Предпочитанията за сайтове с помощта на таблицата.",
         "description": "Table caption of Site Preferences page."
     },
     "optionsSitePreferencesSelect": {
@@ -1215,7 +1267,7 @@
         "description": "About page text of reporting bugs."
     },
     "optionsAboutCreateNewIssue": {
-        "message": "Докладване на проблем в GitHub",
+        "message": "Докладване на проблем в GitHub.",
         "description": "Link text for creating a new issue."
     },
     "optionsAboutDebugInfo": {
@@ -1268,7 +1320,7 @@
     },
     "optionsPasskeysEnable": {
         "message": "Включване на Passkeys",
-        "description": "Enabled Passkeys option text."
+        "description": "Enabled passkeys option text."
     },
     "optionsPasskeysEnableHelpText": {
         "message": "Поддръжане на Web Authentication.",
@@ -1276,10 +1328,10 @@
     },
     "optionsPasskeysEnableFallback": {
         "message": "Резервен вариант на Passkeys",
-        "description": "Enabled Passkeys fallback option text."
+        "description": "Enabled passkeys fallback option text."
     },
     "optionsPasskeysEnableFallbackHelpText": {
-        "message": "Когато е отметнато, грешна или отказана заявка към KeePassXC ще задейства вградената в четеца заявка към Passkeys. Ако не е отметнато, връзка към KeePassXC е задължителна и отказаната заявка ще води до грешка. По подразбиране: отметнато.",
+        "message": "Когато е отметнато, грешна или отказана заявка към KeePassXC ще задейства вградената в четеца заявка за Passkeys. Ако не е отметнато, връзка към KeePassXC е задължителна и отказаната заявка ще води до грешка. По подразбиране: отметнато.",
         "description": "Passkeys fallback option help text."
     },
     "openNewTab": {
@@ -1291,7 +1343,7 @@
         "description": "Options page HTTP Basic Auth dialog text"
     },
     "autocompleteSubmitMessage": {
-        "message": "Вашият избор ще бъде автоматично пратен",
+        "message": "Изборът ви ще бъде автоматично изпратен",
         "description": "Message shown at the bottom of autocomplete menu."
     },
     "lockDatabase": {

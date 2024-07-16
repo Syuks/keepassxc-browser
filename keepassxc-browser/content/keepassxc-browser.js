@@ -33,7 +33,13 @@ kpxc.url = null;
 // Add page to Site Preferences with a selected option enabled. Set from the popup.
 kpxc.addToSitePreferences = async function(optionName, addWildcard = false) {
     // Returns a predefined URL for certain sites
-    let site = trimURL(window.top.location.href).toLowerCase();
+    let site;
+    try {
+        site = trimURL(window.top.location.href);
+    } catch (err) {
+        logDebug('Adding to Site Preferences denied from iframe.');
+        return;
+    }
 
     // Check if the site already exists -> update the current settings
     let siteExists = false;
@@ -146,6 +152,12 @@ kpxc.getDocumentLocation = function() {
     return kpxc.settings.saveDomainOnly ? document.location.origin : document.location.href;
 };
 
+kpxc.getUniqueGroupCount = function(creds) {
+    const groups = creds.map(c => c.group || '');
+    const uniqueGroups = new Set(groups);
+    return uniqueGroups.size;
+};
+
 // Returns the form that includes the inputField
 kpxc.getForm = function(inputField) {
     if (inputField.form) {
@@ -255,16 +267,39 @@ kpxc.initAutocomplete = function() {
         return;
     }
 
+    const showGroupNameInAutocomplete = kpxc.showGroupNameInAutocomplete();
+
     for (const c of kpxc.combinations) {
         if (c.username) {
-            kpxcUserAutocomplete.create(c.username, false, kpxc.settings.autoSubmit, kpxc.settings.afterFillSorting);
+            kpxcUserAutocomplete.create(
+                c.username,
+                false,
+                kpxc.settings.autoSubmit,
+                kpxc.settings.useCompactMode,
+                showGroupNameInAutocomplete,
+                kpxc.settings.afterFillSorting,
+            );
         } else if (!c.username && c.password) {
             // Single password field
-            kpxcUserAutocomplete.create(c.password, false, kpxc.settings.autoSubmit, kpxc.settings.afterFillSorting);
+            kpxcUserAutocomplete.create(
+                c.password,
+                false,
+                kpxc.settings.autoSubmit,
+                kpxc.settings.useCompactMode,
+                showGroupNameInAutocomplete,
+                kpxc.settings.afterFillSorting,
+            );
         }
 
         if (c.totp) {
-            kpxcTOTPAutocomplete.create(c.totp, false, kpxc.settings.autoSubmit, kpxc.settings.afterFillSortingTotp);
+            kpxcTOTPAutocomplete.create(
+                c.totp,
+                false,
+                kpxc.settings.autoSubmit,
+                kpxc.settings.useCompactMode,
+                showGroupNameInAutocomplete,
+                kpxc.settings.afterFillSortingTotp,
+            );
         }
     }
 };
@@ -370,7 +405,7 @@ kpxc.initLoginPopup = function() {
 
         return {
             title: title,
-            group: group,
+            group: credential.group || '',
             visibleLogin: visibleLogin,
             login: credential.login,
             loginId: loginId,
@@ -381,23 +416,17 @@ kpxc.initLoginPopup = function() {
 
     // Sorting with or without group name included
     const sortLoginItemBy = function(a, b, name, withGroup = false) {
-        const firstGroup = a.group.toLowerCase();
-        const secondGroup = b.group.toLowerCase();
-        const first = a[name].toLowerCase();
-        const second = b[name].toLowerCase();
+        const firstGroup = a.group?.toLowerCase();
+        const secondGroup = b.group?.toLowerCase();
+        const first = a[name]?.toLowerCase();
+        const second = b[name]?.toLowerCase();
 
         return withGroup
             ? firstGroup.localeCompare(secondGroup) || first.localeCompare(second)
             : first.localeCompare(second);
     };
 
-    const getUniqueGroupCount = function(creds) {
-        const groups = creds.map(c => c.group || '');
-        const uniqueGroups = new Set(groups);
-        return uniqueGroups.size;
-    };
-
-    const showGroupNameInAutocomplete = kpxc.settings.showGroupNameInAutocomplete && (getUniqueGroupCount(kpxc.credentials) > 1);
+    const showGroupNameInAutocomplete = kpxc.showGroupNameInAutocomplete();
 
     // Initialize login items
     const loginItems = [];
@@ -433,6 +462,8 @@ kpxc.initLoginPopup = function() {
         popupLoginItems.push({ text: l.text, uuid: l.uuid });
 
         kpxcUserAutocomplete.elements.push({
+            group: showGroupNameInAutocomplete ? l.group : undefined,
+            title: l.title,
             label: l.text,
             value: l.login,
             uuid: l.uuid,
@@ -505,10 +536,12 @@ kpxc.rememberCredentials = async function(usernameValue, passwordValue, urlValue
         }
     }
 
+    const showGroupNameInAutocomplete = kpxc.showGroupNameInAutocomplete();
+
     const credentialsList = [];
     for (const c of credentials) {
         credentialsList.push({
-            login: c.login,
+            login: showGroupNameInAutocomplete ? `[${c.group}] ${c.login}` : c.login,
             name: c.name,
             uuid: c.uuid
         });
@@ -708,16 +741,22 @@ kpxc.setValueWithChange = function(field, value, forced = false) {
     dispatchLegacyEvent(field, 'change');
 };
 
+kpxc.showGroupNameInAutocomplete = function() {
+    return !kpxc.settings.useCompactMode
+        || (kpxc.settings.showGroupNameInAutocomplete && kpxc.getUniqueGroupCount(kpxc.credentials) > 1);
+};
+
 // Returns true if site is ignored
 kpxc.siteIgnored = async function(condition) {
     if (kpxc.settings.sitePreferences) {
         let currentLocation;
         try {
-            currentLocation = window.top.location.href.toLowerCase();
+            currentLocation = window.top.location.href;
         } catch (err) {
             // Cross-domain security error inspecting window.top.location.href.
-            // This catches an error when an iframe is being accessed from another (sub)domain -> use the iframe URL instead.
-            currentLocation = window.self.location.href.toLowerCase();
+            // This catches an error when an iframe is being accessed from another (sub)domain
+            // -> use the iframe URL instead.
+            currentLocation = window.self.location.href;
         }
 
         // Refresh current settings for the site
@@ -805,6 +844,10 @@ kpxc.updateTOTPList = async function() {
 
 // Apply a script to the page for intercepting Passkeys (WebAuthn) requests
 kpxc.enablePasskeys = function() {
+    if (document?.documentElement?.ownerDocument?.contentType === 'text/xml') {
+        return;
+    }
+
     const passkeys = document.createElement('script');
     passkeys.src = browser.runtime.getURL('content/passkeys.js');
     document.documentElement.appendChild(passkeys);
@@ -837,18 +880,17 @@ kpxc.enablePasskeys = function() {
             let errorMessage;
             if (ret.response && ret.response.errorCode) {
                 errorMessage = await sendMessage('get_error_message', ret.response.errorCode);
-                // Do not create a notification for this error
-                if (ret?.response?.errorCode !== PASSKEYS_WAIT_FOR_LIFETIMER) {
-                    kpxcUI.createNotification('error', errorMessage);
-                }
+                kpxcUI.createNotification('error', errorMessage);
 
-                if (letTimerRunOut(ret?.response?.errorCode)) {
+                if (kpxc.settings.passkeysFallback) {
+                    kpxcPasskeysUtils.sendPasskeysResponse(undefined, ret.response?.errorCode, errorMessage);
+                } else if (letTimerRunOut(ret?.response?.errorCode)) {
                     return;
                 }
             }
 
-            const responsePublicKey = callback(ret.response);
-            kpxcPasskeysUtils.sendPasskeysResponse(responsePublicKey, ret.response?.errorCode, errorMessage);
+            logDebug('Passkey response', ret.response);
+            kpxcPasskeysUtils.sendPasskeysResponse(ret.response, ret.response?.errorCode, errorMessage);
             stopTimer(lifetimeTimer);
         }
     };
@@ -864,15 +906,15 @@ kpxc.enablePasskeys = function() {
                 ev.detail.publicKey,
                 ev.detail.sameOriginWithAncestors,
             );
-            logDebug('publicKey', publicKey);
-            await sendResponse('passkeys_register', publicKey, kpxcPasskeysUtils.parsePublicKeyCredential);
+            logDebug('Passkey request', publicKey);
+            await sendResponse('passkeys_register', publicKey);
         } else if (ev.detail.action === 'passkeys_get') {
             const publicKey = kpxcPasskeysUtils.buildCredentialRequestOptions(
                 ev.detail.publicKey,
                 ev.detail.sameOriginWithAncestors,
             );
-            logDebug('publicKey', publicKey);
-            await sendResponse('passkeys_get', publicKey, kpxcPasskeysUtils.parseGetPublicKeyCredential);
+            logDebug('Passkey request', publicKey);
+            await sendResponse('passkeys_get', publicKey);
         }
     });
 };

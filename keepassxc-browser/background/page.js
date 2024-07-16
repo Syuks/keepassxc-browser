@@ -4,7 +4,6 @@ const defaultSettings = {
     afterFillSorting: SORT_BY_MATCHING_CREDENTIALS_SETTING,
     afterFillSortingTotp: SORT_BY_RELEVANT_ENTRY,
     autoCompleteUsernames: true,
-    showGroupNameInAutocomplete: true,
     autoFillAndSend: false,
     autoFillSingleEntry: false,
     autoFillSingleTotp: false,
@@ -24,12 +23,14 @@ const defaultSettings = {
     redirectAllowance: 1,
     saveDomainOnly: true,
     showGettingStartedGuideAlert: true,
-    showTroubleshootingGuideAlert: true,
+    showGroupNameInAutocomplete: true,
     showLoginFormIcon: true,
     showLoginNotifications: true,
     showNotifications: true,
-    useMonochromeToolbarIcon: false,
     showOTPIcon: true,
+    showTroubleshootingGuideAlert: true,
+    useCompactMode: false,
+    useMonochromeToolbarIcon: false,
     useObserver: true,
     usePredefinedSites: true,
     usePasswordGeneratorIcons: false,
@@ -340,7 +341,7 @@ page.setAllowIframes = async function(tab, args = []) {
     const [ allowIframes, site ] = args;
 
     // Only set when main windows' URL is used
-    if (tab?.url === site) {
+    if (trimURL(tab?.url) === trimURL(site)) {
         page.tabs[tab.id].allowIframes = allowIframes;
     }
 };
@@ -422,7 +423,7 @@ page.getBaseDomainFromUrl = async function(hostname, url) {
     }
 
     // Remove the top level domain part from the hostname, e.g. https://another.example.co.uk -> https://another.example
-    const finalDomain = hostname.slice(0, hostname.indexOf(tld) - 1);
+    const finalDomain = hostname.slice(0, hostname.lastIndexOf(tld) - 1);
     // Split the URL and select the last part, e.g. https://another.example -> example
     let baseDomain = finalDomain.split('.')?.at(-1);
     // Append the top level domain back to the URL, e.g. example -> example.co.uk

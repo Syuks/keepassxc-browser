@@ -15,6 +15,58 @@ const PASSKEYS_UNKNOWN_ERROR = 31;
 const PASSKEYS_INVALID_CHALLENGE = 32;
 const PASSKEYS_INVALID_USER_ID = 33;
 
+const kpxcStringToArrayBuffer = function(str) {
+    const arr = Uint8Array.from(str, c => c.charCodeAt(0));
+    return arr.buffer;
+};
+
+// From URL encoded base64 string to ArrayBuffer
+const kpxcBase64ToArrayBuffer = function(str) {
+    return kpxcStringToArrayBuffer(window.atob(str?.replaceAll('-', '+').replaceAll('_', '/')));
+};
+
+// Wraps response to AuthenticatorAttestationResponse object
+const createAttestationResponse = function(publicKey) {
+    const response = {
+        attestationObject: kpxcBase64ToArrayBuffer(publicKey.response.attestationObject),
+        clientDataJSON: kpxcBase64ToArrayBuffer(publicKey.response.clientDataJSON),
+        getAuthenticatorData: () => kpxcBase64ToArrayBuffer(publicKey.response?.authenticatorData),
+        getTransports: () => [ 'internal' ]
+    };
+
+    return Object.setPrototypeOf(response, AuthenticatorAttestationResponse.prototype);
+};
+
+// Wraps response to AuthenticatorAssertionResponse object
+const createAssertionResponse = function(publicKey) {
+    const response = {
+        authenticatorData: kpxcBase64ToArrayBuffer(publicKey.response?.authenticatorData),
+        clientDataJSON: kpxcBase64ToArrayBuffer(publicKey.response?.clientDataJSON),
+        signature: kpxcBase64ToArrayBuffer(publicKey.response?.signature),
+        userHandle: publicKey.response?.userHandle ? kpxcBase64ToArrayBuffer(publicKey.response?.userHandle) : null
+    };
+
+    return Object.setPrototypeOf(response, AuthenticatorAssertionResponse.prototype);
+};
+
+// Wraps public key to PublicKeyCredential object
+const createPublicKeyCredential = function(publicKey) {
+    const authenticatorResponse = publicKey?.response?.attestationObject
+        ? createAttestationResponse(publicKey)
+        : createAssertionResponse(publicKey);
+    const publicKeyCredential = {
+        authenticatorAttachment: publicKey.authenticatorAttachment,
+        id: publicKey.id,
+        rawId: kpxcBase64ToArrayBuffer(publicKey.id),
+        response: authenticatorResponse,
+        type: publicKey.type,
+        clientExtensionResults: () => publicKey?.response?.clientExtensionResults || {},
+        getClientExtensionResults: () => publicKey?.response?.clientExtensionResults || {}
+    };
+
+    return Object.setPrototypeOf(publicKeyCredential, PublicKeyCredential.prototype);
+};
+
 // Posts a message to extension's content script and waits for response
 const postMessageToExtension = function(request) {
     return new Promise((resolve, reject) => {
@@ -46,7 +98,7 @@ const isSameOriginWithAncestors = function() {
 };
 
 // Throws errors to a correct exceptions
-const handleError = function(errorCode, errorMessage) {
+const throwError = function(errorCode, errorMessage) {
     if ((!errorCode && !errorMessage) || errorCode === PASSKEYS_REQUEST_CANCELED) {
         // No error or canceled by user. Stop the timer but throw no exception. Fallback with be called instead.
         return;
@@ -103,14 +155,13 @@ const handleError = function(errorCode, errorMessage) {
             });
 
             if (!response.publicKey) {
-                handleError(response?.errorCode, response?.errorMessage);
+                if (!response.fallback) {
+                    throwError(response?.errorCode, response?.errorMessage);
+                }
                 return response.fallback ? originalCredentials.create(options) : null;
             }
 
-            response.publicKey.getClientExtensionResults = () => {};
-            response.publicKey.clientExtensionResults = () => {};
-            response.publicKey.response.getTransports = () => [];
-            return response.publicKey;
+            return createPublicKeyCredential(response.publicKey);
         },
         async get(options) {
             if (!options.publicKey || options?.mediation === 'silent') {
@@ -129,13 +180,13 @@ const handleError = function(errorCode, errorMessage) {
             });
 
             if (!response.publicKey) {
-                handleError(response?.errorCode, response?.errorMessage);
+                if (!response.fallback) {
+                    throwError(response?.errorCode, response?.errorMessage);
+                }
                 return response.fallback ? originalCredentials.get(options) : null;
             }
 
-            response.publicKey.getClientExtensionResults = () => {};
-            response.publicKey.clientExtensionResults = () => {};
-            return response.publicKey;
+            return createPublicKeyCredential(response.publicKey);
         }
     };
 

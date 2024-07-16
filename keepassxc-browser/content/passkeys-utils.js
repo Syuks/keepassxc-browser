@@ -4,18 +4,8 @@ const MINIMUM_TIMEOUT = 15000;
 const DEFAULT_TIMEOUT = 30000;
 const DISCOURAGED_TIMEOUT = 120000;
 
-const stringToArrayBuffer = function(str) {
-    const arr = Uint8Array.from(str, c => c.charCodeAt(0));
-    return arr.buffer;
-};
-
-// From URL encoded base64 string to ArrayBuffer
-const base64ToArrayBuffer = function(str) {
-    return stringToArrayBuffer(window.atob(str.replaceAll('-', '+').replaceAll('_', '/')));
-};
-
 // From ArrayBuffer to URL encoded base64 string
-const arrayBufferToBase64 = function(buf) {
+const kpxcArrayBufferToBase64 = function(buf) {
     const str = [ ...new Uint8Array(buf) ].map(c => String.fromCharCode(c)).join('');
     return window.btoa(str).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 };
@@ -56,7 +46,7 @@ const kpxcPasskeysUtils = {};
 // Sends response from KeePassXC back to the injected script
 kpxcPasskeysUtils.sendPasskeysResponse = function(publicKey, errorCode, errorMessage) {
     const response = errorCode
-        ? { errorCode: errorCode, errorMessage: errorMessage }
+        ? { errorCode: errorCode, errorMessage: errorMessage, fallback: kpxc.settings.passkeysFallback }
         : { publicKey: publicKey, fallback: kpxc.settings.passkeysFallback };
     const details = isFirefox() ? cloneInto(response, document.defaultView) : response;
     document.dispatchEvent(new CustomEvent('kpxc-passkeys-response', { detail: details }));
@@ -70,28 +60,38 @@ kpxcPasskeysUtils.buildCredentialCreationOptions = function(pkOptions, sameOrigi
         const publicKey = {};
         publicKey.attestation = pkOptions?.attestation;
         publicKey.authenticatorSelection = pkOptions?.authenticatorSelection;
-        publicKey.challenge = arrayBufferToBase64(pkOptions.challenge);
+        publicKey.challenge = kpxcArrayBufferToBase64(pkOptions.challenge);
         publicKey.extensions = pkOptions?.extensions;
-        publicKey.pubKeyCredParams = pkOptions?.pubKeyCredParams;
+
+        // Make sure integers are used for "alg". Set to reserved if not found.
+        // https://www.iana.org/assignments/cose/cose.xhtml#algorithms
+        publicKey.pubKeyCredParams = [];
+        if (pkOptions.pubKeyCredParams) {
+            for (const credParam of pkOptions.pubKeyCredParams) {
+                publicKey.pubKeyCredParams.push({
+                    type: credParam?.type,
+                    alg: credParam.alg ? Number(credParam.alg) : 0
+                });
+            }
+        }
+
         publicKey.rp = pkOptions?.rp;
         publicKey.timeout = getTimeout(publicKey?.authenticatorSelection?.userVerification, pkOptions?.timeout);
 
         publicKey.excludeCredentials = [];
         if (pkOptions.excludeCredentials && pkOptions.excludeCredentials.length > 0) {
             for (const cred of pkOptions.excludeCredentials) {
-                const arr = {
-                    id: arrayBufferToBase64(cred.id),
+                publicKey.excludeCredentials.push({
+                    id: kpxcArrayBufferToBase64(cred.id),
                     transports: cred.transports,
                     type: cred.type
-                };
-
-                publicKey.excludeCredentials.push(arr);
+                });
             }
         }
 
         publicKey.user = {};
         publicKey.user.displayName = pkOptions.user.displayName;
-        publicKey.user.id = arrayBufferToBase64(pkOptions.user.id);
+        publicKey.user.id = kpxcArrayBufferToBase64(pkOptions.user.id);
         publicKey.user.name = pkOptions.user.name;
 
         return publicKey;
@@ -106,7 +106,7 @@ kpxcPasskeysUtils.buildCredentialRequestOptions = function(pkOptions, sameOrigin
         checkErrors(pkOptions, sameOriginWithAncestors);
 
         const publicKey = {};
-        publicKey.challenge = arrayBufferToBase64(pkOptions.challenge);
+        publicKey.challenge = kpxcArrayBufferToBase64(pkOptions.challenge);
         publicKey.enterpriseAttestationPossible = false;
         publicKey.extensions = pkOptions?.extensions;
         publicKey.rpId = pkOptions?.rpId;
@@ -124,8 +124,8 @@ kpxcPasskeysUtils.buildCredentialRequestOptions = function(pkOptions, sameOrigin
                 }
 
                 const arr = {
-                    id: arrayBufferToBase64(cred.id),
-                    transports: transports,
+                    id: kpxcArrayBufferToBase64(cred.id),
+                    transports: [ ...transports, 'internal' ],
                     type: cred.type
                 };
 
@@ -137,37 +137,4 @@ kpxcPasskeysUtils.buildCredentialRequestOptions = function(pkOptions, sameOrigin
     } catch (e) {
         console.log(e);
     }
-};
-
-// Parse register response back from base64 strings to ByteArrays
-kpxcPasskeysUtils.parsePublicKeyCredential = function(publicKeyCredential) {
-    if (!publicKeyCredential || !publicKeyCredential.type) {
-        return undefined;
-    }
-
-    publicKeyCredential.rawId = base64ToArrayBuffer(publicKeyCredential.id);
-    publicKeyCredential.response.attestationObject =
-        base64ToArrayBuffer(publicKeyCredential.response.attestationObject);
-    publicKeyCredential.response.clientDataJSON = base64ToArrayBuffer(publicKeyCredential.response.clientDataJSON);
-
-    return publicKeyCredential;
-};
-
-// Parse authentication response back from base64 strings to ByteArrays
-kpxcPasskeysUtils.parseGetPublicKeyCredential = function(publicKeyCredential) {
-    if (!publicKeyCredential || !publicKeyCredential.type) {
-        return undefined;
-    }
-
-    publicKeyCredential.rawId = base64ToArrayBuffer(publicKeyCredential.id);
-    publicKeyCredential.response.authenticatorData =
-        base64ToArrayBuffer(publicKeyCredential.response.authenticatorData);
-    publicKeyCredential.response.clientDataJSON = base64ToArrayBuffer(publicKeyCredential.response.clientDataJSON);
-    publicKeyCredential.response.signature = base64ToArrayBuffer(publicKeyCredential.response.signature);
-
-    if (publicKeyCredential.response.userHandle) {
-        publicKeyCredential.response.userHandle = base64ToArrayBuffer(publicKeyCredential.response.userHandle);
-    }
-
-    return publicKeyCredential;
 };

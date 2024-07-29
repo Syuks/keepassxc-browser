@@ -94,9 +94,20 @@ kpxcFill.fillFromAutofill = async function() {
     const pageUuid = await sendMessage('page_get_login_id');
 
     if (pageUuid) {
-        const credsFromUuid = kpxc.credentials.find(c => c.uuid === pageUuid);
-        if (credsFromUuid) {
-            kpxcFill.fillInCredentials(kpxc.combinations[index], credsFromUuid.login, pageUuid);
+        const credFromUuid = kpxc.credentials.find(c => c.uuid === pageUuid);
+        if (credFromUuid) {
+            kpxcFill.fillInCredentials(kpxc.combinations[index], credFromUuid.login, pageUuid);
+        }
+        return;
+    }
+
+    const username = kpxcSites.detectUsernameFromPage();
+
+    if (username) {
+        const credFromUsername = kpxc.credentials.find(c => c.login === username);
+        if (credFromUsername) {
+            await sendMessage('page_set_login_id', credFromUsername.uuid);
+            kpxcFill.fillInCredentials(kpxc.combinations[index], credFromUsername.login, credFromUsername.uuid);
         }
     }
 };

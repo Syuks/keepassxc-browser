@@ -823,7 +823,7 @@ keepass.reconnect = async function(tab = null, connectionTimeout = 1500) {
 
     await keepass.testAssociation();
     await keepass.isConfigured();
-    keepass.updateDatabaseHashToContent();
+    await keepass.updateDatabaseHashToContent();
     return true;
 };
 

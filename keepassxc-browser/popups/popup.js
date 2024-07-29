@@ -99,9 +99,15 @@ const sendMessageToTab = async function(message) {
     });
 
     $('#reload-status-button').addEventListener('click', async () => {
-        statusResponse(await browser.runtime.sendMessage({
+        const r = await browser.runtime.sendMessage({
             action: 'reconnect'
-        }));
+        })
+
+        if (r.keePassXCAvailable) {
+            close();
+        } else {
+            statusResponse(r);
+        }
 
         // Shows the Troubleshooting Guide alert every third time Reload button is pressed when popup is open
         if (reloadCount > 2) {

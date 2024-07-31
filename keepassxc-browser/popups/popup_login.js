@@ -61,16 +61,19 @@
                 return;
             }
 
-            const val = filter.value;
+            const val = removeAccents(filter.value);
             const re = new RegExp(val, 'i');
             const links = ll.getElementsByTagName('a');
+
             for (const i in links) {
                 if (links.hasOwnProperty(i)) {
-                    const found = String(links[i].textContent).match(re) !== null;
+                    const textContent = removeAccents(String(links[i].textContent));
+                    const found = textContent.match(re) !== null;
                     links[i].style = found ? '' : 'display: none;';
                 }
             }
 
+            // Reset selection
             index = 0;
             selectItem();
         });
@@ -79,10 +82,9 @@
             if (!e.isTrusted) {
                 return;
             }
-
-            cancelEvent(e);
             
             if (e.key === 'ArrowDown') {
+                cancelEvent(e);
                 const items = getAllItems();
                 index = (index + 1) % items.length;
                 selectItem();
@@ -90,6 +92,7 @@
             }
             
             if (e.key === 'ArrowUp') {
+                cancelEvent(e);
                 const items = getAllItems();
                 index = (index > 0 ? index : items.length) - 1;  
                 selectItem();
@@ -102,7 +105,9 @@
                 if (!selectedItem) {
                     return;
                 }
-
+                
+                cancelEvent(e);
+                
                 browser.tabs.sendMessage(tab?.id, {
                     action: 'fill_user_pass_with_specific_login',
                     id: Number(selectedItem.id),
@@ -115,6 +120,10 @@
         });
 
         filter.focus();
+    }
+
+    function removeAccents(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
 
     function cancelEvent(e) {

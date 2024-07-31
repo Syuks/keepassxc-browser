@@ -192,7 +192,7 @@ code {
         color: var(--kpxc-text-color) !important;
     }
 
-    .list-group-item:hover {
+    .list-group-item--active {
         background-color: var(--kpxc-table-hover-color) !important;
     }
 

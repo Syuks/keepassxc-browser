@@ -237,7 +237,11 @@
     },
     "errorNotConnected": {
         "message": "KeePassXC ile bağlantı kurulmamış.",
-        "description": "Error notification shown when not connected to KeePassXC"
+        "description": "Error notification shown when not connected to KeePassXC."
+    },
+    "errorCurrentDatabaseNotConnected": {
+        "message": "Geçerli veri tabanı ile bağlantı kurulamadı.",
+        "description": "Error notification shown when current database is not connected during action."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "Hata: Oluşturulan parola izin verilen boyuttan daha uzun!",
@@ -367,7 +371,7 @@
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsMultipleFoundSecondLine": {
-        "message": "Daha fazla seçenek için KeePassXC-Tarayıcı simgesine tıklayın.",
+        "message": "Daha fazla seçenek için KeePassXC-Browser simgesine tıklayın.",
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsNoUsernameFound": {
@@ -523,7 +527,7 @@
         "description": "A message shown choosing what credentials user wants to update."
     },
     "rememberChooseGroup": {
-        "message": "Lütfen yeni kimlik doğrulama bilgilerini eklemek istediğiniz kümeyi seçin.",
+        "message": "Lütfen yeni kimlik doğrulama bilgilerini kaydetmek istediğiniz grubu seçin.",
         "description": "A message shown choosing what group user wants to use for new credentials."
     },
     "rememberInfoDefaultGroupNotFound": {
@@ -627,7 +631,7 @@
         "description": "General Settings tab text."
     },
     "optionsConnectedDatabasesTab": {
-        "message": "Bağlı veritabanları",
+        "message": "Bağlı veri tabanları",
         "description": "Connected Databases tab text."
     },
     "optionsCustomFieldsTab": {
@@ -647,7 +651,7 @@
         "description": "General settings page header."
     },
     "optionsMenuConnectedDatabases": {
-        "message": "Bağlı veritabanları",
+        "message": "Bağlı veri tabanları",
         "description": "Connected Databases page header."
     },
     "optionsMenuCustomFields": {
@@ -714,6 +718,10 @@
         "message": "Grupları bölü karakteri ile ayırarak yazın. Örnek: Grup/AltGrup.",
         "description": "Default group help text."
     },
+    "optionsLabelDefaultPasskeyGroup": {
+        "message": "Yeni geçiş anahtarlarının kaydedileceği varsayılan grup:",
+        "description": "Default passkey group options text."
+    },
     "optionsLabelDefaultGroupCheckboxText": {
         "message": "Her zaman yeni kimlik doğrulama bilgilerinin nereye kaydedileceği sorulur",
         "description": "Default group checkbox help text."
@@ -758,6 +766,10 @@
         "message": "Tek kimlik doğrulama bilgisi kayıtları otomatik olarak doldurulsun",
         "description": "Automatically fill-in single credential entry checkbox text."
     },
+    "optionsCheckboxAutoFillRelevantCredential": {
+        "message": "Automatically fill in relevant credential entries",
+        "description": "Automatically fill-in relevant credential entry checkbox text."
+    },
     "optionsCheckboxAutoFillSingleTotp": {
         "message": "Tekil tek kullanımlık parola kayıtları otomatik olarak doldurulsun",
         "description": "Automatically fill-in single TOTP entries checkbox text."
@@ -787,7 +799,7 @@
         "description": "Use monochrome toolbar icon checkbox text."
     },
     "optionsCheckboxUseCompactMode": {
-        "message": "Use compact mode",
+        "message": "Küçük kip kullanılsın",
         "description": "Whether the compact mode (legacy dropdown) should be enabled."
     },
     "optionsSaveDomainOnly": {
@@ -823,7 +835,7 @@
         "description": "Text above radio buttons in the settings page."
     },
     "optionsRadioThreeDays": {
-        "message": "3 günde bir",
+        "message": "üç günde bir",
         "description": "Radio button text."
     },
     "optionsRadioWeek": {
@@ -906,6 +918,10 @@
         "message": "Yalnızca tek bir kayıt alınırsa KeePassXC-Browser otomatik olarak kimlik bilgilerini doldurabilsin.",
         "description": "Auto-Fill Single Entry option help text."
     },
+    "optionsAutoFillRelevantCredentialHelpText": {
+        "message": "Automatically fill in the relevant credential if a second fill is needed.",
+        "description": "Auto-Fill Relevant Credential option help text."
+    },
     "optionsAutoFillSingleEntryWarning": {
         "message": "Uyarı! Otomatik doldurmayı kullanmanın güvenli olmadığını bilerek kullanın. KeePassXC-Browser, oturum açma alanlarını otomatik olarak algılamaya çalışır. Ancak bazen bu alanlar hatalı olarak algılanabilir ve hassas veriler güvenli olmayan alanlara doldurularak görülebilir.",
         "description": "Auto-Fill Single Entry warning text."
@@ -919,7 +935,7 @@
         "description": "Autocomplete Usernames option help text."
     },
     "optionsShowGroupNameInAutocompleteHelpText": {
-        "message": "When credentials are returned from different groups, the group name will be shown. Only affects the compact mode.",
+        "message": "Farklı gruplardan kimlik bilgileri bulunduğunda, grup adını görüntüler. Yalnızca küçük kipi etkiler.",
         "description": "Show group name in autocomplete help text."
     },
     "optionsShowNotificationsHelpText": {
@@ -931,8 +947,8 @@
         "description": "Use monochrome toolbar icon option help text."
     },
     "optionsUseCompactModeHelpText": {
-      "message": "Use a compact version of the dropdown list to select credentials.",
-      "description": "Use compact (legacy) mode help text."
+        "message": "Kimlik doğrulama bilgilerini seçmek için açılan listenin sıkıştırılmış sürümünü kullanır.",
+        "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "Yeni kimlik doğrulama bilgileri kaydedilirken, tam adres yerine yalnızca etki alanını kaydeder.",
@@ -1023,7 +1039,7 @@
         "description": "Import settings confirmation dialog help text."
     },
     "optionsConnectedDatabasesText": {
-        "message": "KeePassXC-Browser ile bağlantısı kurulmuş KeePassXC veritabanları.",
+        "message": "KeePassXC-Browser ile bağlantısı kurulmuş KeePassXC veri tabanları.",
         "description": "Info text about connected databases."
     },
     "optionsConnectedDatabasesNotFound": {
@@ -1035,7 +1051,7 @@
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmFirst": {
-        "message": "Şu tanımlayıcıyı veritabanları listesinden kaldırmak istediğinize emin misiniz: $1",
+        "message": "Şu tanımlayıcıyı veri tabanları listesinden kaldırmak istediğinize emin misiniz: $1?",
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmSecond": {
@@ -1081,7 +1097,7 @@
     "optionsColumnAllowIframes": {
         "message": "Başka siteden iframe bulunabilsin",
         "description": "Allow iframes column text."
-  },
+    },
     "optionsColumnDelete": {
         "message": "Dil",
         "description": "Site Preferences list column title."

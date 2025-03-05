@@ -184,7 +184,7 @@
         "description": "Credential is excluded."
     },
     "errorMessagePasskeysRequestCanceled": {
-        "message": "Запрос passkeys отменен.",
+        "message": "Запрос ключей доступа отменен.",
         "description": "Passkeys request canceled."
     },
     "errorMessagePasskeysInvalidUserVerification": {
@@ -220,7 +220,7 @@
         "description": "Wait for timer to expire."
     },
     "errorMessagePasskeysUnknownError": {
-        "message": "Неизвестная ошибка passskeys.",
+        "message": "Неизвестная ошибка ключей доступа.",
         "description": "Unknown passkeys error."
     },
     "errorMessagePasskeysInvalidChallenge": {
@@ -237,7 +237,11 @@
     },
     "errorNotConnected": {
         "message": "Не подключён к KeePassXC.",
-        "description": "Error notification shown when not connected to KeePassXC"
+        "description": "Error notification shown when not connected to KeePassXC."
+    },
+    "errorCurrentDatabaseNotConnected": {
+        "message": "Current database is not connected.",
+        "description": "Error notification shown when current database is not connected during action."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "ОШИБКА:\nсгенерированный пароль длиннее допустимого!",
@@ -367,7 +371,7 @@
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsMultipleFoundSecondLine": {
-        "message": "Нажмите на значок KeePassXC-Browser для дополнительных опций.",
+        "message": "Нажмите на значок KeePassXC-Browser для получения дополнительных параметров.",
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsNoUsernameFound": {
@@ -475,7 +479,7 @@
         "description": "Checking status message in popup."
     },
     "popupNotConfigured": {
-        "message": "KeePassXC-Browser не настроен. Нажмите кнопку подключения, чтобы связаться с KeePassXC.",
+        "message": "KeePassXC-Browser не настроен. Нажмите кнопку подключения, чтобы связать его с KeePassXC.",
         "description": "A popup message shown when the extension has not been connected to KeePassXC."
     },
     "popupNeedReconfigure": {
@@ -483,7 +487,7 @@
         "description": "A popup message shown when the extension has been disconnected from KeePassXC."
     },
     "popupNeedReconfigureMessage": {
-        "message": "Нажмите кнопку переподключения, чтобы установить новое соединение.",
+        "message": "Нажмите кнопку повторного подключения, чтобы установить новое соединение.",
         "description": "A popup message shown when reconnect is needed."
     },
     "popupConfiguredNotAssociated": {
@@ -523,7 +527,7 @@
         "description": "A message shown choosing what credentials user wants to update."
     },
     "rememberChooseGroup": {
-        "message": "Пожалуйста, выберите группу, в которую вы хотите добавить новые учётные данные.",
+        "message": "Пожалуйста, выберите группу для хранения новых учётных данных.",
         "description": "A message shown choosing what group user wants to use for new credentials."
     },
     "rememberInfoDefaultGroupNotFound": {
@@ -714,6 +718,10 @@
         "message": "Разделите группу косыми чертам, например: Группа/ДочерняяГруппа.",
         "description": "Default group help text."
     },
+    "optionsLabelDefaultPasskeyGroup": {
+        "message": "Группа по умолчанию для сохранения новых ключей доступа:",
+        "description": "Default passkey group options text."
+    },
     "optionsLabelDefaultGroupCheckboxText": {
         "message": "Всегда спрашивать, куда сохранять новые учётные данные",
         "description": "Default group checkbox help text."
@@ -757,6 +765,10 @@
     "optionsCheckboxAutoFillSingleEntry": {
         "message": "Автозаполнение элементов с единственными учётными данными",
         "description": "Automatically fill-in single credential entry checkbox text."
+    },
+    "optionsCheckboxAutoFillRelevantCredential": {
+        "message": "Automatically fill in relevant credential entries",
+        "description": "Automatically fill-in relevant credential entry checkbox text."
     },
     "optionsCheckboxAutoFillSingleTotp": {
         "message": "Автоматически заполнять одиночные записи TOTP",
@@ -823,7 +835,7 @@
         "description": "Text above radio buttons in the settings page."
     },
     "optionsRadioThreeDays": {
-        "message": "каждые 3 дня",
+        "message": "каждые три дня",
         "description": "Radio button text."
     },
     "optionsRadioWeek": {
@@ -843,7 +855,7 @@
         "description": "Theme selection header text."
     },
     "optionsCredentialSortSelectionHeader": {
-        "message": "Упорядочить данные по",
+        "message": "Сортировать учетные данные по",
         "description": "Credential sort option header text."
     },
     "optionsThemeSelection": {
@@ -887,7 +899,7 @@
         "description": "Use predefined sites option help text."
     },
     "optionsShowLoginFormIconHelpText": {
-        "message": "Добавляет значок в поля логиная для заполнения учётных данных одним щелчком мыши.",
+        "message": "Добавляет значок в поля логина для заполнения учётных данных одним щелчком мыши.",
         "description": "Username field icon option help text."
     },
     "optionsShowOTPIconHelpText": {
@@ -905,6 +917,10 @@
     "optionsAutoFillSingleEntryHelpText": {
         "message": "Разрешить KeePassXC-Browser автоматически заполнять учётные данные, если он получает только одну запись.",
         "description": "Auto-Fill Single Entry option help text."
+    },
+    "optionsAutoFillRelevantCredentialHelpText": {
+        "message": "Automatically fill in the relevant credential if a second fill is needed.",
+        "description": "Auto-Fill Relevant Credential option help text."
     },
     "optionsAutoFillSingleEntryWarning": {
         "message": "Внимание! Использование автозаполнения небезопасно. Используйте его на своё усмотрение. KeePassXC-Browser автоматически пытается обнаружить поля ввода учётных данных. Однако они могут быть обнаружены неправильно, что может привести к заполнению конфиденциальных данных в небезопасных полях.",
@@ -931,8 +947,8 @@
         "description": "Use monochrome toolbar icon option help text."
     },
     "optionsUseCompactModeHelpText": {
-      "message": "Компактная версия выпадающего списка для выбора учетных данных.",
-      "description": "Use compact (legacy) mode help text."
+        "message": "Компактная версия выпадающего списка для выбора учетных данных.",
+        "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "При сохранении новых учётных данных сохранять только домен, а не полный URL.",
@@ -951,7 +967,7 @@
         "description": "Download favicon after save help text."
     },
     "optionsAutoFillAndSendHelpText": {
-        "message": "Если на странице есть учётные данные, и тип входа - запрос базовой HTTP-аутентификации, KeePassXC-Browser войти с первыми указанными учётными данными.",
+        "message": "Если для страницы найдены учетные данные, а тип входа - запрос базовой HTTP-аутентификации, KeePassXC-Browser пытается автоматически войти в систему с первыми указанными учетными данными. При наличии нескольких учетных данных можно использовать всплывающее окно расширения для выбора правильной. Даже если эта функция включена, все равно можно ввести данные для входа базовой HTTP-аутентификации вручную.",
         "description": "Auto-Fill And Send option help text."
     },
     "optionsAutoFillAndSendHelpTextSecond": {
@@ -967,11 +983,11 @@
         "description": "Clear credentials timeout help text."
     },
     "optionsVersionInfoText": {
-        "message": "Для извлечения учётных данных KeePassXC-Browser требуется KeePassXC.",
+        "message": "KeePassXC-Browser требуется KeePassXC для получения учётных данных.",
         "description": "Settings page version info text."
     },
     "optionsVersionDownload": {
-        "message": "Новейшую стабильную версию можно загрузить с $1",
+        "message": "Скачать последнюю стабильную версию можно с $1",
         "description": "Settings page download link."
     },
     "optionsVersionRunning": {
@@ -979,7 +995,7 @@
         "description": "Settings page info text of user's KeePassXC version."
     },
     "optionsLatestVersion": {
-        "message": "Новейшая версия KeePassXC: $1",
+        "message": "Последняя доступная версия KeePassXC: $1",
         "description": "Settings page info text about the latest KeePassXC version."
     },
     "optionsKeePassXCVersionRequired": {
@@ -1023,7 +1039,7 @@
         "description": "Import settings confirmation dialog help text."
     },
     "optionsConnectedDatabasesText": {
-        "message": "Эти базы данных KeePassXC подключены к KeePassXC-Browser.",
+        "message": "Базы данных, подключенные к KeePassXC-Browser.",
         "description": "Info text about connected databases."
     },
     "optionsConnectedDatabasesNotFound": {
@@ -1035,7 +1051,7 @@
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmFirst": {
-        "message": "Вы действительно хотите удалить следующий идентификатор из списка базы данных:$1",
+        "message": "Вы действительно хотите удалить следующий идентификатор из списка базы данных: $1?",
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmSecond": {
@@ -1051,7 +1067,7 @@
         "description": "Database list column title."
     },
     "optionsDatabaseLastUsed": {
-        "message": "Последний",
+        "message": "Последнее использование",
         "description": "Database list column title."
     },
     "optionsDatabaseCreated": {
@@ -1067,7 +1083,7 @@
         "description": "Site Preferences list column title."
     },
     "optionsColumnIgnore": {
-        "message": "Пропустить",
+        "message": "Игнорировать",
         "description": "Site Preferences list column title."
     },
     "optionsColumnUsernameOnly": {
@@ -1081,7 +1097,7 @@
     "optionsColumnAllowIframes": {
         "message": "Разрешить Cross-Origin iframes",
         "description": "Allow iframes column text."
-  },
+    },
     "optionsColumnDelete": {
         "message": "Удалить",
         "description": "Site Preferences list column title."
@@ -1119,7 +1135,7 @@
         "description": "Sort matching credentials by group and username option selection."
     },
     "optionsFillSortPriority": {
-        "message": "Упорядочивание учётных данных после заполнения",
+        "message": "Сортировать учетные данные после заполнения",
         "description": ""
     },
     "optionsFillSortPriorityHelpText": {
@@ -1127,7 +1143,7 @@
         "description": "Help text for Sort credentials after fill."
     },
     "optionsFillSortPriorityTotp": {
-        "message": "Сортировка учетных данных после заполнения TOTP по",
+        "message": "Сортировать учетные данные после заполнения TOTP",
         "description": ""
     },
     "optionsFillSortPriorityTotpHelpText": {
@@ -1147,11 +1163,11 @@
         "description": "Shown when no saved custom credentials are saved."
     },
     "optionsCustomFieldsTableCaption": {
-        "message": "Вы можете управлять сохранёнными пользовательскими полями входа, используя таблицу ниже.",
+        "message": "Вы можете управлять сохранёнными пользовательскими полями входа с помощью таблицы.",
         "description": "Table caption of Custom Login Fields page."
     },
     "optionsCustomFieldsTabHelpTextFirst": {
-        "message": "Если KeePassXC-Browser обнаруживает неверные поля логина, вы можете сами указать правильные поля.",
+        "message": "Если KeePassXC-Browser обнаруживает неверные поля входа, вы можете сами указать правильные поля.",
         "description": "Saved Custom Login Fields info text, first part."
     },
     "optionsCustomFieldsTabHelpTextSecond": {
@@ -1187,11 +1203,11 @@
         "description": "Site Preferences info text, first part."
     },
     "optionsSitePreferencesTabHelpTextSecond": {
-        "message": "Для неучитывания новых/изменённых учётных данных на каком-либо сайте добавьте их ниже или щёлкните по мерцающему значку KeePassXC-Browser и выберите ",
+        "message": "Для игнорирования новых/измененных учетных данных на определенном сайте, добавьте их ниже или используя баннер на странице, выберите <em>Не спрашивать для этого сайта</em>.",
         "description": "Site Preferences info text, second part."
     },
     "optionsSitePreferencesTabHelpTextThird": {
-        "message": "Если сайт полностью неучитывается (выбрано <em>Отключить все функции</em>), то при посещении такого сайта расширение ничего не будет делать.",
+        "message": "Если сайт полностью игнорируется (выбрано <em>Отключить все функции</em>), то при посещении такого сайта расширение ничего не будет делать.",
         "description": "Site Preferences info text, third part."
     },
     "optionsSitePreferencesTabHelpTextFourth": {
@@ -1227,7 +1243,7 @@
         "description": "Table caption of Site Preferences page."
     },
     "optionsSitePreferencesSelect": {
-        "message": "Опция для неучитывания деталей расширения для страницы.",
+        "message": "Опция, позволяющая игнорировать функции расширения для данной страницы.",
         "description": "Title text of select element in Site Preferences."
     },
     "optionsAboutChrome": {
@@ -1315,11 +1331,11 @@
         "description": "Extension title in settings page"
     },
     "optionsPasskeysTitle": {
-        "message": "Passkeys",
+        "message": "Ключи доступа",
         "description": "Passkeys settings title in settings page."
     },
     "optionsPasskeysEnable": {
-        "message": "Включить passkeys",
+        "message": "Включить ключи доступа",
         "description": "Enabled passkeys option text."
     },
     "optionsPasskeysEnableHelpText": {
@@ -1327,11 +1343,11 @@
         "description": "Passkeys option help text."
     },
     "optionsPasskeysEnableFallback": {
-        "message": "Включить возврат passkeys",
+        "message": "Включить резервный вариант ключей доступа",
         "description": "Enabled passkeys fallback option text."
     },
     "optionsPasskeysEnableFallbackHelpText": {
-        "message": "Если эта опция включена, то при неудачном или отмененном запросе к KeePassXC будет срабатывать собственный внутренний запрос passkeys. Если этот параметр отключен, то будет требоваться подключение к KeePassXC, и отмененный запрос не будет выполнен. По умолчанию: включено.",
+        "message": "Если эта опция включена, то при неудачном или отмененном запросе к KeePassXC будет срабатывать собственный внутренний запрос ключей доступа. Если этот параметр отключен, то будет требоваться подключение к KeePassXC, и отмененный запрос не будет выполнен. По умолчанию: включено.",
         "description": "Passkeys fallback option help text."
     },
     "openNewTab": {

@@ -206,8 +206,8 @@ kpxcEvent.pageClearLogins = async function(tab, alreadyCalled) {
     }
 };
 
-kpxcEvent.compareVersion = async function(tab, args = []) {
-    return keepass.compareVersion(args[0], args[1]);
+kpxcEvent.compareMultipleVersions = async function(tab, args = []) {
+    return keepass.compareMultipleVersions(args[0], args[1]);
 };
 
 kpxcEvent.getIsKeePassXCAvailable = async function() {
@@ -237,9 +237,11 @@ kpxcEvent.sendBackToTabs = async function(tab, args = []) {
 kpxcEvent.messageHandlers = {
     'add_credentials': keepass.addCredentials,
     'associate': keepass.associate,
+    'banner_get_position': page.getBannerPosition,
+    'banner_set_position': page.setBannerPosition,
     'check_database_hash': keepass.checkDatabaseHash,
     'check_update_keepassxc': kpxcEvent.onCheckUpdateKeePassXC,
-    'compare_version': kpxcEvent.compareVersion,
+    'compare_versions': kpxcEvent.compareMultipleVersions,
     'create_new_group': keepass.createNewGroup,
     'enable_automatic_reconnect': keepass.enableAutomaticReconnect,
     'disable_automatic_reconnect': keepass.disableAutomaticReconnect,

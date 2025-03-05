@@ -83,14 +83,7 @@ PasswordIcon.prototype.createIcon = function(field) {
 
     kpxcUI.setIconPosition(icon, field, this.rtl);
     this.icon = icon;
-
-    const styleSheet = createStylesheet('css/pwgen.css');
-    const wrapper = document.createElement('div');
-
-    this.shadowRoot = wrapper.attachShadow({ mode: 'closed' });
-    this.shadowRoot.append(styleSheet);
-    this.shadowRoot.append(icon);
-    document.body.append(wrapper);
+    this.createWrapper('css/pwgen.css');
 };
 
 
@@ -157,9 +150,9 @@ const isPasswordGeneratorSupported = async function() {
     });
 
     const result = await browser.runtime.sendMessage({
-        action: 'compare_version',
-        args: [ '2.7.0', response.current ]
+        action: 'compare_versions',
+        args: [ [ '2.7.0' ], response.current ]
     });
 
-    return result;
+    return result['2.7.0'] || false;
 };

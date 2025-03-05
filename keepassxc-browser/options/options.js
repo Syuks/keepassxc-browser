@@ -74,6 +74,8 @@ options.initGeneralSettings = async function() {
         } else if (name === 'autoReconnect') {
             const message = updated.autoReconnect ? 'enable_automatic_reconnect' : 'disable_automatic_reconnect';
             browser.runtime.sendMessage({ action: message });
+        } else if (name === 'passkeys') {
+            $('#passkeysFallback').disabled = !isChecked;
         } else if (name === 'useMonochromeToolbarIcon') {
             browser.runtime.sendMessage({ action: 'update_popup' });
         }
@@ -112,6 +114,7 @@ options.initGeneralSettings = async function() {
     $('#tab-general-settings select#afterFillSorting').value = options.settings['afterFillSorting'];
     $('#tab-general-settings select#afterFillSortingTotp').value = options.settings['afterFillSortingTotp'];
     $('#tab-general-settings input#defaultGroup').value = options.settings['defaultGroup'];
+    $('#tab-general-settings input#defaultPasskeyGroup').value = options.settings['defaultPasskeyGroup'];
     $('#tab-general-settings input#clearCredentialTimeout').value = options.settings['clearCredentialsTimeout'];
 
     const generalSettingsRadioInputs = document.querySelectorAll('#tab-general-settings input[type=radio]');
@@ -203,6 +206,7 @@ options.initGeneralSettings = async function() {
         });
     });
 
+    // Default group
     $('#defaultGroupButton').addEventListener('click', async function() {
         const value = $('#defaultGroup').value;
         options.settings['defaultGroup'] = (value.length > 0 ? value : '');
@@ -214,6 +218,21 @@ options.initGeneralSettings = async function() {
         options.settings['defaultGroup'] = '';
         await options.saveSettings();
     });
+
+    // Default passkey group
+    $('#defaultPasskeyGroupButton').addEventListener('click', async function() {
+        const value = $('#defaultPasskeyGroup').value;
+        options.settings['defaultPasskeyGroup'] = (value.length > 0 ? value : '');
+        await options.saveSettings();
+    });
+
+    $('#defaultPasskeyGroupButtonReset').addEventListener('click', async function() {
+        $('#defaultPasskeyGroup').value = '';
+        options.settings['defaultPasskeyGroup'] = '';
+        await options.saveSettings();
+    });
+
+    $('#passkeysFallback').disabled = options.settings['passkeys'] === false;
 
     let temporarySettings;
     const dialogImportSettingsModal = new bootstrap.Modal('#dialogImportSettings',
@@ -309,36 +328,39 @@ options.showKeePassXCVersions = async function(response) {
     $('#tab-about span.kpxcVersion').textContent = response.current;
     $('#tab-general-settings button.checkUpdateKeePassXC').disabled = false;
 
-    // Hide/disable certain options with older KeePassXC versions than 2.6.0
-    const version260Result = await browser.runtime.sendMessage({
-        action: 'compare_version',
-        args: [ '2.6.0', response.current ]
+    const versionResults = await browser.runtime.sendMessage({
+        action: 'compare_versions',
+        args: [
+            [
+                '2.6.0',
+                '2.7.0',
+                '2.7.7',
+                '2.7.10'
+            ],
+            response.current
+        ],
     });
 
-    if (version260Result) {
+    // Hide/disable certain options with older KeePassXC versions than 2.6.0
+    if (versionResults['2.6.0']) {
         $('#tab-general-settings #versionRequiredAlert').hide();
     } else {
         $('#tab-general-settings #showGroupNameInAutocomplete').disabled = true;
     }
 
     // Hide certain options with older KeePassXC versions than 2.7.0
-    const version270Result = await browser.runtime.sendMessage({
-        action: 'compare_version',
-        args: [ '2.7.0', response.current ]
-    });
-
-    if (!version270Result) {
+    if (!versionResults['2.7.0']) {
         $('#tab-general-settings #downloadFaviconAfterSaveFormGroup').hide();
     }
 
     // Hide certain options with older KeePassXC versions than 2.7.7
-    const version277Result = await browser.runtime.sendMessage({
-        action: 'compare_version',
-        args: [ '2.7.7', response.current ]
-    });
-
-    if (!version277Result) {
+    if (!versionResults['2.7.7']) {
         $('#tab-general-settings #passkeysOptionsCard').hide();
+    }
+
+    // Hide passkeys default group option with KeePassXC version < 2.7.10
+    if (!versionResults['2.7.10']) {
+        $('#tab-general-settings #passkeysDefaultGroup').hide();
     }
 };
 

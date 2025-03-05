@@ -50,6 +50,27 @@ class Icon {
         }
     }
 
+    // Creates a wrapper div that has the icon in Shadow DOM
+    createWrapper(styleSheetFilename) {
+        const styleSheet = createStylesheet(styleSheetFilename);
+        const wrapper = document.createElement('div');
+        wrapper.style.all = 'unset';
+        wrapper.style.display = 'none';
+
+        // Make sure the wrapper is positioned correctly without CSS styles affecting to it
+        wrapper.style.position = 'absolute';
+        wrapper.style.top = Pixels(0);
+        wrapper.style.left = Pixels(0);
+
+        // Waits for stylesheet to load before displaying the element
+        styleSheet.addEventListener('load', () => wrapper.style.display = 'block');
+
+        this.shadowRoot = wrapper.attachShadow({ mode: 'closed' });
+        this.shadowRoot.append(styleSheet);
+        this.shadowRoot.append(this.icon);
+        document.body.append(wrapper);
+    }
+
     switchIcon(state, uuid) {
         if (!this.icon) {
             return;
@@ -112,7 +133,7 @@ kpxcUI.monitorIconPosition = function(iconClass) {
     });
 
     window.addEventListener('transitionend', function(e) {
-        if (e.target?.nodeName === 'INPUT' || e.target?.nodeName === 'TEXTAREA') {
+        if (matchesWithNodeName(e.target, 'INPUT') || matchesWithNodeName(e.target, 'TEXTAREA')) {
             kpxcUI.updateIconPosition(iconClass);
         }
     });
@@ -133,8 +154,9 @@ kpxcUI.setIconPosition = function(icon, field, rtl = false, segmented = false) {
     const rect = field.getBoundingClientRect();
     const size = Number(icon.getAttribute('size'));
     const offset = kpxcUI.calculateIconOffset(field, size);
-    let left = kpxcUI.getRelativeLeftPosition(rect);
-    let top = kpxcUI.getRelativeTopPosition(rect);
+    const zoom = kpxcUI.bodyStyle.zoom || 1;
+    let left = kpxcUI.getRelativeLeftPosition(rect) / zoom;
+    let top = kpxcUI.getRelativeTopPosition(rect) / zoom;
 
     // Add more space for the icon to show it at the right side of the field if TOTP fields are segmented
     if (segmented) {
@@ -142,17 +164,17 @@ kpxcUI.setIconPosition = function(icon, field, rtl = false, segmented = false) {
     }
 
     // Adjusts the icon offset for certain sites
-    const iconOffset = kpxcSites.iconOffset(left, top, size);
+    const iconOffset = kpxcSites.iconOffset(left, top, size, field?.getLowerCaseAttribute('type'));
     if (iconOffset) {
         left = iconOffset[0];
         top = iconOffset[1];
     }
 
-    const scrollTop = kpxcUI.getScrollTop();
-    const scrollLeft = kpxcUI.getScrollLeft();
+    const scrollTop = kpxcUI.getScrollTop() / zoom;
+    const scrollLeft = kpxcUI.getScrollLeft() / zoom;
     icon.style.top = Pixels(top + scrollTop + offset + 1);
     icon.style.left = rtl
-        ? Pixels((left + scrollLeft) + offset)
+        ? Pixels(left + scrollLeft + offset)
         : Pixels(left + scrollLeft + field.offsetWidth - size - offset);
 };
 
@@ -213,6 +235,59 @@ kpxcUI.isRTL = function(field) {
     return kpxcFields.traverseParents(field,
         f => [ 'ltr', 'rtl' ].includes(f.getLowerCaseAttribute('dir')),
         f => ({ 'ltr': false, 'rtl': true })[f.getLowerCaseAttribute('dir')]);
+};
+
+kpxcUI.makeBannerDraggable = function(banner) {
+    if (!banner) {
+        return;
+    }
+
+    banner.draggable = true;
+
+    banner.addEventListener('dragstart', (e) => {
+        if (!e.isTrusted) {
+            return;
+        }
+
+        e.dataTransfer.effectAllowed = 'copyMove';
+        document.addEventListener('dragover', preventDefaultDragEnd);
+    });
+
+    banner.addEventListener('dragend', async (e) => {
+        if (!e.isTrusted || !e.target) {
+            return;
+        }
+
+        // If dragged to last third of the screen, move banner to bottom.
+        // If dragged to first third of the screen, move banner to top.
+        // If credential/group dialog is open, move it as well.
+        const bannerDialog = e.target.querySelector('.kpxc-banner-dialog');
+        if (e.y > e.view.innerHeight * (2 / 3) && e.target.classList.contains('kpxc-banner-on-top')) {
+            e.target.classList.remove('kpxc-banner-on-top');
+            e.target.classList.add('kpxc-banner-on-bottom');
+
+            if (bannerDialog) {
+                bannerDialog.style.top = '';
+                bannerDialog.style.bottom = Pixels(e.target.offsetHeight);
+                bannerDialog.classList.remove('kpxc-banner-dialog-top');
+                bannerDialog.classList.add('kpxc-banner-dialog-bottom');
+            }
+            await sendMessage('banner_set_position', BannerPosition.BOTTOM);
+        } else if (e.y < e.view.innerHeight * (1 / 3) && e.target.classList.contains('kpxc-banner-on-bottom')) {
+            e.target.classList.remove('kpxc-banner-on-bottom');
+            e.target.classList.add('kpxc-banner-on-top');
+
+            if (bannerDialog) {
+                bannerDialog.style.bottom = '';
+                bannerDialog.style.top = Pixels(e.target.offsetHeight);
+                bannerDialog.classList.remove('kpxc-banner-dialog-bottom');
+                bannerDialog.classList.add('kpxc-banner-dialog-top');
+            }
+            await sendMessage('banner_set_position', BannerPosition.TOP);
+        }
+
+        document.removeEventListener('dragover', preventDefaultDragEnd);
+    });
 };
 
 /**
@@ -336,6 +411,10 @@ const createStylesheet = function(file) {
     stylesheet.setAttribute('rel', 'stylesheet');
     stylesheet.setAttribute('href', browser.runtime.getURL(file));
     return stylesheet;
+};
+
+const preventDefaultDragEnd = function(e) {
+    e?.preventDefault();
 };
 
 const logDebug = function(message, extra) {

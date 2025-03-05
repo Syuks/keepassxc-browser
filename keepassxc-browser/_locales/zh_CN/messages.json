@@ -237,7 +237,11 @@
     },
     "errorNotConnected": {
         "message": "未连接到 KeePassXC。",
-        "description": "Error notification shown when not connected to KeePassXC"
+        "description": "Error notification shown when not connected to KeePassXC."
+    },
+    "errorCurrentDatabaseNotConnected": {
+        "message": "当前数据库未连接。",
+        "description": "Error notification shown when current database is not connected during action."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "错误：生成的密码超过了允许的长度！",
@@ -523,7 +527,7 @@
         "description": "A message shown choosing what credentials user wants to update."
     },
     "rememberChooseGroup": {
-        "message": "请选择要添加新凭据的群组。",
+        "message": "请选择用于存储新凭据的群组。",
         "description": "A message shown choosing what group user wants to use for new credentials."
     },
     "rememberInfoDefaultGroupNotFound": {
@@ -714,6 +718,10 @@
         "message": "使用斜杠分隔群组名，例如：Group/ChildGroup。",
         "description": "Default group help text."
     },
+    "optionsLabelDefaultPasskeyGroup": {
+        "message": "保存新通行密钥的默认群组：",
+        "description": "Default passkey group options text."
+    },
     "optionsLabelDefaultGroupCheckboxText": {
         "message": "始终询问保存新凭据的位置",
         "description": "Default group checkbox help text."
@@ -757,6 +765,10 @@
     "optionsCheckboxAutoFillSingleEntry": {
         "message": "自动填充单凭据条目",
         "description": "Automatically fill-in single credential entry checkbox text."
+    },
+    "optionsCheckboxAutoFillRelevantCredential": {
+        "message": "Automatically fill in relevant credential entries",
+        "description": "Automatically fill-in relevant credential entry checkbox text."
     },
     "optionsCheckboxAutoFillSingleTotp": {
         "message": "自动填充单 TOTP 条目",
@@ -823,7 +835,7 @@
         "description": "Text above radio buttons in the settings page."
     },
     "optionsRadioThreeDays": {
-        "message": "每 3 天",
+        "message": "每三天",
         "description": "Radio button text."
     },
     "optionsRadioWeek": {
@@ -906,6 +918,10 @@
         "message": "只接收到一条条目时，KeePassXC-Browser 将自动填充凭据。",
         "description": "Auto-Fill Single Entry option help text."
     },
+    "optionsAutoFillRelevantCredentialHelpText": {
+        "message": "Automatically fill in the relevant credential if a second fill is needed.",
+        "description": "Auto-Fill Relevant Credential option help text."
+    },
     "optionsAutoFillSingleEntryWarning": {
         "message": "警告！使用自动填充并不安全。您需要自担风险。KeePassXC-Browser 会尝试自动检测登录字段。但是，自动检测可能不准确，导致在不安全的输入字段内填写敏感信息。",
         "description": "Auto-Fill Single Entry warning text."
@@ -931,8 +947,8 @@
         "description": "Use monochrome toolbar icon option help text."
     },
     "optionsUseCompactModeHelpText": {
-      "message": "使用紧凑版本的下拉列表来选择凭据。",
-      "description": "Use compact (legacy) mode help text."
+        "message": "使用紧凑版本的下拉列表来选择凭据。",
+        "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "保存新凭据时，只保存域名而非完整 URL。",
@@ -1035,7 +1051,7 @@
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmFirst": {
-        "message": "您确定要从数据库列表中删除以下标识符吗：$1",
+        "message": "您确定要从数据库列表中删除以下标识符吗：$1？",
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmSecond": {
@@ -1081,7 +1097,7 @@
     "optionsColumnAllowIframes": {
         "message": "允许跨域 iframe 框架",
         "description": "Allow iframes column text."
-  },
+    },
     "optionsColumnDelete": {
         "message": "删除",
         "description": "Site Preferences list column title."

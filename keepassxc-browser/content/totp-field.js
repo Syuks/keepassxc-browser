@@ -1,7 +1,8 @@
 'use strict';
 
-const ignoreRegex = /(bank|coupon|postal|user|zip).*code|comment|author|error/i;
+const ignoreRegex = /(bank|coupon|postal|user|zip).*code|(en|de)code(d|r)*|comment|author|error/i;
 const ignoredTypes = [ 'email', 'password', 'username' ];
+const allowedInputTypes = [ 'number', 'password', 'tel', 'text' ];
 
 const acceptedOTPFields = [
     '2fa',
@@ -52,6 +53,12 @@ kpxcTOTPIcons.isAcceptedTOTPField = function(field) {
     const id = field.getLowerCaseAttribute('id');
     const name = field.getLowerCaseAttribute('name');
     const placeholder = field.getLowerCaseAttribute('placeholder');
+    const type = field.getLowerCaseAttribute('type');
+
+    // Checks if input type is allowed
+    if (!allowedInputTypes.some(t => type === t)) {
+        return false;
+    }
 
     // Checks if the field id, name or placeholder includes some of the acceptedOTPFields but not any from ignoredTypes
     if ((acceptedOTPFields.some(f => id?.includes(f) || (name?.includes(f) || placeholder?.includes(f))) || acceptedParents.some(s => field.closest(s)))
@@ -167,15 +174,5 @@ TOTPFieldIcon.prototype.createIcon = function(field, segmented = false) {
 
     kpxcUI.setIconPosition(icon, field, this.rtl, segmented);
     this.icon = icon;
-
-    const styleSheet = createStylesheet('css/totp.css');
-    const wrapper = document.createElement('div');
-    wrapper.style.all = 'unset';
-    wrapper.style.display = 'none';
-    styleSheet.addEventListener('load', () => wrapper.style.display = 'block');
-
-    this.shadowRoot = wrapper.attachShadow({ mode: 'closed' });
-    this.shadowRoot.append(styleSheet);
-    this.shadowRoot.append(icon);
-    document.body.append(wrapper);
+    this.createWrapper('css/totp.css');
 };

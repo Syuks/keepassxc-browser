@@ -35,6 +35,15 @@ const PREDEFINED_SITELIST = [
     'https://*.afip.gob.ar/*'
 ];
 
+const IMPROVED_DETECTION_PREDEFINED_SITELIST = [
+    'https://auth.max.com/',
+    'https://login.qt.io/login',
+    'https://secure.chase.com/*',
+    'https://www.reddit.com/',
+    'https://old.reddit.com/login/*',
+    'https://www.icloud.com/'
+];
+
 const googleUrl = 'https://accounts.google.com';
 const afipUrl = 'https://auth.afip.gob.ar';
 
@@ -91,7 +100,8 @@ kpxcSites.exceptionFound = function(identifier, field) {
               || document.location.origin.startsWith('https://mail.protonmail.com')
               && identifier === 'mailboxPassword') {
         return true;
-    } else if (document.location.origin === 'https://www.patreon.com' && field?.name === 'current-password') {
+    } else if (document.location.origin === 'https://www.patreon.com' &&
+               (field?.name === 'current-password' || field?.innerHTML?.includes('current-password'))) {
         return true;
     } else if (document.location.origin === 'https://wordpress.com' && identifier?.value === 'login__form-password') {
         return true;
@@ -100,13 +110,23 @@ kpxcSites.exceptionFound = function(identifier, field) {
     return false;
 };
 
+// Forbids using Shadow DOM query with some sites unless a login dialog has been identified
+kpxcSites.isShadowDomQueryAllowed = function(nodeName) {
+    if (document.location.href?.startsWith('https://www.reddit.com')
+        && nodeName !== 'BODY'
+        && !document.querySelector('auth-flow-manager[step-name=login]')) {
+        return false;
+    }
+    return true;
+};
+
 /**
  * Handles a few exceptions for certain sites where 2FA field is not regognized properly.
  * @param {object} field   Input field Element
  * @returns {boolean}      True if an Element has a match with the needed indentfifiers and document location
  */
 kpxcSites.totpExceptionFound = function(field) {
-    if (!field || field.nodeName !== 'INPUT') {
+    if (!field || !matchesWithNodeName(field, 'INPUT')) {
         return false;
     }
 
@@ -125,7 +145,7 @@ kpxcSites.totpExceptionFound = function(field) {
  * @returns {boolean}       True if an Element has a match with the needed indentfifiers and document location
  */
 kpxcSites.segmentedTotpExceptionFound = function(form) {
-    if (!form || form.nodeName !== 'FORM') {
+    if (!form || !matchesWithNodeName(form, 'FORM')) {
         return false;
     }
 
@@ -151,11 +171,11 @@ kpxcSites.expectedTOTPMaxLength = function() {
 
 /**
  * Handles a few exceptions for certain sites where form submit button is not regognized properly.
- * @param {object} form     Form element
+ * @param {object} form     Form element (optional)
  * @returns {object}        Button element
  */
 kpxcSites.formSubmitButtonExceptionFound = function(form) {
-    if (form.action.startsWith(googleUrl)) {
+    if (form?.action?.startsWith(googleUrl)) {
         const findDiv = $('#identifierNext, #passwordNext');
         if (!findDiv) {
             return undefined;
@@ -164,14 +184,14 @@ kpxcSites.formSubmitButtonExceptionFound = function(form) {
         const buttons = findDiv.getElementsByTagName('button');
         kpxcSites.savedForm = form;
         return buttons.length > 0 ? buttons[0] : undefined;
-    } else if (form.action.startsWith('https://www.ebay.')) {
+    } else if (form?.action?.startsWith('https://www.ebay.')) {
         // For eBay we must return the first button.
         for (const i of form.elements) {
             if (i.type === 'button') {
                 return i;
             }
         }
-    } else if (form.action.includes('signin.aws.amazon.com')) {
+    } else if (form?.action?.includes('signin.aws.amazon.com')) {
         // For Amazon AWS the button is outside the form.
         const button = $('#signin_button');
         if (button) {
@@ -184,14 +204,17 @@ kpxcSites.formSubmitButtonExceptionFound = function(form) {
             'odc.officeapps.live.com',
             'login.microsoftonline.com',
             'login.microsoftonline.us',
-        ].some(u => form.action.includes(u))) {
+        ].some(u => form?.action?.includes(u))) {
         const buttons = Array.from(form.querySelectorAll(kpxcForm.formButtonQuery));
         if (buttons?.length > 1) {
             return buttons[1];
         }
-    } else if (form.action.startsWith('https://barmerid.id.bconnect.barmer.de')) {
+    } else if (form?.action?.startsWith('https://barmerid.id.bconnect.barmer.de')) {
         const loginButton = $('#btn-login');
         return loginButton?.shadowRoot?.children?.[0];
+    } else if (!form && document.location.href.includes('reddit.com/settings')) {
+        // Reddit change password popup
+        return $('.button[slot=primary-button]');
     }
 
     return undefined;
@@ -212,14 +235,17 @@ kpxcSites.popupExceptionFound = function(combinations) {
 
 /**
  * Handles a few exceptions for certain sites where Username Icon is not placed properly.
- * @param {number} left     Absolute left position of the icon
- * @param {number} top      Absolute top position of the icon
- * @param {number} iconSize Size of the icon
- * @returns {array}         New left and top values as an Array
+ * @param {number} left         Absolute left position of the icon
+ * @param {number} top          Absolute top position of the icon
+ * @param {number} iconSize     Size of the icon
+ * @param {string} inputType    Input field type
+ * @returns {array}             New left and top values as an Array
  */
-kpxcSites.iconOffset = function(left, top, iconSize) {
+kpxcSites.iconOffset = function(left, top, iconSize, inputType) {
     if (document.location.hostname.includes('idmsa.apple.com')) {
         return [ left - (iconSize + 10), top + 3 ];
+    } else if (document.location.origin === 'https://secure.royalbank.com' && inputType === 'password') {
+        return [ left - (iconSize + 10), top ];
     }
 
     return undefined;

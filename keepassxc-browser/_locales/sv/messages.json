@@ -237,7 +237,11 @@
     },
     "errorNotConnected": {
         "message": "Inte ansluten till KeePassXC.",
-        "description": "Error notification shown when not connected to KeePassXC"
+        "description": "Error notification shown when not connected to KeePassXC."
+    },
+    "errorCurrentDatabaseNotConnected": {
+        "message": "Aktuell databas är inte ansluten.",
+        "description": "Error notification shown when current database is not connected during action."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "Fel:\nDet genererade lösenordet är längre än den tillåtna längden!\nDet har kortats ned för att passa längden.\n\nVänligen kom ihåg det nya lösenordet!",
@@ -523,7 +527,7 @@
         "description": "A message shown choosing what credentials user wants to update."
     },
     "rememberChooseGroup": {
-        "message": "Välj i vilken grupp du vill lägga till de nya autentiseringsuppgifterna.",
+        "message": "Välj en grupp, för att lagra nya inloggningsuppgifter.",
         "description": "A message shown choosing what group user wants to use for new credentials."
     },
     "rememberInfoDefaultGroupNotFound": {
@@ -714,6 +718,10 @@
         "message": "Separate the group with slashes, for example: Group/ChildGroup.",
         "description": "Default group help text."
     },
+    "optionsLabelDefaultPasskeyGroup": {
+        "message": "Standardgrupp för att spara nya passnycklar:",
+        "description": "Default passkey group options text."
+    },
     "optionsLabelDefaultGroupCheckboxText": {
         "message": "Always ask where to save new credentials",
         "description": "Default group checkbox help text."
@@ -757,6 +765,10 @@
     "optionsCheckboxAutoFillSingleEntry": {
         "message": "Fyll automatiskt i enstaka inloggningsuppgifter.",
         "description": "Automatically fill-in single credential entry checkbox text."
+    },
+    "optionsCheckboxAutoFillRelevantCredential": {
+        "message": "Fyll automatiskt i relevanta inloggningsuppgifter.",
+        "description": "Automatically fill-in relevant credential entry checkbox text."
     },
     "optionsCheckboxAutoFillSingleTotp": {
         "message": "Fyll automatiskt i enstaka TOTP-poster",
@@ -906,6 +918,10 @@
         "message": "Låt KeePassXC-Browser fylla i inloggningsuppgifter automatiskt om den bara tar emot ett inlägg.",
         "description": "Auto-Fill Single Entry option help text."
     },
+    "optionsAutoFillRelevantCredentialHelpText": {
+        "message": "Fyll automatiskt i relevanta inloggningsuppgifter om en andra inmatning behövs.",
+        "description": "Auto-Fill Relevant Credential option help text."
+    },
     "optionsAutoFillSingleEntryWarning": {
         "message": "Varning! Användning av auto-skriv är inte säkert. Använd det på egen risk. KeePassXC-Browser försöker automatiskt identifiera inloggningsfält. De kan dock identifieras felaktigt och eventuellt fyllas i med känslig data i osäkra indatafält.",
         "description": "Auto-Fill Single Entry warning text."
@@ -931,8 +947,8 @@
         "description": "Use monochrome toolbar icon option help text."
     },
     "optionsUseCompactModeHelpText": {
-      "message": "Använd en kompakt version av listrutan för att välja inloggningsuppgifter.",
-      "description": "Use compact (legacy) mode help text."
+        "message": "Använd en kompakt version av listrutan för att välja inloggningsuppgifter.",
+        "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "Spara enbart domänen istället för hela URL:en när nya inloggningsuppgifter sparas.",
@@ -1035,7 +1051,7 @@
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmFirst": {
-        "message": "Vill du verkligen ta bort följande identifierare från databaslistan?",
+        "message": "Vill du verkligen ta bort följande identifierare från databaslistan: $1?",
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmSecond": {
@@ -1081,7 +1097,7 @@
     "optionsColumnAllowIframes": {
         "message": "Tillåt iframes",
         "description": "Allow iframes column text."
-  },
+    },
     "optionsColumnDelete": {
         "message": "Ta bort",
         "description": "Site Preferences list column title."

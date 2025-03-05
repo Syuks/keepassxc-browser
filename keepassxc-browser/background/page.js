@@ -6,16 +6,19 @@ const defaultSettings = {
     autoCompleteUsernames: true,
     autoFillAndSend: false,
     autoFillSingleEntry: false,
+    autoFillRelevantCredential: false,
     autoFillSingleTotp: false,
     autoReconnect: false,
     autoRetrieveCredentials: true,
     autoSubmit: false,
+    bannerPosition: BannerPosition.TOP,
     checkUpdateKeePassXC: CHECK_UPDATE_NEVER,
     clearCredentialsTimeout: 10,
     colorTheme: 'system',
     credentialSorting: SORT_BY_GROUP_AND_TITLE,
     debugLogging: false,
     defaultGroup: '',
+    defaultPasskeyGroup: '',
     defaultGroupAlwaysAsk: false,
     downloadFaviconAfterSave: false,
     passkeys: false,
@@ -60,6 +63,18 @@ page.popupData = {
 page.initSettings = async function() {
     try {
         const item = await browser.storage.local.get({ 'settings': {} });
+
+        // Load managed settings if found
+        try {
+            const managedSettings = await browser.storage.managed.get('settings');
+            if (managedSettings?.settings) {
+                console.log('Managed settings found.');
+                item.settings = managedSettings.settings;
+            }
+        } catch (err) {
+            logError('page.initSettings error: ' + err);
+        }
+
         page.settings = item.settings;
         page.settings.autoReconnect = false;
 
@@ -252,6 +267,15 @@ page.setManualFill = async function(tab, manualFill) {
     page.manualFill = manualFill;
 };
 
+page.getBannerPosition = async function(tab) {
+    return page.settings.bannerPosition;
+};
+
+page.setBannerPosition = async function(tab, position) {
+    page.settings.bannerPosition = position;
+    await browser.storage.local.set({ 'settings': page.settings });
+};
+
 page.getSubmitted = async function(tab) {
     // Do not return any credentials if the tab ID does not match.
     if (tab.id !== page.submittedCredentials.tabId) {
@@ -317,11 +341,11 @@ page.updateContextMenu = async function(tab, credentials) {
             // Show username inside [] if there are KPH attributes inside multiple credentials
             const attributeName = Object.keys(attribute)[0].slice(5);
             const finalName = credentials.length > 1
-                ? `[${cred.login}] ${attributeName}`
+                ? `[${cred?.login}] ${attributeName} (${cred.name || credentials.indexOf(cred)})`
                 : attributeName;
 
             const menuItem = {
-                action: `fill_attribute_${finalName}`,
+                action: `fill_attribute_${cred?.uuid}_${attributeName}`,
                 args: attribute,
                 parentId: 'fill_attribute',
                 title: finalName

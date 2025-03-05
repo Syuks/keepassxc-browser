@@ -1,3 +1,61 @@
+1.9.7 (2025-02-21)
+=========================
+- Add exceptions to Shadow DOM input query [#2430]
+- Add option to auto-fill related credentials (thanks wolfsilver) [#2409]
+- Change passkeys script to be injected at document start [#2432]
+- Fix old.reddit.com login page [#2440]
+- Fix TOTP field input type check [#2454]
+- Fix loading managed settings [#2455]
+
+1.9.6 (2024-12-25)
+=========================
+- Add all_urls host permission to Chrome manifest file [#2421]
+- Add new Predefined Sites (Qt, Max) [#2398]
+- Add a new notification when trying to fill without a connected database [#2405]
+- Fix disabling passkeys fallback checkbox when the feature is not in use [#2420]
+- Fix input field identification [2411] [#2418]
+- Passkeys: Fix some constant value definitions (thanks a2kolbasov) [#2416]
+
+1.9.5 (2024-11-27)
+=========================
+- Add support for checkboxes with Custom Login Fields [#2372]
+- Add support for custom password change forms [#2383]
+- Refactor compare version functions [#2375]
+- Fix TOTP field ignore regex [#2376]
+- Fix segmented TOTP detection [#2387]
+- Fix Reddit login popup, and allow label element on Observer Helper [#2391]
+- Passkeys: Fix navigator.credentials.store override [#2381]
+
+1.9.4 (2024-10-26)
+=========================
+- Add configuration option for passkeys default group [#2346]
+- Add icon offset exception [#2356]
+- Add support for draggable banners [#2359]
+- Add support for managed settings using 3rdparty policy [#2366]
+- Fix exception on Credential Banner [#2326]
+- Fix content positioning with CSS zoom (thanks Xia0xia0Xia0) [#2341]
+- Fix Predefined Sites for some pages [#2351]
+- Fix illegal invocation of getPublicKey and getPublicKeyAlgorithm with passkeys (thanks Keroosha) [#2323]
+- Fix translations [#2361]
+- Fix to ignore animation elements when using dynamic input field detection [#2367]
+- Refactor Improved Input Field Detection to handle Shadow DOM better [#2360]
+
+1.9.3 (2024-08-24)
+=========================
+- Fix allowing content scripts on XHTML pages [#2314]
+- Fix nodeName check [#2324]
+
+1.9.2 (2024-08-11)
+=========================
+- Add Improved Input Field Detection to Predefined Sites [#2293]
+- Fix attribute filling with identical usernames [#2304]
+- Fix segmented TOTP field identification [#2305]
+- Fix scrollbar colors with Autocomplete Menu [#2302]
+- Fix breaking page layouts [#2285]
+- Fix Autocomplete Menu issues with the new layout [#2269, #2274, #2279]
+- Fix XML formatting [#2287]
+- Fix plain text password fill prevention [#2259]
+
 1.9.1.1 (2024-07-06)
 =========================
 - Fix credential sorting [#2262]
@@ -22,7 +80,7 @@
 
 1.9.0.5 (2024-05-12)
 =========================
--  Remove obsolete hashed scripts from manifest [#2195]
+- Remove obsolete hashed scripts from manifest [#2195]
 
 1.9.0.4 (2024-05-03)
 =========================

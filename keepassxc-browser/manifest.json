@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "KeePassXC-Browser",
-    "version": "1.9.1.1",
-    "version_name": "1.9.1.1",
+    "version": "1.9.7",
+    "version_name": "1.9.7",
     "minimum_chrome_version": "93",
     "description": "__MSG_extensionDescription__",
     "author": "KeePassXC Team",
@@ -52,6 +52,10 @@
             "matches": [
                 "<all_urls>"
             ],
+            "exclude_matches": [
+                "*://*/*.xml*",
+                "file:///*.xml*"
+            ],
             "js": [
                 "common/browser-polyfill.min.js",
                 "common/global.js",
@@ -70,10 +74,24 @@
                 "content/pwgen.js",
                 "content/totp-autocomplete.js",
                 "content/totp-field.js",
-                "content/username-field.js",
-                "content/passkeys-utils.js"
+                "content/username-field.js"
             ],
             "run_at": "document_idle",
+            "all_frames": true
+        },
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "exclude_matches": [
+                "*://*/*.xml*",
+                "file:///*.xml*"
+            ],
+            "js": [
+                "content/passkeys-inject.js",
+                "content/passkeys-utils.js"
+            ],
+            "run_at": "document_start",
             "all_frames": true
         }
     ],
@@ -144,6 +162,7 @@
         "content/passkeys.js"
     ],
     "permissions": [
+        "<all_urls>",
         "activeTab",
         "clipboardWrite",
         "contextMenus",
@@ -164,6 +183,9 @@
             "id": "keepassxc-browser@keepassxc.org",
             "strict_min_version": "96.0"
         }
+    },
+    "storage": {
+      "managed_schema": "managed_storage.json"
     },
     "default_locale": "en"
 }

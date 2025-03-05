@@ -50,10 +50,46 @@ const AssociatedAction = {
     CANCELED: 3
 };
 
+const BannerPosition = {
+    BOTTOM: 0,
+    TOP: 1
+};
+
 const ManualFill = {
     NONE: 0,
     PASSWORD: 1,
     BOTH: 2
+};
+
+const compareVersion = function(minimum, current, canBeEqual = true) {
+    if (!minimum || !current || minimum?.indexOf('.') === -1 || current?.indexOf('.') === -1) {
+        return false;
+    }
+
+    // Handle beta/snapshot builds as stable version
+    const snapshot = '-snapshot';
+    const beta = '-beta';
+    if (current.endsWith(snapshot)) {
+        current = current.slice(0, -snapshot.length);
+    }
+
+    if (current.endsWith(beta)) {
+        current = current.slice(0, -beta.length);
+    }
+
+    const min = minimum.split('.', 3).map(s => s.padStart(4, '0')).join('.');
+    const cur = current.split('.', 3).map(s => s.padStart(4, '0')).join('.');
+    return (canBeEqual ? (min <= cur) : (min < cur));
+};
+
+// Checks if element's nodeName matches
+const matchesWithNodeName = function(elem, name) {
+    // Don't allow undefined element or 'name'
+    if (!elem || !name) {
+        return false;
+    }
+
+    return elem?.nodeName?.toUpperCase() === name?.toUpperCase();
 };
 
 // Match hostname or path with wildcards
@@ -149,6 +185,8 @@ const getCurrentTab = async function() {
 // Exports for tests
 if (typeof module === 'object') {
     module.exports = {
+        compareVersion,
+        matchesWithNodeName,
         siteMatch,
         slashNeededForUrl,
         trimURL,

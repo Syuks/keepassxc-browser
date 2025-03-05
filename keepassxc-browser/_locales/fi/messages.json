@@ -184,7 +184,7 @@
         "description": "Credential is excluded."
     },
     "errorMessagePasskeysRequestCanceled": {
-        "message": "Passkeys-pyyntö on peruttu.",
+        "message": "Pääsyavainpyyntö on peruttu.",
         "description": "Passkeys request canceled."
     },
     "errorMessagePasskeysInvalidUserVerification": {
@@ -220,7 +220,7 @@
         "description": "Wait for timer to expire."
     },
     "errorMessagePasskeysUnknownError": {
-        "message": "Tuntematon passkeys-virhe.",
+        "message": "Tuntematon pääsyavainvirhe.",
         "description": "Unknown passkeys error."
     },
     "errorMessagePasskeysInvalidChallenge": {
@@ -237,7 +237,11 @@
     },
     "errorNotConnected": {
         "message": "Ei yhteyttä KeePassXC:hen.",
-        "description": "Error notification shown when not connected to KeePassXC"
+        "description": "Error notification shown when not connected to KeePassXC."
+    },
+    "errorCurrentDatabaseNotConnected": {
+        "message": "Tietokantaa ei ole yhdistetty.",
+        "description": "Error notification shown when current database is not connected during action."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "Virhe:\nLuotu salasana on sallittua pidempi!\nSalasana on leikattu sopivan pituiseksi.\n\nMuista uusi salasana!",
@@ -714,6 +718,10 @@
         "message": "Erota ryhmät vinoviivalla, esimerkiksi: Ryhmä/AlaRyhmä.",
         "description": "Default group help text."
     },
+    "optionsLabelDefaultPasskeyGroup": {
+        "message": "Oletusryhmä johon uudet pääsyavaimet tallennetaan:",
+        "description": "Default passkey group options text."
+    },
     "optionsLabelDefaultGroupCheckboxText": {
         "message": "Kysy aina minne uudet tietueet tallennetaan.",
         "description": "Default group checkbox help text."
@@ -758,6 +766,10 @@
         "message": "Täytä yksittäinen tietue automaattisesti",
         "description": "Automatically fill-in single credential entry checkbox text."
     },
+    "optionsCheckboxAutoFillRelevantCredential": {
+        "message": "Täytä vastaava tietue automaattisesti",
+        "description": "Automatically fill-in relevant credential entry checkbox text."
+    },
     "optionsCheckboxAutoFillSingleTotp": {
         "message": "Täytä yksittäiset TOTP-kentät automaattisesti",
         "description": "Automatically fill-in single TOTP entries checkbox text."
@@ -787,7 +799,7 @@
         "description": "Use monochrome toolbar icon checkbox text."
     },
     "optionsCheckboxUseCompactMode": {
-        "message": "Use compact mode",
+        "message": "Käytä kompaktia tilaa",
         "description": "Whether the compact mode (legacy dropdown) should be enabled."
     },
     "optionsSaveDomainOnly": {
@@ -906,6 +918,10 @@
         "message": "Salli KeePassXC-Browserin täyttää kirjautumistiedot automaattisesti, jos se noutaa vain yksittäisen tietueen.",
         "description": "Auto-Fill Single Entry option help text."
     },
+    "optionsAutoFillRelevantCredentialHelpText": {
+        "message": "Täyttää tietueen tiedot automaattisesti, jos se vaaditaan toisen kerran.",
+        "description": "Auto-Fill Relevant Credential option help text."
+    },
     "optionsAutoFillSingleEntryWarning": {
         "message": "Varoitus! Automaattinen täydennys ei ole turvallinen. Käytä omalla vastuulla. KeePassXC-Browser yrittää automaattisesti tunnistaa kirjautumiskentät. On mahollista, että yksityistä tietoa täydennetään kenttiin jotka eivät ole turvallisia.",
         "description": "Auto-Fill Single Entry warning text."
@@ -919,7 +935,7 @@
         "description": "Autocomplete Usernames option help text."
     },
     "optionsShowGroupNameInAutocompleteHelpText": {
-        "message": "When credentials are returned from different groups, the group name will be shown. Only affects the compact mode.",
+        "message": "Kun tietueita löytyy eri ryhmistä, näytetään ryhmän nimi. Vaikuttaa vain kompaktissa tilassa.",
         "description": "Show group name in autocomplete help text."
     },
     "optionsShowNotificationsHelpText": {
@@ -931,8 +947,8 @@
         "description": "Use monochrome toolbar icon option help text."
     },
     "optionsUseCompactModeHelpText": {
-      "message": "Use a compact version of the dropdown list to select credentials.",
-      "description": "Use compact (legacy) mode help text."
+        "message": "Käytä kompaktia versiota listasta, kun valitset sivulla tietueita.",
+        "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "Kun tallennetaan uusia tietueita, tallenna täydellisen URL-osoitteen sijaan vain sivuston verkkotunnus.",
@@ -1035,7 +1051,7 @@
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmFirst": {
-        "message": "Haluatko poistaa seuraavan tunnisteen tietokantalistasta: $1",
+        "message": "Haluatko poistaa seuraavan tunnisteen tietokantalistasta: $1?",
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmSecond": {
@@ -1081,7 +1097,7 @@
     "optionsColumnAllowIframes": {
         "message": "Salli iframe-upotukset muilta sivustoilta",
         "description": "Allow iframes column text."
-  },
+    },
     "optionsColumnDelete": {
         "message": "Poista",
         "description": "Site Preferences list column title."
@@ -1315,11 +1331,11 @@
         "description": "Extension title in settings page"
     },
     "optionsPasskeysTitle": {
-        "message": "Passkeyt",
+        "message": "Pääsyavaimet",
         "description": "Passkeys settings title in settings page."
     },
     "optionsPasskeysEnable": {
-        "message": "Ota käyttöön passkeyt",
+        "message": "Ota käyttöön pääsyavaimet",
         "description": "Enabled passkeys option text."
     },
     "optionsPasskeysEnableHelpText": {
@@ -1331,7 +1347,7 @@
         "description": "Enabled passkeys fallback option text."
     },
     "optionsPasskeysEnableFallbackHelpText": {
-        "message": "Kun aktivoitu, epäonnistunut tai peruutettu pyyntö KeePassXC:lle ohjaa selaimen omaan passkeys-pyyntöön. Mikäli asetus on pois päältä, yhteys KeePassXC:hen on vaadittu, ja peruutettu pyyntö epäonnistuu suoraan. Oletus: aktivoitu.",
+        "message": "Kun aktivoitu, epäonnistunut tai peruutettu pyyntö KeePassXC:lle ohjaa selaimen omaan pääsyavainpyyntöön. Mikäli asetus on pois päältä, yhteys KeePassXC:hen on vaadittu, ja peruutettu pyyntö epäonnistuu suoraan. Oletus: aktivoitu.",
         "description": "Passkeys fallback option help text."
     },
     "openNewTab": {

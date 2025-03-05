@@ -237,7 +237,11 @@
     },
     "errorNotConnected": {
         "message": "Nepřipojeno ke KeePassXC.",
-        "description": "Error notification shown when not connected to KeePassXC"
+        "description": "Error notification shown when not connected to KeePassXC."
+    },
+    "errorCurrentDatabaseNotConnected": {
+        "message": "Current database is not connected.",
+        "description": "Error notification shown when current database is not connected during action."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "Chyba:\nVytvořené heslo je delší než délka, která je možná!\nBylo zkráceno, aby se vešlo.\n\nZapamatujte se nové heslo!",
@@ -367,7 +371,7 @@
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsMultipleFoundSecondLine": {
-        "message": "Kliknutím na ikonu KeePassXC-Browser zobrazíte další možnosti.",
+        "message": "Click the KeePassXC-Browser icon for more options.",
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsNoUsernameFound": {
@@ -475,7 +479,7 @@
         "description": "Checking status message in popup."
     },
     "popupNotConfigured": {
-        "message": "KeePassXC-Browser nebyl nastaven.\nKlikněte na připojit a spárujte s KeePassXC.",
+        "message": "KeePassXC-Browser has not been configured. Click the connect button to pair with KeePassXC.",
         "description": "A popup message shown when the extension has not been connected to KeePassXC."
     },
     "popupNeedReconfigure": {
@@ -483,7 +487,7 @@
         "description": "A popup message shown when the extension has been disconnected from KeePassXC."
     },
     "popupNeedReconfigureMessage": {
-        "message": "Kliknutím na tlačítko připojit znovu navážete nové připojení.",
+        "message": "Click the reconnect button to establish a new connection.",
         "description": "A popup message shown when reconnect is needed."
     },
     "popupConfiguredNotAssociated": {
@@ -523,7 +527,7 @@
         "description": "A message shown choosing what credentials user wants to update."
     },
     "rememberChooseGroup": {
-        "message": "Zvolte skupinu, do které chcete přidat nové přihlašovací údaje.",
+        "message": "Please choose a group to store new credentials.",
         "description": "A message shown choosing what group user wants to use for new credentials."
     },
     "rememberInfoDefaultGroupNotFound": {
@@ -714,6 +718,10 @@
         "message": "Separate the group with slashes, for example: Group/ChildGroup.",
         "description": "Default group help text."
     },
+    "optionsLabelDefaultPasskeyGroup": {
+        "message": "Default group for saving new passkeys:",
+        "description": "Default passkey group options text."
+    },
     "optionsLabelDefaultGroupCheckboxText": {
         "message": "Always ask where to save new credentials",
         "description": "Default group checkbox help text."
@@ -757,6 +765,10 @@
     "optionsCheckboxAutoFillSingleEntry": {
         "message": "Automatically fill in single-credential entries",
         "description": "Automatically fill-in single credential entry checkbox text."
+    },
+    "optionsCheckboxAutoFillRelevantCredential": {
+        "message": "Automatically fill in relevant credential entries",
+        "description": "Automatically fill-in relevant credential entry checkbox text."
     },
     "optionsCheckboxAutoFillSingleTotp": {
         "message": "Automatically fill in single TOTP entries",
@@ -823,7 +835,7 @@
         "description": "Text above radio buttons in the settings page."
     },
     "optionsRadioThreeDays": {
-        "message": "každé 3 dny",
+        "message": "every three days",
         "description": "Radio button text."
     },
     "optionsRadioWeek": {
@@ -906,6 +918,10 @@
         "message": "Pokud obdrží pouze jedinou položku, nechat KeePassXC-Browser automaticky vyplnit přihlašovací údaje.",
         "description": "Auto-Fill Single Entry option help text."
     },
+    "optionsAutoFillRelevantCredentialHelpText": {
+        "message": "Automatically fill in the relevant credential if a second fill is needed.",
+        "description": "Auto-Fill Relevant Credential option help text."
+    },
     "optionsAutoFillSingleEntryWarning": {
         "message": "Warning! Using auto-fill is not safe. Use at your own risk. KeePassXC-Browser automatically tries to detect login fields. However, they may be detected incorrectly, possibly filling sensitive data to unsafe input fields.",
         "description": "Auto-Fill Single Entry warning text."
@@ -931,8 +947,8 @@
         "description": "Use monochrome toolbar icon option help text."
     },
     "optionsUseCompactModeHelpText": {
-      "message": "Use a compact version of the dropdown list to select credentials.",
-      "description": "Use compact (legacy) mode help text."
+        "message": "Use a compact version of the dropdown list to select credentials.",
+        "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "Při ukládání nových přihlašovacích údajů, uložit pouze doménu namísto úplné URL adresy.",
@@ -1035,7 +1051,7 @@
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmFirst": {
-        "message": "Opravdu chcete následující identifikátor odebrat ze seznamu databází?",
+        "message": "Do you really want to remove the following identifier from the database list: $1?",
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmSecond": {
@@ -1081,7 +1097,7 @@
     "optionsColumnAllowIframes": {
         "message": "Allow Cross-Origin iframes",
         "description": "Allow iframes column text."
-  },
+    },
     "optionsColumnDelete": {
         "message": "Smazat",
         "description": "Site Preferences list column title."

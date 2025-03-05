@@ -237,7 +237,11 @@
     },
     "errorNotConnected": {
         "message": "Nicht mit KeePassXC verbunden.",
-        "description": "Error notification shown when not connected to KeePassXC"
+        "description": "Error notification shown when not connected to KeePassXC."
+    },
+    "errorCurrentDatabaseNotConnected": {
+        "message": "Aktuelle Datenbank ist nicht verbunden.",
+        "description": "Error notification shown when current database is not connected during action."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "Fehler:\nDas generierte Passwort ist länger als die zulässige Länge!\nEs wurde auf die Länge abgeschnitten.\n\nBitte merken Sie sich das neue Passwort!",
@@ -359,11 +363,11 @@
         "description": "Shown when no username is set in the credentials."
     },
     "credentialsNoLoginsFound": {
-        "message": "Fehler:\nKeine Anmeldungen gefunden.",
+        "message": "Keine Anmeldungen gefunden.",
         "description": "Shown when no credentials are found for the current page."
     },
     "credentialsMultipleFound": {
-        "message": "Fehler:\nIn KeePassXC wurde mehr als eine Anmeldung gefunden!\nKlicken Sie auf das KeePassXC-Browser-Symbol für weitere Optionen.",
+        "message": "In KeePassXC wurde mehr als eine Anmeldung gefunden!",
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsMultipleFoundSecondLine": {
@@ -371,7 +375,7 @@
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsNoUsernameFound": {
-        "message": "Fehler:\nKeine Anmeldedaten für den angegebenen Benutzernamen gefunden.",
+        "message": "Keine Anmeldedaten für den angegebenen Benutzernamen gefunden.",
         "description": "Alert message when no credentials are found for the given username."
     },
     "credentialsNoTOTPFound": {
@@ -523,7 +527,7 @@
         "description": "A message shown choosing what credentials user wants to update."
     },
     "rememberChooseGroup": {
-        "message": "Bitte wählen Sie die Gruppe aus, zu der Sie die neuen Anmeldedaten hinzufügen möchten.",
+        "message": "Bitte wählen Sie eine Gruppe aus, in der neue Anmeldedaten gespeichert werden sollen.",
         "description": "A message shown choosing what group user wants to use for new credentials."
     },
     "rememberInfoDefaultGroupNotFound": {
@@ -714,6 +718,10 @@
         "message": "Trennen Sie die Gruppe durch Schrägstriche, zum Beispiel: Gruppe/KinderGruppe.",
         "description": "Default group help text."
     },
+    "optionsLabelDefaultPasskeyGroup": {
+        "message": "Standardgruppe zum Speichern neuer Passkeys:",
+        "description": "Default passkey group options text."
+    },
     "optionsLabelDefaultGroupCheckboxText": {
         "message": "Immer nachfragen, wo neue Anmeldedaten gespeichert werden sollen",
         "description": "Default group checkbox help text."
@@ -757,6 +765,10 @@
     "optionsCheckboxAutoFillSingleEntry": {
         "message": "Einträge mit einzelnen Anmeldedaten automatisch ausfüllen",
         "description": "Automatically fill-in single credential entry checkbox text."
+    },
+    "optionsCheckboxAutoFillRelevantCredential": {
+        "message": "Automatically fill in relevant credential entries",
+        "description": "Automatically fill-in relevant credential entry checkbox text."
     },
     "optionsCheckboxAutoFillSingleTotp": {
         "message": "Einzelne TOTP-Einträge automatisch ausfüllen",
@@ -906,6 +918,10 @@
         "message": "Anmeldedaten von KeePassXC-Browser automatisch ausfüllen lassen, wenn er nur einen einzigen Eintrag erhält.",
         "description": "Auto-Fill Single Entry option help text."
     },
+    "optionsAutoFillRelevantCredentialHelpText": {
+        "message": "Automatically fill in the relevant credential if a second fill is needed.",
+        "description": "Auto-Fill Relevant Credential option help text."
+    },
     "optionsAutoFillSingleEntryWarning": {
         "message": "Warnung! Die Verwendung des automatischen Ausfüllens ist nicht sicher und erfolgt auf eigene Gefahr. KeePassXC-Browser versucht automatisch, Anmeldefelder zu erkennen. Sie können jedoch falsch erkannt werden, wodurch möglicherweise sensible Daten in unsichere Eingabefelder eingetragen werden.",
         "description": "Auto-Fill Single Entry warning text."
@@ -931,8 +947,8 @@
         "description": "Use monochrome toolbar icon option help text."
     },
     "optionsUseCompactModeHelpText": {
-      "message": "Verwenden Sie eine kompakte Version der Drop-down-Liste, um Anmeldedaten auszuwählen.",
-      "description": "Use compact (legacy) mode help text."
+        "message": "Verwenden Sie eine kompakte Version der Drop-down-Liste, um Anmeldedaten auszuwählen.",
+        "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "Beim Speichern neuer Anmeldedaten nur die Domain anstatt der vollständigen URL speichern.",
@@ -1081,7 +1097,7 @@
     "optionsColumnAllowIframes": {
         "message": "Cross-Origin iframes zulassen",
         "description": "Allow iframes column text."
-  },
+    },
     "optionsColumnDelete": {
         "message": "Löschen",
         "description": "Site Preferences list column title."

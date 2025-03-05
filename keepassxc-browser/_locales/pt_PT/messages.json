@@ -12,7 +12,7 @@
         "description": "Allow Cross-Origin iframes button title text."
     },
     "connectButtonTitle": {
-        "message": "Conectar base de dados ativa a KeePassXC-Browser.",
+        "message": "Ligar a base de dados ativa atual ao KeePassXC-Browser.",
         "description": "Connect button title text."
     },
     "copyDebugInfoButtonTitle": {
@@ -24,7 +24,7 @@
         "description": "Dismiss HTTP Auth button title text."
     },
     "reconnectButtonTitle": {
-        "message": "Conectar, novamente, base de dados ativa a KeePassXC-Browser.",
+        "message": "Voltar a ligar a base de dados ativa atual ao KeePassXC-Browser.",
         "description": "Reconnect button title text."
     },
     "redetectButtonTitle": {
@@ -32,11 +32,11 @@
         "description": "Redetect login fields button title text."
     },
     "reloadButtonTitle": {
-        "message": "Recarregar extensão e conectar com KeePassXC.",
+        "message": "Recarrega a extensão e volta a ligar-se ao KeePassXC.",
         "description": "Reload button title text."
     },
     "removeConnectedDatabaseButtonTitle": {
-        "message": "Cancelar ligação da base de dados de KeePassXC-Browser.",
+        "message": "Remover a base de dados ligada ao KeePassXC-Browser.",
         "description": "Remove button title on Connected Databases tab."
     },
     "removeCustomLoginFieldsButtonTitle": {
@@ -237,7 +237,11 @@
     },
     "errorNotConnected": {
         "message": "Não existe uma ligação a KeePassXC",
-        "description": "Error notification shown when not connected to KeePassXC"
+        "description": "Error notification shown when not connected to KeePassXC."
+    },
+    "errorCurrentDatabaseNotConnected": {
+        "message": "Current database is not connected.",
+        "description": "Error notification shown when current database is not connected during action."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "Erro: a palavra-passe gerada tem um tamanho superior ao permitido!",
@@ -271,7 +275,7 @@
         "description": "Username field icon hover text when database is locked."
     },
     "usernameDisconnectedFieldText": {
-        "message": "O KeePassXC está desconectado.",
+        "message": "O KeePassXC está desligado.",
         "description": "Username field icon hover text when KeePassXC is disconnected."
     },
     "totp": {
@@ -367,7 +371,7 @@
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsMultipleFoundSecondLine": {
-        "message": "Prima o ícone KeePassXC-Browser para mais opções",
+        "message": "Clique no ícone KeePassXC-Browser para mais opções.",
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsNoUsernameFound": {
@@ -411,11 +415,11 @@
         "description": "Popup credential choosing button text."
     },
     "popupConnectButton": {
-        "message": "Conectar",
+        "message": "Ligar",
         "description": "Popup Connect button text."
     },
     "popupReconnectButton": {
-        "message": "Conectar novamente",
+        "message": "Ligar novamente",
         "description": "Popup Reconnect button text."
     },
     "popupRedetectButton": {
@@ -463,7 +467,7 @@
         "description": "Hide alert close button title."
     },
     "popupTroubleshootingText": {
-        "message": "Não foi possível conectar a KeePassXC? Talvez a nossa página Wiki possa ajudar.",
+        "message": "Não consegue ligar-se ao KeePassXC? Talvez a nossa página wiki possa ajudar.",
         "description": "Popup information message about Troubleshooting Guide."
     },
     "popupTroubleshootingLinkText": {
@@ -475,23 +479,23 @@
         "description": "Checking status message in popup."
     },
     "popupNotConfigured": {
-        "message": "KeePassXC-Browser não foi configurado. Prima o botão Conectar para emparelhar com KeePassXC.",
+        "message": "O KeePassXC-Browser não foi configurado. Clique no botão de ligação para emparelhar com o KeePassXC.",
         "description": "A popup message shown when the extension has not been connected to KeePassXC."
     },
     "popupNeedReconfigure": {
-        "message": "KeePassXC-Browser foi desconectado de KeePassXC.",
+        "message": "KeePassXC-Browser foi desconectado do KeePassXC.",
         "description": "A popup message shown when the extension has been disconnected from KeePassXC."
     },
     "popupNeedReconfigureMessage": {
-        "message": "Prima o botão 'Conectar novamente' para estabelecer uma nova ligação",
+        "message": "Clique no botão de restabelecer a ligação para estabelecer uma nova ligação.",
         "description": "A popup message shown when reconnect is needed."
     },
     "popupConfiguredNotAssociated": {
-        "message": "KeePassXC-Browser ainda não se conectou a KeePassXC, mas foi configurado com o identificador: $1",
+        "message": "KeePassXC-Browser ainda não se conectou ao KeePassXC, mas foi configurado com o identificador: $1",
         "description": "A popup message shown when KeePassXC is not connected but configured."
     },
     "popupConfiguredAndAssociated": {
-        "message": "KeePassXC-Browser está conectado a KeePassXC e foi configurado com o seguinte identificador: $1",
+        "message": "KeePassXC-Browser está conectado ao KeePassXC e foi configurado com o seguinte identificador: $1",
         "description": "A popup message when a connection to KeePassXC is successful."
     },
     "popupUsernameFieldDetected": {
@@ -523,7 +527,7 @@
         "description": "A message shown choosing what credentials user wants to update."
     },
     "rememberChooseGroup": {
-        "message": "Escolha o grupo para o qual pretende adicionar as novas credenciais",
+        "message": "Escolha o grupo para o qual pretende adicionar as novas credenciais.",
         "description": "A message shown choosing what group user wants to use for new credentials."
     },
     "rememberInfoDefaultGroupNotFound": {
@@ -691,7 +695,7 @@
         "description": "Confirm button text when removing database key or Custom Login Fields."
     },
     "optionsButtonCancel": {
-        "message": " Cancelar",
+        "message": "Cancelar",
         "description": "Cancel button text when removing database key or Custom Login Fields."
     },
     "optionsButtonReset": {
@@ -713,6 +717,10 @@
     "optionsDefaultGroupHelpText": {
         "message": "Separe os grupos com barra. Por exemplo: Grupo/Subgrupo",
         "description": "Default group help text."
+    },
+    "optionsLabelDefaultPasskeyGroup": {
+        "message": "Grupo predefinido para guardar as novas chaves-mestra:",
+        "description": "Default passkey group options text."
     },
     "optionsLabelDefaultGroupCheckboxText": {
         "message": "Perguntar sempre para guardar novas credenciais",
@@ -758,6 +766,10 @@
         "message": "Preencher automaticamente as entradas de credenciais únicas",
         "description": "Automatically fill-in single credential entry checkbox text."
     },
+    "optionsCheckboxAutoFillRelevantCredential": {
+        "message": "Automatically fill in relevant credential entries",
+        "description": "Automatically fill-in relevant credential entry checkbox text."
+    },
     "optionsCheckboxAutoFillSingleTotp": {
         "message": "Preencher automaticamente as entradas TOTP únicas",
         "description": "Automatically fill-in single TOTP entries checkbox text."
@@ -787,7 +799,7 @@
         "description": "Use monochrome toolbar icon checkbox text."
     },
     "optionsCheckboxUseCompactMode": {
-        "message": "Use compact mode",
+        "message": "Usar modo compacto",
         "description": "Whether the compact mode (legacy dropdown) should be enabled."
     },
     "optionsSaveDomainOnly": {
@@ -799,7 +811,7 @@
         "description": "Show login notifications checkbox text."
     },
     "optionsRedirectAllowance": {
-        "message": "Número de reencaminhamentos permitidos:  $1",
+        "message": "Número de reencaminhamentos permitidos: $1",
         "description": "Redirect allowance range input text."
     },
     "optionsRedirectAllowanceHelpText": {
@@ -823,7 +835,7 @@
         "description": "Text above radio buttons in the settings page."
     },
     "optionsRadioThreeDays": {
-        "message": "a cada 3 dias",
+        "message": "de três em três dias",
         "description": "Radio button text."
     },
     "optionsRadioWeek": {
@@ -883,7 +895,7 @@
         "description": "Use predefined sites checkbox text."
     },
     "optionsUsePredefinedSitesHelpText": {
-        "message": "Adds common sites that have username-only login forms to the Site Preferences.",
+        "message": "Adiciona sites comuns que têm formulários de início de sessão apenas com o nome de utilizador às preferências do site.",
         "description": "Use predefined sites option help text."
     },
     "optionsShowLoginFormIconHelpText": {
@@ -906,6 +918,10 @@
         "message": "Permitir a KeePassXC-Browser preencher automaticamente as credenciais se receber apenas uma única entrada",
         "description": "Auto-Fill Single Entry option help text."
     },
+    "optionsAutoFillRelevantCredentialHelpText": {
+        "message": "Automatically fill in the relevant credential if a second fill is needed.",
+        "description": "Auto-Fill Relevant Credential option help text."
+    },
     "optionsAutoFillSingleEntryWarning": {
         "message": "Aviso! O uso de preenchimento automático não é seguro. Use por sua conta e risco. KeePassXC-Browser tenta detetar automaticamente campos de autenticação. Contudo, estes campos podem ser detetados de forma incorreta levando ao preenchimento de dados confidenciais em campos de entrada inseguros.",
         "description": "Auto-Fill Single Entry warning text."
@@ -919,7 +935,7 @@
         "description": "Autocomplete Usernames option help text."
     },
     "optionsShowGroupNameInAutocompleteHelpText": {
-        "message": "When credentials are returned from different groups, the group name will be shown. Only affects the compact mode.",
+        "message": "Quando as credenciais são devolvidas de grupos diferentes, o nome do grupo será apresentado. Afeta apenas o modo compacto.",
         "description": "Show group name in autocomplete help text."
     },
     "optionsShowNotificationsHelpText": {
@@ -931,15 +947,15 @@
         "description": "Use monochrome toolbar icon option help text."
     },
     "optionsUseCompactModeHelpText": {
-      "message": "Use a compact version of the dropdown list to select credentials.",
-      "description": "Use compact (legacy) mode help text."
+        "message": "Usa uma versão compacta da lista pendente para selecionar as credenciais.",
+        "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "Ao guardar as novas credenciais, guardar apenas o domínio e não o URL",
         "description": "Save domain only option help text."
     },
     "optionsSaveDomainOnlyCustomLoginHelpText": {
-        "message": "When saving new Custom Login Fields, save only the domain instead of full URL.",
+        "message": "Ao guardar novos campos de início de sessão personalizados, guarda apenas o domínio em vez do URL completo.",
         "description": "Save domain only option help text."
     },
     "optionsDownloadFaviconAfterSave": {
@@ -1035,7 +1051,7 @@
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmFirst": {
-        "message": "Tem a certeza de que deseja remover o seguinte identificador da lista da base de dados: $1",
+        "message": "Pretende realmente remover o seguinte identificador da lista da base de dados: $1?",
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmSecond": {
@@ -1081,7 +1097,7 @@
     "optionsColumnAllowIframes": {
         "message": "Permitir molduras \"Cross-Origin\"",
         "description": "Allow iframes column text."
-  },
+    },
     "optionsColumnDelete": {
         "message": "Eliminar",
         "description": "Site Preferences list column title."
@@ -1143,11 +1159,11 @@
         "description": "Relevant credential first option for Sort after fill."
     },
     "optionsCustomFieldsNotFound": {
-        "message": "No saved Custom Login Fields found.",
+        "message": "Não foram encontrados campos de início de sessão personalizados guardados.",
         "description": "Shown when no saved custom credentials are saved."
     },
     "optionsCustomFieldsTableCaption": {
-        "message": "You can manage saved Custom Login Fields using the table.",
+        "message": "Pode gerir os campos de início de sessão personalizados guardados utilizando a tabela.",
         "description": "Table caption of Custom Login Fields page."
     },
     "optionsCustomFieldsTabHelpTextFirst": {
@@ -1159,15 +1175,15 @@
         "description": "Saved Custom Login Fields info text, second part."
     },
     "optionsCustomFieldsTabHelpTextThird": {
-        "message": "On this page you can manage saved Custom Login Fields.",
+        "message": "Nesta página, pode gerir os campos de início de sessão personalizados guardados.",
         "description": "Saved Custom Login Fields info text, third part."
     },
     "optionsCustomFieldsRemove": {
-        "message": "Remove saved Custom Login Fields?",
+        "message": "Remover campos de início de sessão personalizados guardados?",
         "description": "Confirmation text when removing saved Custom Login Fields."
     },
     "optionsCustomFieldsConfirmation": {
-        "message": "Do you really want to remove the saved Custom Login Fields on the page: $1",
+        "message": "Pretende realmente remover os campos de início de sessão personalizados guardados na página: $1",
         "description": "Confirmation text when removing saved Custom Login Fields."
     },
     "optionsCustomFieldsConfirmationHelpText": {
@@ -1175,7 +1191,7 @@
         "description": "Part of confirmation text when removing saved Custom Login Fields."
     },
     "optionsSitePreferencesNotFound": {
-        "message": "No Site Preferences found.",
+        "message": "Não foram encontradas preferências do site.",
         "description": "Shown when no Site Preferences are saved."
     },
     "optionsSitePreferencesRemove": {
@@ -1223,7 +1239,7 @@
         "description": "Part of confirmation text when removing Site Preferences."
     },
     "optionsSitePreferencesTableCaption": {
-        "message": "You can manage saved Site Preferences using the table.",
+        "message": "Pode gerir as preferências do site guardadas utilizando a tabela.",
         "description": "Table caption of Site Preferences page."
     },
     "optionsSitePreferencesSelect": {
@@ -1335,7 +1351,7 @@
         "description": "Passkeys fallback option help text."
     },
     "openNewTab": {
-        "message": "Abre um  novo separador",
+        "message": "Abre um novo separador",
         "description": "Title attribute text."
     },
     "httpAuthDialog": {

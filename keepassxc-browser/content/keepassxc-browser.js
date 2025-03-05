@@ -1,9 +1,5 @@
 'use strict';
 
-const PASSKEYS_NO_LOGINS_FOUND = 15;
-const PASSKEYS_WAIT_FOR_LIFETIMER = 21;
-const PASSKEYS_CREDENTIAL_IS_EXCLUDED = 30;
-
 // Contains already called method names
 const _called = {};
 _called.automaticRedetectCompleted = false;
@@ -327,14 +323,19 @@ kpxc.initCombinations = async function(inputs = []) {
         const field = c.username || c.password;
         if (field && c.form) {
             // Initialize form-submit for remembering credentials
-            kpxcForm.init(c.form, c);
+            kpxcForm.initForm(c.form, c);
         }
 
         // Don't allow duplicates
-        if (!kpxc.combinations.some(f => f.username === c.username && f.password === c.password && f.totp === c.totp && f.form === c.form)) {
+        if (!kpxc.combinations.some(f =>
+            f.username === c.username && f.password === c.password && f.totp === c.totp && f.form === c.form
+        )) {
             kpxc.combinations.push(c);
         }
     }
+
+    // Identify a custom password change form
+    kpxcForm.initCustomForm(combinations);
 
     // Update the fields in Custom Login Fields banner if it's open
     if (kpxcCustomLoginFieldsBanner.created) {
@@ -507,6 +508,17 @@ kpxc.prepareCredentials = async function() {
 
     kpxc.initLoginPopup();
     kpxc.initAutocomplete();
+
+    if (kpxc.settings.autoFillRelevantCredential) {
+        const pageUuid = await sendMessage('page_get_login_id');
+        if (pageUuid) {
+            const relevantCredential = kpxc.credentials.find(c => c.uuid === pageUuid);
+            const combination = kpxc.combinations?.at(-1);
+            if (relevantCredential && combination) {
+                kpxcFill.fillInCredentials(combination, relevantCredential.login, relevantCredential.uuid);
+            }
+        }
+    }
 };
 
 /**
@@ -599,7 +611,7 @@ kpxc.rememberCredentialsFromContextMenu = async function() {
     }
 
     const el = document.activeElement;
-    if (el.nodeName !== 'INPUT') {
+    if (!matchesWithNodeName(el, 'INPUT')) {
         return;
     }
 
@@ -697,7 +709,7 @@ kpxc.setPasswordFilled = async function(state) {
     await sendMessage('password_set_filled', state);
 };
 
-// Special handling for settings value to select element
+// Special handling for setting value to select and checkbox elements
 kpxc.setValue = function(field, value, forced = false) {
     if (field.matches('select')) {
         value = value.toLowerCase().trim();
@@ -711,6 +723,8 @@ kpxc.setValue = function(field, value, forced = false) {
         }
 
         return;
+    } else if (field.getLowerCaseAttribute('type') === 'checkbox' && value?.toLowerCase() === 'true') {
+        field.checked = true;
     }
 
     kpxc.setValueWithChange(field, value, forced);
@@ -746,7 +760,7 @@ kpxc.showGroupNameInAutocomplete = function() {
         || (kpxc.settings.showGroupNameInAutocomplete && kpxc.getUniqueGroupCount(kpxc.credentials) > 1);
 };
 
-// Returns true if site is ignored
+// Returns true if site is ignored, and checks for predefined sites
 kpxc.siteIgnored = async function(condition) {
     if (kpxc.settings.sitePreferences) {
         let currentLocation;
@@ -759,7 +773,6 @@ kpxc.siteIgnored = async function(condition) {
             currentLocation = window.self.location.href;
         }
 
-        // Refresh current settings for the site
         const currentSetting = condition || IGNORE_FULL;
         for (const site of kpxc.settings.sitePreferences) {
             if (siteMatch(site.url, currentLocation) || site.url === currentLocation) {
@@ -767,6 +780,7 @@ kpxc.siteIgnored = async function(condition) {
                     return true;
                 }
 
+                // Refresh current settings for the site
                 kpxc.singleInputEnabledForPage = site.usernameOnly;
                 kpxc.improvedFieldDetectionEnabledForPage = site.improvedFieldDetection;
                 await sendMessage('page_set_allow_iframes', [ site.allowIframes, currentLocation ]);
@@ -775,11 +789,7 @@ kpxc.siteIgnored = async function(condition) {
 
         // Check for predefined sites
         if (kpxc.settings.usePredefinedSites) {
-            for (const url of PREDEFINED_SITELIST) {
-                if (siteMatch(url, currentLocation) || url === currentLocation) {
-                    kpxc.singleInputEnabledForPage = true;
-                }
-            }
+            kpxc.usePredefinedSites(currentLocation);
         }
     }
 
@@ -842,81 +852,21 @@ kpxc.updateTOTPList = async function() {
     return [];
 };
 
-// Apply a script to the page for intercepting Passkeys (WebAuthn) requests
-kpxc.enablePasskeys = function() {
-    if (document?.documentElement?.ownerDocument?.contentType === 'text/xml') {
-        return;
+// Enable certain settings based on predefined sites list
+kpxc.usePredefinedSites = function(currentLocation) {
+    // Single input field
+    for (const url of PREDEFINED_SITELIST) {
+        if (siteMatch(url, currentLocation) || url === currentLocation) {
+            kpxc.singleInputEnabledForPage = true;
+        }
     }
 
-    const passkeys = document.createElement('script');
-    passkeys.src = browser.runtime.getURL('content/passkeys.js');
-    document.documentElement.appendChild(passkeys);
-
-    const startTimer = function(timeout) {
-        return setTimeout(() => {
-            throw new DOMException('lifetimeTimer has expired', 'NotAllowedError');
-        }, timeout);
-    };
-
-    const stopTimer = function(lifetimeTimer) {
-        if (lifetimeTimer) {
-            clearTimeout(lifetimeTimer);
+    // Improved input field detection
+    for (const url of IMPROVED_DETECTION_PREDEFINED_SITELIST) {
+        if (siteMatch(url, currentLocation) || url === currentLocation) {
+            kpxc.improvedFieldDetectionEnabledForPage = true;
         }
-    };
-
-    const letTimerRunOut = function (errorCode) {
-        return (
-            errorCode === PASSKEYS_WAIT_FOR_LIFETIMER ||
-            errorCode === PASSKEYS_CREDENTIAL_IS_EXCLUDED ||
-            errorCode === PASSKEYS_NO_LOGINS_FOUND
-        );
-    };
-
-    const sendResponse = async function(command, publicKey, callback) {
-        const lifetimeTimer = startTimer(publicKey?.timeout);
-
-        const ret = await sendMessage(command, [ publicKey, window.location.origin ]);
-        if (ret) {
-            let errorMessage;
-            if (ret.response && ret.response.errorCode) {
-                errorMessage = await sendMessage('get_error_message', ret.response.errorCode);
-                kpxcUI.createNotification('error', errorMessage);
-
-                if (kpxc.settings.passkeysFallback) {
-                    kpxcPasskeysUtils.sendPasskeysResponse(undefined, ret.response?.errorCode, errorMessage);
-                } else if (letTimerRunOut(ret?.response?.errorCode)) {
-                    return;
-                }
-            }
-
-            logDebug('Passkey response', ret.response);
-            kpxcPasskeysUtils.sendPasskeysResponse(ret.response, ret.response?.errorCode, errorMessage);
-            stopTimer(lifetimeTimer);
-        }
-    };
-
-    document.addEventListener('kpxc-passkeys-request', async (ev) => {
-        if (!window.isSecureContext) {
-            kpxcUI.createNotification('error', tr('errorMessagePasskeysContextIsNotSecure'));
-            return;
-        }
-
-        if (ev.detail.action === 'passkeys_create') {
-            const publicKey = kpxcPasskeysUtils.buildCredentialCreationOptions(
-                ev.detail.publicKey,
-                ev.detail.sameOriginWithAncestors,
-            );
-            logDebug('Passkey request', publicKey);
-            await sendResponse('passkeys_register', publicKey);
-        } else if (ev.detail.action === 'passkeys_get') {
-            const publicKey = kpxcPasskeysUtils.buildCredentialRequestOptions(
-                ev.detail.publicKey,
-                ev.detail.sameOriginWithAncestors,
-            );
-            logDebug('Passkey request', publicKey);
-            await sendResponse('passkeys_get', publicKey);
-        }
-    });
+    }
 };
 
 /**
@@ -924,6 +874,12 @@ kpxc.enablePasskeys = function() {
  */
 const initContentScript = async function() {
     try {
+        if (document?.documentElement?.ownerDocument?.contentType !== 'text/html'
+            && document?.documentElement?.ownerDocument?.contentType !== 'application/xhtml+xml'
+        ) {
+            return;
+        }
+
         const settings = await sendMessage('load_settings');
         if (!settings) {
             logError('Error: Cannot load extension settings');
@@ -935,10 +891,6 @@ const initContentScript = async function() {
         if (await kpxc.siteIgnored()) {
             logDebug('This site is ignored in Site Preferences.');
             return;
-        }
-
-        if (kpxc.settings.passkeys) {
-            kpxc.enablePasskeys();
         }
 
         await kpxc.updateDatabaseState();

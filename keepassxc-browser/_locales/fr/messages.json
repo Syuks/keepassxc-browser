@@ -237,7 +237,11 @@
     },
     "errorNotConnected": {
         "message": "Non connecté à KeePassXC.",
-        "description": "Error notification shown when not connected to KeePassXC"
+        "description": "Error notification shown when not connected to KeePassXC."
+    },
+    "errorCurrentDatabaseNotConnected": {
+        "message": "Current database is not connected.",
+        "description": "Error notification shown when current database is not connected during action."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "Erreur:\nLe mot de passe généré est plus long que la longueur autorisée !\nIl a été tronqué à la longueur maximale.\n\nVeuillez vous souvenir du nouveau mot de passe !",
@@ -367,7 +371,7 @@
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsMultipleFoundSecondLine": {
-        "message": "Pour plus d’options, cliquez sur l’icône de KeePassXC-Browser.",
+        "message": "Click the KeePassXC-Browser icon for more options.",
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsNoUsernameFound": {
@@ -475,7 +479,7 @@
         "description": "Checking status message in popup."
     },
     "popupNotConfigured": {
-        "message": "KeePassXC-Browser n'est pas configuré. Appuyer sur le bouton Connecter pour se connecter à KeePassXC.",
+        "message": "KeePassXC-Browser has not been configured. Click the connect button to pair with KeePassXC.",
         "description": "A popup message shown when the extension has not been connected to KeePassXC."
     },
     "popupNeedReconfigure": {
@@ -483,7 +487,7 @@
         "description": "A popup message shown when the extension has been disconnected from KeePassXC."
     },
     "popupNeedReconfigureMessage": {
-        "message": "Appuyer sur le bouton Reconnecter pour établir une nouvelle connexion.",
+        "message": "Click the reconnect button to establish a new connection.",
         "description": "A popup message shown when reconnect is needed."
     },
     "popupConfiguredNotAssociated": {
@@ -523,7 +527,7 @@
         "description": "A message shown choosing what credentials user wants to update."
     },
     "rememberChooseGroup": {
-        "message": "Veuillez choisir le groupe auquel ajouter les nouveaux identifiants.",
+        "message": "Please choose a group to store new credentials.",
         "description": "A message shown choosing what group user wants to use for new credentials."
     },
     "rememberInfoDefaultGroupNotFound": {
@@ -714,6 +718,10 @@
         "message": "Divisez le groupe avec des barres obliques, par exemple : Groupe/GroupeEnfant.",
         "description": "Default group help text."
     },
+    "optionsLabelDefaultPasskeyGroup": {
+        "message": "Default group for saving new passkeys:",
+        "description": "Default passkey group options text."
+    },
     "optionsLabelDefaultGroupCheckboxText": {
         "message": "Toujours demander où enregistrer les nouvelles informations d’identification",
         "description": "Default group checkbox help text."
@@ -757,6 +765,10 @@
     "optionsCheckboxAutoFillSingleEntry": {
         "message": "Remplir automatiquement les entrées ne contenant qu'un identifiant",
         "description": "Automatically fill-in single credential entry checkbox text."
+    },
+    "optionsCheckboxAutoFillRelevantCredential": {
+        "message": "Automatically fill in relevant credential entries",
+        "description": "Automatically fill-in relevant credential entry checkbox text."
     },
     "optionsCheckboxAutoFillSingleTotp": {
         "message": "Remplir automatiquement les entrées ne contenant qu'un seul TOTP",
@@ -823,7 +835,7 @@
         "description": "Text above radio buttons in the settings page."
     },
     "optionsRadioThreeDays": {
-        "message": " tous les 3 jours",
+        "message": "every three days",
         "description": "Radio button text."
     },
     "optionsRadioWeek": {
@@ -906,6 +918,10 @@
         "message": "Laisse KeePassXC-Browser remplir les identifiants automatiquement si une seule entrée est retournée.",
         "description": "Auto-Fill Single Entry option help text."
     },
+    "optionsAutoFillRelevantCredentialHelpText": {
+        "message": "Automatically fill in the relevant credential if a second fill is needed.",
+        "description": "Auto-Fill Relevant Credential option help text."
+    },
     "optionsAutoFillSingleEntryWarning": {
         "message": "Attention ! Le remplissage automatique n'est pas recommandé. Vous l'utilisez à vos risques. KeePassXC-Browser tente de détecter automatiquement les champs d'identification. Cependant, la détection peut être erronée et entraîner le remplissage de champs non sûrs avec des données sensibles.",
         "description": "Auto-Fill Single Entry warning text."
@@ -931,8 +947,8 @@
         "description": "Use monochrome toolbar icon option help text."
     },
     "optionsUseCompactModeHelpText": {
-      "message": "Use a compact version of the dropdown list to select credentials.",
-      "description": "Use compact (legacy) mode help text."
+        "message": "Use a compact version of the dropdown list to select credentials.",
+        "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "Lorsqu'un nouvel identifiant est ajouté, n'enregistrer que le domaine au lieu de l'URL complète.",
@@ -1035,7 +1051,7 @@
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmFirst": {
-        "message": "Voulez-vous vraiment supprimer l'identifiant suivant de la liste des bases de données ?",
+        "message": "Do you really want to remove the following identifier from the database list: $1?",
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmSecond": {
@@ -1081,7 +1097,7 @@
     "optionsColumnAllowIframes": {
         "message": "Autoriser les iframes Cross–Origin",
         "description": "Allow iframes column text."
-  },
+    },
     "optionsColumnDelete": {
         "message": "Supprimer",
         "description": "Site Preferences list column title."

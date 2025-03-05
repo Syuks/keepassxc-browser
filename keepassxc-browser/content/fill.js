@@ -28,7 +28,7 @@ kpxcFill.fillInFromActiveElement = async function(passOnly = false) {
     await kpxc.receiveCredentialsIfNecessary();
     if (kpxc.credentials.length === 0) {
         logDebug(`Error: Credential list is empty for: ${document.location.origin}`);
-        kpxcUI.createNotification('error', `${tr('credentialsNoLoginsFound')} ${document.location.origin}`);
+        showErrorNotification(`${tr('credentialsNoLoginsFound')} ${document.location.origin}`);
         return;
     }
 
@@ -137,7 +137,7 @@ kpxcFill.fillFromTOTP = async function(target) {
     const credentialList = await kpxc.updateTOTPList();
 
     if (!credentialList || credentialList?.length === 0) {
-        kpxcUI.createNotification('warning', tr('credentialsNoTOTPFound'));
+        showErrorNotification(tr('credentialsNoTOTPFound'), 'warning');
         return;
     }
 
@@ -164,7 +164,7 @@ kpxcFill.fillTOTPFromUuid = async function(el, uuid) {
 
     if (user.totp?.length > 0) {
         // Retrieve a new TOTP value
-        const totp = await sendMessage('get_totp', [user.uuid, user.totp]);
+        const totp = await sendMessage('get_totp', [ user.uuid, user.totp ]);
         if (!totp) {
             kpxcUI.createNotification('warning', tr('credentialsNoTOTPFound'));
             return;
@@ -215,7 +215,7 @@ kpxcFill.fillFromUsernameIcon = async function(combination) {
     await kpxc.receiveCredentialsIfNecessary();
     if (kpxc.credentials.length === 0) {
         logDebug(`Error: Credential list is empty for: ${document.location.origin}`);
-        kpxcUI.createNotification('error', `${tr('credentialsNoLoginsFound')} ${document.location.origin}`);
+        showErrorNotification(`${tr('credentialsNoLoginsFound')} ${document.location.origin}`);
         return;
     } else if (kpxc.credentials.length > 1 && kpxc.settings.autoCompleteUsernames) {
         kpxcUserAutocomplete.showList(combination.username || combination.password);
@@ -264,7 +264,7 @@ kpxcFill.fillInCredentials = async function(combination, predefinedUsername, uui
     }
 
     // Fill password
-    if (combination.password && combination.password.nodeName === 'INPUT') {
+    if (combination.password && matchesWithNodeName(combination.password, 'INPUT')) {
         // Show a notification if password length exceeds the length defined in input
         if (combination.password.maxLength
             && combination.password.maxLength > 0
@@ -369,4 +369,14 @@ const passwordFillIsAllowed = function(elem) {
     }
 
     return elem?.getLowerCaseAttribute('type') === 'password';
+};
+
+// Show a specific error notification if current database is not connected
+const showErrorNotification = async function(errorMessage, notificationType = 'error') {
+    const connectedDatabase = await sendMessage('get_connected_database');
+    if (!connectedDatabase?.identifier) {
+        kpxcUI.createNotification('error', tr('errorCurrentDatabaseNotConnected'));
+    } else {
+        kpxcUI.createNotification(notificationType, errorMessage);
+    }
 };

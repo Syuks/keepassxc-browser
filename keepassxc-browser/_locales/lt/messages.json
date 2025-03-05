@@ -192,11 +192,11 @@
         "description": "Invalid user verification."
     },
     "errorMessagePasskeysEmptyPublicKey": {
-        "message": "Empty public key.",
+        "message": "Tuščias viešasis raktas.",
         "description": "Empty public key."
     },
     "errorMessagePasskeysInvalidUrlProvided": {
-        "message": "Invalid URL provided.",
+        "message": "Pateiktas netinkamas URL.",
         "description": "Invalid URL provided."
     },
     "errorMessagePasskeysOriginNotAllowed": {
@@ -232,12 +232,16 @@
         "description": "user.id does not match the required length."
     },
     "errorMessagePasskeysContextIsNotSecure": {
-        "message": "Context is not secure.",
+        "message": "Kontekstas yra nesaugus.",
         "description": "Context is not secure."
     },
     "errorNotConnected": {
         "message": "Neprisijungta prie KeePassXC.",
-        "description": "Error notification shown when not connected to KeePassXC"
+        "description": "Error notification shown when not connected to KeePassXC."
+    },
+    "errorCurrentDatabaseNotConnected": {
+        "message": "Dabartinė duomenų bazė yra neprijungta.",
+        "description": "Error notification shown when current database is not connected during action."
     },
     "passwordGeneratorErrorTooLong": {
         "message": "Klaida: sugeneruotas slaptažodis yra ilgesnis nei leistinas ilgis!",
@@ -267,7 +271,7 @@
         "description": "Username field icon hover text when no credentials are."
     },
     "usernameLockedFieldText": {
-        "message": "Database is locked.",
+        "message": "Duomenų bazė užrakinta.",
         "description": "Username field icon hover text when database is locked."
     },
     "usernameDisconnectedFieldText": {
@@ -367,7 +371,7 @@
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsMultipleFoundSecondLine": {
-        "message": "Paspauskite \"KeePassXC-Browser\" piktogramą, kad gautumėte daugiau parinkčių.",
+        "message": "Click the KeePassXC-Browser icon for more options.",
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."
     },
     "credentialsNoUsernameFound": {
@@ -475,7 +479,7 @@
         "description": "Checking status message in popup."
     },
     "popupNotConfigured": {
-        "message": "KeePassXC-Browser nebuvo sukonfigūruota. Paspauskite prisijungimo mygtuką, norėdami suporuoti su KeePassXC.",
+        "message": "KeePassXC-Browser has not been configured. Click the connect button to pair with KeePassXC.",
         "description": "A popup message shown when the extension has not been connected to KeePassXC."
     },
     "popupNeedReconfigure": {
@@ -483,7 +487,7 @@
         "description": "A popup message shown when the extension has been disconnected from KeePassXC."
     },
     "popupNeedReconfigureMessage": {
-        "message": "Norėdami užmegzti naują ryšį, paspauskite prisijungimo iš naujo mygtuką.",
+        "message": "Click the reconnect button to establish a new connection.",
         "description": "A popup message shown when reconnect is needed."
     },
     "popupConfiguredNotAssociated": {
@@ -523,7 +527,7 @@
         "description": "A message shown choosing what credentials user wants to update."
     },
     "rememberChooseGroup": {
-        "message": "Pasirinkite grupę, į kurią norite įtraukti naujus kredencialus.",
+        "message": "Please choose a group to store new credentials.",
         "description": "A message shown choosing what group user wants to use for new credentials."
     },
     "rememberInfoDefaultGroupNotFound": {
@@ -587,7 +591,7 @@
         "description": "A popup message shown when web page has multiple password fields."
     },
     "popupUsername": {
-        "message": "Username:",
+        "message": "Naudotojo vardas:",
         "description": "A username field name shown on credential update."
     },
     "popupButtonNew": {
@@ -599,11 +603,11 @@
         "description": "Update button text in popup when updating credentials."
     },
     "popupButtonCancel": {
-        "message": "Cancel",
+        "message": "Atsisakyti",
         "description": "Cancel button text in popup when updating credentials."
     },
     "popupButtonBack": {
-        "message": "Back",
+        "message": "Atgal",
         "description": "Back button text in popup when updating credentials."
     },
     "popupButtonIgnore": {
@@ -655,7 +659,7 @@
         "description": "Custom Login Fields page header."
     },
     "optionsMenuSitePreferences": {
-        "message": "Site Preferences",
+        "message": "Svetainės nuostatos",
         "description": "Site Preferences page header."
     },
     "optionsMenuAbout": {
@@ -714,6 +718,10 @@
         "message": "Atskirkite grupę pasviraisiais brūkšniais, pvz., grupė / vaikų grupė.",
         "description": "Default group help text."
     },
+    "optionsLabelDefaultPasskeyGroup": {
+        "message": "Default group for saving new passkeys:",
+        "description": "Default passkey group options text."
+    },
     "optionsLabelDefaultGroupCheckboxText": {
         "message": "Visada klauskite, kur išsaugoti naujus kredencialus",
         "description": "Default group checkbox help text."
@@ -757,6 +765,10 @@
     "optionsCheckboxAutoFillSingleEntry": {
         "message": "Automatically fill in single-credential entries",
         "description": "Automatically fill-in single credential entry checkbox text."
+    },
+    "optionsCheckboxAutoFillRelevantCredential": {
+        "message": "Automatically fill in relevant credential entries",
+        "description": "Automatically fill-in relevant credential entry checkbox text."
     },
     "optionsCheckboxAutoFillSingleTotp": {
         "message": "Automatically fill in single TOTP entries",
@@ -823,7 +835,7 @@
         "description": "Text above radio buttons in the settings page."
     },
     "optionsRadioThreeDays": {
-        "message": "kas 3 dienas",
+        "message": "kas tris dienas",
         "description": "Radio button text."
     },
     "optionsRadioWeek": {
@@ -906,6 +918,10 @@
         "message": "Leiskite \"KeePassXC-Browser\" automatiškai užpildyti kredencialus, jei ji gauna tik vieną įrašą.",
         "description": "Auto-Fill Single Entry option help text."
     },
+    "optionsAutoFillRelevantCredentialHelpText": {
+        "message": "Automatically fill in the relevant credential if a second fill is needed.",
+        "description": "Auto-Fill Relevant Credential option help text."
+    },
     "optionsAutoFillSingleEntryWarning": {
         "message": "Warning! Using auto-fill is not safe. Use at your own risk. KeePassXC-Browser automatically tries to detect login fields. However, they may be detected incorrectly, possibly filling sensitive data to unsafe input fields.",
         "description": "Auto-Fill Single Entry warning text."
@@ -931,8 +947,8 @@
         "description": "Use monochrome toolbar icon option help text."
     },
     "optionsUseCompactModeHelpText": {
-      "message": "Use a compact version of the dropdown list to select credentials.",
-      "description": "Use compact (legacy) mode help text."
+        "message": "Use a compact version of the dropdown list to select credentials.",
+        "description": "Use compact (legacy) mode help text."
     },
     "optionsSaveDomainOnlyHelpText": {
         "message": "Įrašydami naujus kredencialus, įrašykite tik domeną, o ne visą URL.",
@@ -1035,7 +1051,7 @@
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmFirst": {
-        "message": "Ar tikrai norite iš duomenų bazių sąrašo pašalinti šį identifikatorių: $1",
+        "message": "Do you really want to remove the following identifier from the database list: $1?",
         "description": "Confirmation text when removing database from the list."
     },
     "optionsDatabasesRemoveIdentifierConfirmSecond": {
@@ -1081,7 +1097,7 @@
     "optionsColumnAllowIframes": {
         "message": "Allow Cross-Origin iframes",
         "description": "Allow iframes column text."
-  },
+    },
     "optionsColumnDelete": {
         "message": "Ištrinti",
         "description": "Site Preferences list column title."

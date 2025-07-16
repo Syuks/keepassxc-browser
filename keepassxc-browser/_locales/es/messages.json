@@ -7,6 +7,10 @@
         "message": "Añadir sitio de referencia para esta URL",
         "description": "Add button title text on Site Preferences tab."
     },
+    "editSitePreferenceButtonTitle": {
+        "message": "Editar URL para las preferencias de este sitio.",
+        "description": "Edit button title text on Site Preferences tab."
+    },
     "allowIframeButtonTitle": {
         "message": "Permitir marcos de Orígenes Cruzados para la página actual",
         "description": "Allow Cross-Origin iframes button title text."
@@ -16,7 +20,7 @@
         "description": "Connect button title text."
     },
     "copyDebugInfoButtonTitle": {
-        "message": "Copie la información de depuración al portapapeles.",
+        "message": "Copy debug info to clipboard",
         "description": "Copy debug info button title text on About tab."
     },
     "dismissHttpAuthButtonTitle": {
@@ -104,7 +108,7 @@
         "description": "Database hash not received."
     },
     "errorMessageClientPublicKey": {
-        "message": "Clave pública del cliente no recibida.",
+        "message": "Llave pública del cliente no recibida.",
         "description": "Client public key not received."
     },
     "errorMessageDecrypt": {
@@ -128,7 +132,7 @@
         "description": "KeePassXC association failed, try again."
     },
     "errorMessageKeyExchange": {
-        "message": "Intercambio de clave no fue correcto.",
+        "message": "Intercambio de llave no fue correcto.",
         "description": "Key exchange was not successful."
     },
     "errorMessageEncryptionKey": {
@@ -192,7 +196,7 @@
         "description": "Invalid user verification."
     },
     "errorMessagePasskeysEmptyPublicKey": {
-        "message": "Clave pública vacía.",
+        "message": "Llave pública vacía.",
         "description": "Empty public key."
     },
     "errorMessagePasskeysInvalidUrlProvided": {
@@ -622,6 +626,14 @@
         "message": "Descartar y mostrar el diálogo de autenticación predeterminado",
         "description": "Dismiss button text when in HTTP Authentication popup."
     },
+    "optionsDefaultSettingsTitle": {
+        "message": "Default settings",
+        "description": "Default settings title for Getting Started page."
+    },
+    "optionsWelcomeTitle": {
+        "message": "KeePassXC-Browser",
+        "description": "Main card title for Getting Started page."
+    },
     "optionsTitle": {
         "message": "Configuración | KeePassXC-Browser",
         "description": "Options page title."
@@ -685,6 +697,10 @@
     "optionsButtonAdd": {
         "message": "Añadir",
         "description": "Add button text."
+    },
+    "optionsButtonEdit": {
+        "message": "Edit",
+        "description": "Edit button text."
     },
     "optionsButtonUpdate": {
         "message": "Buscar actualizaciones",
@@ -767,7 +783,7 @@
         "description": "Automatically fill-in single credential entry checkbox text."
     },
     "optionsCheckboxAutoFillRelevantCredential": {
-        "message": "Automatically fill in relevant credential entries",
+        "message": "Rellenar automáticamente las entradas de credenciales pertinentes",
         "description": "Automatically fill-in relevant credential entry checkbox text."
     },
     "optionsCheckboxAutoFillSingleTotp": {
@@ -809,6 +825,14 @@
     "optionsCheckboxShowLoginNotifications": {
         "message": "Mostrar una pancarta en la página cuando nuevas credenciales puedan ser guardadas en la base de datos",
         "description": "Show login notifications checkbox text."
+    },
+    "optionsDefaultPasswordManager": {
+        "message": "Set as default password manager",
+        "description": "Default password manager checkbox text."
+    },
+    "optionsDefaultPasswordManagerHelpText": {
+        "message": "Sets KeePassXC-Browser as the default password manager for the browser.",
+        "description": "Default password manager help text."
     },
     "optionsRedirectAllowance": {
         "message": "Número de redirecciones permitidas:  $1",
@@ -906,6 +930,10 @@
         "message": "Añade un icono a los campos de entrada que son reconocidos como OTP/2FA.",
         "description": "OTP field icon option help text."
     },
+    "optionsHideIconsAlertText": {
+        "message": "También puede ocultar los iconos manualmente cuando necesite con shift+click.",
+        "description": "Hide icons alert text text."
+    },
     "optionsAutoRetrieveCredentialsHelpText": {
         "message": "KeePassXC-Browser recuperará inmediatamente las credenciales cuando se active una pestaña.",
         "description": "Auto-Retrive Credentials option help text."
@@ -919,7 +947,7 @@
         "description": "Auto-Fill Single Entry option help text."
     },
     "optionsAutoFillRelevantCredentialHelpText": {
-        "message": "Automatically fill in the relevant credential if a second fill is needed.",
+        "message": "Rellenar automáticamente la credencial correspondiente si se necesita un segundo rellenado.",
         "description": "Auto-Fill Relevant Credential option help text."
     },
     "optionsAutoFillSingleEntryWarning": {
@@ -1365,5 +1393,33 @@
     "lockDatabase": {
         "message": "Bloquear base de datos",
         "description": "Lock database button title text."
+    },
+    "welcomeText": {
+        "message": "Welcome to KeePassXC-Browser!",
+        "description": "Main title of Getting Started page."
+    },
+    "documentationGettingStarted": {
+        "message": "Our Getting Started Guide will get you up and running quickly.",
+        "description": "Getting Started document text."
+    },
+    "documentationUserGuide": {
+        "message": "Looking for more comprehensive documentation? Our User Guide is there to help.",
+        "description": "User Guide text."
+    },
+    "documentationTroubleshootingGuide": {
+        "message": "Need help troubleshooting the browser integration? Check the Troubleshooting Guide.",
+        "description": "Troubleshooting Guide text."
+    },
+    "gettingStartedWelcomeText": {
+        "message": "Welcome to KeePassXC-Browser, the official browser extension for KeePassXC.",
+        "description": "Welcome to KeePassXC-Browser, the official browser extension for KeePassXC."
+    },
+    "gettingStartedSecondWelcomeText": {
+        "message": "Please go through the default settings and check all your preferred options.",
+        "description": "Please go through the default settings and check all your preferred options."
+    },
+    "gettingStartedNewUser": {
+        "message": "Are you a new user? Check links to our documentation.",
+        "description": "Are you a new user? Check links to our documentation."
     }
 }

@@ -582,7 +582,7 @@ keepass.requestAutotype = async function(tab, args = []) {
 
     const kpAction = kpActions.REQUEST_AUTOTYPE;
     const nonce = keepassClient.getNonce();
-    const search = page.getTopLevelDomainFromUrl(args[0]);
+    const search = await page.getBaseDomainFromUrl(args[0]);
 
     const messageData = {
         action: kpAction,
@@ -929,7 +929,7 @@ keepass.updateDatabase = async function() {
 keepass.updateDatabaseHashToContent = async function() {
     try {
         const tab = await getCurrentTab();
-        if (tab) {
+        if (tab?.id) {
             // Send message to content script
             browser.tabs.sendMessage(tab.id, {
                 action: 'check_database_hash',

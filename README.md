@@ -11,7 +11,7 @@ This browser extension was first supported in KeePassXC 2.3.0 (release end of 20
 
 Get the extension for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/keepassxc-browser/) or [Chrome/Chromium](https://chromewebstore.google.com/detail/keepassxc-browser/oboonakemofpalcgghocfoadofidjkkk) or [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/pdffhmdngciaglkoonimfcmckehcpafo) (requires KeePassXC 2.5.3 or newer).
 
-Please see this [document](https://keepassxc.org/docs/KeePassXC_GettingStarted.html#_setup_browser_integration) for instructions how to configure KeePassXC in order to connect the database correctly.
+Please see this [document](https://keepassxc.org/docs/KeePassXC_GettingStarted.html#_browser_integration) for instructions how to configure KeePassXC in order to connect the database correctly.
 
 ## How it works
 
@@ -33,10 +33,12 @@ KeePassXC-Browser extension requests the following permissions:
 | `nativeMessaging`         | Allows communication with KeePassXC application |
 | `notifications`           | To show browser notifications |
 | `offscreen`               | For accessing system theme when setting icon colors (Chrome only) |
+| `privacy`                 | For setting the extension as default password manager |
 | `storage`                 | For storing extension settings (always stored locally in the browser, they are never synced) |
 | `tabs`                    | To request tab URL's and other info |
 | `webNavigation`           | To show browser notifications on install or update |
 | `webRequest`              | For handling HTTP Basic Auth |
+| `webRequestAuthProvider`  | For handling HTTP Basic Auth for Chromium based browsers |
 | `webRequestBlocking`      | For handling HTTP Basic Auth |
 | `http://*/*`              | To allow using KeePassXC-Browser on all websites |
 | `https://*/*`             | To allow using KeePassXC-Browser on all websites |

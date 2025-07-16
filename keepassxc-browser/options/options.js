@@ -64,6 +64,13 @@ options.initGeneralSettings = async function() {
         const isChecked = e.currentTarget.checked;
         options.settings[name] = isChecked;
 
+        // Default password manager setting relies on optional permission, and must be checked before saving options
+        if (name === 'defaultPasswordManager') {
+            const isDefaultPasswordManagerSet = await updateDefaultPasswordManager();
+            options.settings[name] = isDefaultPasswordManagerSet;
+            e.target.checked = isDefaultPasswordManagerSet;
+        }
+
         const updated = await options.saveSettings();
         if (name === 'autoFillAndSend') {
             browser.runtime.sendMessage({ action: 'init_http_auth' });
@@ -91,7 +98,6 @@ options.initGeneralSettings = async function() {
     const generalSettingsCheckboxes = document.querySelectorAll('#tab-general-settings input[type=checkbox]');
     for (const checkbox of generalSettingsCheckboxes) {
         checkbox.checked = options.settings[checkbox.name];
-
         if (checkbox.name === 'defaultGroupAlwaysAsk' && checkbox.checked) {
             $('#defaultGroup').disabled = true;
             $('#defaultGroupButton').disabled = true;
@@ -200,9 +206,21 @@ options.initGeneralSettings = async function() {
     });
 
     $('#configureCommands').addEventListener('click', function() {
+        if (isFirefox()) {
+            if (typeof(browser.commands.openShortcutSettings) === 'function') {
+                browser.commands.openShortcutSettings();
+            } else {
+                // TODO: Remove internal shortcuts page after Firefox ESR has support for openShortcutSettings()
+                browser.tabs.create({
+                    url: browser.runtime.getURL('options/shortcuts.html')
+                });
+            }
+            return;
+        }
+
         const scheme = isEdge() ? 'edge' : 'chrome';
         browser.tabs.create({
-            url: isFirefox() ? browser.runtime.getURL('options/shortcuts.html') : `${scheme}://extensions/shortcuts`
+            url: `${scheme}://extensions/shortcuts`
         });
     });
 
@@ -521,12 +539,66 @@ options.initSitePreferences = function() {
     const removeButtonClicked = function(e) {
         e.preventDefault();
 
-        const closestTr = this.closest('tr');
+        const closestTr = e.target.closest('tr');
         $('#dialogDeleteSite').setAttribute('url', closestTr.getAttribute('url'));
         $('#dialogDeleteSite').setAttribute('tr-id', closestTr.getAttribute('id'));
-        $('#dialogDeleteSite .modal-body strong').textContent = closestTr.children[0].textContent;
+        $('#dialogDeleteSite .modal-body strong').textContent = closestTr.getAttribute('url');
 
         dialogDeleteSiteModal.show();
+    };
+
+    // Shows or hides Cancel / Save buttons on row
+    const enterEditMode = function(e, row, inputField, editButton, cancelButton, saveButton) {
+        e.preventDefault();
+        if (!row || !inputField) {
+            return;
+        }
+
+        if (inputField.disabled) {
+            inputField.disabled = false;
+            cancelButton.show();
+            saveButton.show();
+            saveButton.disabled = true;
+            editButton.hide();
+            inputField.focus();
+            inputField.setSelectionRange(inputField.value?.length || 0, inputField.value?.length || 0);
+        }
+    };
+
+    const exitEditMode = function(e, row, inputField, editButton, cancelButton, saveButton) {
+        e.preventDefault();
+        if (!row || !inputField) {
+            return;
+        }
+
+        if (!inputField.disabled) {
+            inputField.disabled = true;
+            inputField.value = row.getAttribute('url');
+            cancelButton.hide();
+            saveButton.hide();
+            editButton.show();
+        }
+    };
+
+    const saveModifiedUrl = function(e, row, inputField, editButton, cancelButton, saveButton) {
+        e.preventDefault();
+        if (!row || !inputField) {
+            return;
+        }
+
+        const currentUrl = row.getAttribute('url');
+        for (const site of options.settings['sitePreferences']) {
+            if (site.url === currentUrl && inputField.validity.valid && inputField.value !== currentUrl) {
+                if (slashNeededForUrl(inputField.value)) {
+                    inputField.value += '/';
+                }
+                site.url = inputField.value;
+                row.setAttribute('url', inputField.value);
+                exitEditMode(e, row, inputField, editButton, cancelButton, saveButton);
+                options.saveSettings();
+                return;
+            }
+        }
     };
 
     const checkboxClicked = function() {
@@ -565,7 +637,35 @@ options.initSitePreferences = function() {
         const row = rowClone.cloneNode(true);
         row.setAttribute('url', url);
         row.setAttribute('id', 'tr-scf' + newIndex);
-        row.children[0].textContent = url;
+
+        // Handle listeners for Edit/Cancel/Save buttons
+        const inputField = row?.querySelector('input#editUrl');
+        const editButton = row?.querySelector('button#sitePreferencesEditUrl');
+        const cancelButton = row?.querySelector('button#sitePreferencesCancelEdit');
+        const saveButton = row?.querySelector('button#sitePreferencesSaveEdit');
+        inputField?.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                saveModifiedUrl(e, row, inputField, editButton, cancelButton, saveButton);
+            } else if (e.key === 'Escape') {
+                exitEditMode(e, row, inputField, editButton, cancelButton, saveButton);
+            } else {
+                saveButton.disabled = !inputField.validity.valid || inputField.value === url;
+            }
+        });
+        editButton?.addEventListener('click', (e) =>
+            enterEditMode(e, row, inputField, editButton, cancelButton, saveButton)
+        );
+        cancelButton?.addEventListener('click', (e) =>
+            exitEditMode(e, row, inputField, editButton, cancelButton, saveButton)
+        );
+        saveButton?.addEventListener('click', (e) =>
+            saveModifiedUrl(e, row, inputField, editButton, cancelButton, saveButton)
+        );
+
+        row.children[0].children[0].children[0].value = url;
+        row.children[0].children[0]?.addEventListener('dblclick', (e) => 
+            enterEditMode(e, row, inputField, editButton, cancelButton, saveButton)
+        );
         row.children[1].children[0].value = ignore;
         row.children[1].children[0].addEventListener('change', selectionChanged);
         row.children[2].children['usernameOnly'].checked = usernameOnly;
@@ -613,7 +713,7 @@ options.initSitePreferences = function() {
             return;
         }
 
-        let value = manualUrl.value.toLowerCase();
+        let value = manualUrl.value;
 
         // Fills the last / char if needed. This ensures the compatibility with Match Patterns
         if (slashNeededForUrl(value)) {

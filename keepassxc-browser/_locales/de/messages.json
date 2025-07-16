@@ -7,6 +7,10 @@
         "message": "Seiteneinstellungen für diese URL hinzufügen.",
         "description": "Add button title text on Site Preferences tab."
     },
+    "editSitePreferenceButtonTitle": {
+        "message": "URL für diese Seiteneinstellungen bearbeiten.",
+        "description": "Edit button title text on Site Preferences tab."
+    },
     "allowIframeButtonTitle": {
         "message": "Cross-Origin iframes für die aktuelle Seite zulassen.",
         "description": "Allow Cross-Origin iframes button title text."
@@ -16,7 +20,7 @@
         "description": "Connect button title text."
     },
     "copyDebugInfoButtonTitle": {
-        "message": "Debug-Informationen in die Zwischenablage kopieren.",
+        "message": "Debug-Informationen in die Zwischenablage kopieren",
         "description": "Copy debug info button title text on About tab."
     },
     "dismissHttpAuthButtonTitle": {
@@ -622,6 +626,14 @@
         "message": "Verwerfen und Standard-Authentifizierungsdialog anzeigen",
         "description": "Dismiss button text when in HTTP Authentication popup."
     },
+    "optionsDefaultSettingsTitle": {
+        "message": "Standardeinstellungen",
+        "description": "Default settings title for Getting Started page."
+    },
+    "optionsWelcomeTitle": {
+        "message": "KeePassXC-Browser",
+        "description": "Main card title for Getting Started page."
+    },
     "optionsTitle": {
         "message": "Einstellungen | KeePassXC-Browser",
         "description": "Options page title."
@@ -685,6 +697,10 @@
     "optionsButtonAdd": {
         "message": " Hinzufügen",
         "description": "Add button text."
+    },
+    "optionsButtonEdit": {
+        "message": "Bearbeiten",
+        "description": "Edit button text."
     },
     "optionsButtonUpdate": {
         "message": " Nach Aktualisierungen suchen",
@@ -767,7 +783,7 @@
         "description": "Automatically fill-in single credential entry checkbox text."
     },
     "optionsCheckboxAutoFillRelevantCredential": {
-        "message": "Automatically fill in relevant credential entries",
+        "message": "Einträge mit relevanten Anmeldedaten automatisch ausfüllen",
         "description": "Automatically fill-in relevant credential entry checkbox text."
     },
     "optionsCheckboxAutoFillSingleTotp": {
@@ -809,6 +825,14 @@
     "optionsCheckboxShowLoginNotifications": {
         "message": "Benachrichtigung anzeigen, wenn neue Anmeldedaten in der Datenbank gespeichert werden können",
         "description": "Show login notifications checkbox text."
+    },
+    "optionsDefaultPasswordManager": {
+        "message": "Als Standard-Passwortmanager festlegen",
+        "description": "Default password manager checkbox text."
+    },
+    "optionsDefaultPasswordManagerHelpText": {
+        "message": "Legt den KeePassXC-Browser als Standard-Passwortmanager für den Browser fest.",
+        "description": "Default password manager help text."
     },
     "optionsRedirectAllowance": {
         "message": "Anzahl erlaubter Weiterleitungen: $1",
@@ -906,6 +930,10 @@
         "message": "Fügt Eingabefeldern, die als OTP/2FA erkannt werden, ein Symbol hinzu.",
         "description": "OTP field icon option help text."
     },
+    "optionsHideIconsAlertText": {
+        "message": "Sie können die Symbole bei Bedarf auch manuell mit Umschalt+Klick ausblenden.",
+        "description": "Hide icons alert text text."
+    },
     "optionsAutoRetrieveCredentialsHelpText": {
         "message": "KeePassXC-Browser ruft Anmeldedaten sofort ab, wenn ein Tab aktiviert wird.",
         "description": "Auto-Retrive Credentials option help text."
@@ -919,7 +947,7 @@
         "description": "Auto-Fill Single Entry option help text."
     },
     "optionsAutoFillRelevantCredentialHelpText": {
-        "message": "Automatically fill in the relevant credential if a second fill is needed.",
+        "message": "Einträge mit relevanten Anmeldedaten automatisch ausfüllen, wenn ein zweites Ausfüllen erforderlich ist.",
         "description": "Auto-Fill Relevant Credential option help text."
     },
     "optionsAutoFillSingleEntryWarning": {
@@ -1365,5 +1393,33 @@
     "lockDatabase": {
         "message": "Datenbank sperren",
         "description": "Lock database button title text."
+    },
+    "welcomeText": {
+        "message": "Willkommen beim KeePassXC-Browser!",
+        "description": "Main title of Getting Started page."
+    },
+    "documentationGettingStarted": {
+        "message": "Unsere Einstiegsanleitung hilft Ihnen, schnell loszulegen.",
+        "description": "Getting Started document text."
+    },
+    "documentationUserGuide": {
+        "message": "Sie suchen eine umfassendere Dokumentation? Unser Benutzerhandbuch hilft Ihnen dabei.",
+        "description": "User Guide text."
+    },
+    "documentationTroubleshootingGuide": {
+        "message": "Benötigen Sie Hilfe bei der Fehlersuche in der Browser-Integration? Lesen Sie den Leitfaden zur Fehlerbehebung.",
+        "description": "Troubleshooting Guide text."
+    },
+    "gettingStartedWelcomeText": {
+        "message": "Willkommen beim KeePassXC-Browser, der offiziellen Browsererweiterung für KeePassXC.",
+        "description": "Welcome to KeePassXC-Browser, the official browser extension for KeePassXC."
+    },
+    "gettingStartedSecondWelcomeText": {
+        "message": "Bitte gehen Sie die Standardeinstellungen durch und wählen Sie alle von Ihnen gewünschten Optionen aus.",
+        "description": "Please go through the default settings and check all your preferred options."
+    },
+    "gettingStartedNewUser": {
+        "message": "Sind Sie ein Neueinsteiger? Hier finden Sie Links zu unserer Dokumentation.",
+        "description": "Are you a new user? Check links to our documentation."
     }
 }

@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
     "name": "KeePassXC-Browser",
-    "version": "1.9.7",
-    "version_name": "1.9.7",
+    "version": "1.9.9.1",
+    "version_name": "1.9.9.1",
     "minimum_chrome_version": "93",
     "description": "__MSG_extensionDescription__",
     "author": "KeePassXC Team",
@@ -33,13 +33,12 @@
     "background": {
         "service_worker": "background/background_service.js"
     },
-   "content_scripts": [
+    "content_scripts": [
         {
             "matches": [
                 "<all_urls>"
             ],
             "exclude_matches": [
-                "*://*/*.xml*",
                 "file:///*.xml*"
             ],
             "js": [
@@ -129,30 +128,32 @@
             "description": "__MSG_popupReloadButton__"
         }
     },
-    "web_accessible_resources": [{
-        "resources": [
-            "icons/disconnected.svg",
-            "icons/help.svg",
-            "icons/keepassxc.svg",
-            "icons/key.svg",
-            "icons/locked.svg",
-            "icons/otp.svg",
-            "css/autocomplete.css",
-            "css/banner.css",
-            "css/button.css",
-            "css/colors.css",
-            "css/define.css",
-            "css/notification.css",
-            "css/pwgen.css",
-            "css/username.css",
-            "css/totp.css",
-            "content/passkeys.js"
-        ],
-        "matches": [
-            "https://*/*",
-            "http://*/*"
-        ]
-    }],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "icons/disconnected.svg",
+                "icons/help.svg",
+                "icons/keepassxc.svg",
+                "icons/key.svg",
+                "icons/locked.svg",
+                "icons/otp.svg",
+                "css/autocomplete.css",
+                "css/banner.css",
+                "css/button.css",
+                "css/colors.css",
+                "css/define.css",
+                "css/notification.css",
+                "css/pwgen.css",
+                "css/username.css",
+                "css/totp.css",
+                "content/passkeys.js"
+            ],
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ]
+        }
+    ],
     "permissions": [
         "activeTab",
         "clipboardWrite",
@@ -168,6 +169,9 @@
         "webRequestAuthProvider",
         "webRequestBlocking"
     ],
+    "optional_permissions": [
+        "privacy"
+    ],
     "content_security_policy": {
         "extension_pages": "script-src 'self'"
     },
@@ -177,7 +181,7 @@
         "http://*/*"
     ],
     "storage": {
-      "managed_schema": "managed_storage.json"
+        "managed_schema": "managed_storage.json"
     },
     "default_locale": "en"
 }

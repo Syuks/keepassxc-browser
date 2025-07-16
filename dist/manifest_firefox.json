@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "KeePassXC-Browser",
-    "version": "1.9.7",
+    "version": "1.9.9.1",
     "description": "__MSG_extensionDescription__",
     "author": "KeePassXC Team",
     "icons": {
@@ -52,7 +52,6 @@
                 "<all_urls>"
             ],
             "exclude_matches": [
-                "*://*/*.xml*",
                 "file:///*.xml*"
             ],
             "js": [
@@ -176,6 +175,9 @@
         "http://*/*",
         "https://api.github.com/"
     ],
+    "optional_permissions": [
+        "privacy"
+    ],
     "applications": {
         "gecko": {
             "id": "keepassxc-browser@keepassxc.org",
@@ -183,7 +185,7 @@
         }
     },
     "storage": {
-      "managed_schema": "managed_storage.json"
+        "managed_schema": "managed_storage.json"
     },
     "default_locale": "en"
 }

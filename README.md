@@ -1,22 +1,19 @@
 # KeePassXC-Browser
 
-Browser extension for [KeePassXC](https://keepassxc.org/) with [Native Messaging](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging).
-
-Based on [pfn](https://github.com/pfn)'s [chromeIPass](https://github.com/pfn/passifox).
-Some changes merged also from [smorks](https://github.com/smorks)' [KeePassHttp-Connector](https://github.com/smorks/keepasshttp-connector).
+Browser extension for [KeePassXC](https://keepassxc.org/) with [native messaging](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging).
 
 ## Download and use
 
 This browser extension was first supported in KeePassXC 2.3.0 (release end of 2017). In general it is advised to only use the latest available release.
 
-Get the extension for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/keepassxc-browser/) or [Chrome/Chromium](https://chromewebstore.google.com/detail/keepassxc-browser/oboonakemofpalcgghocfoadofidjkkk) or [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/pdffhmdngciaglkoonimfcmckehcpafo) (requires KeePassXC 2.5.3 or newer).
+Get the extension for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/keepassxc-browser/) or [Chrome/Chromium](https://chromewebstore.google.com/detail/keepassxc-browser/oboonakemofpalcgghocfoadofidjkkk) or [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/pdffhmdngciaglkoonimfcmckehcpafo).
 
 Please see this [document](https://keepassxc.org/docs/KeePassXC_GettingStarted.html#_browser_integration) for instructions how to configure KeePassXC in order to connect the database correctly.
 
 ## How it works
 
 KeePassXC-Browser communicates with KeePassXC through _keepassxc-proxy_. The proxy handles listening to STDIN/STDOUT
-and transfers these messages through Unix domain sockets / named pipes to KeePassXC. This means KeePassXC can be used and started normally without inteference from
+and transfers these messages through Unix domain sockets / named pipes to KeePassXC. This means KeePassXC can be used and started normally without interference from
 Native Messaging API. KeePassXC-Browser starts only the proxy application and there's no risk of shutting down KeePassXC or losing any unsaved changes. You don't need to install keepassxc-proxy separately. It is included in the KeePassXC application package. Alternatively you can use
 [keepassxc-proxy-rust](https://github.com/varjolintu/keepassxc-proxy-rust) as a proxy if you prefer a non-Qt solution.
 
@@ -50,7 +47,11 @@ Check [keepassxc-protocol](keepassxc-protocol.md) for the details about the mess
 
 ## Translations
 
-Translations are managed on [Transifex](https://www.transifex.com/keepassxc/keepassxc-browser/) which offers a web interface. Please join an existing language team or request a new one if there is none.
+Translations are managed on [Transifex](https://explore.transifex.com/keepassxc/keepassxc-browser/) which offers a web interface. Please join an existing language team or request a new one if there is none.
+
+## Contributing
+
+You may directly contribute your own code by submitting a pull request. Please read the [CONTRIBUTING](.github/CONTRIBUTING.md) document for further information.
 
 ## Development and testing
 

@@ -13,6 +13,14 @@ const ORANGE_BUTTON = 'kpxc-button kpxc-orange-button';
 const RED_BUTTON = 'kpxc-button kpxc-red-button';
 const GRAY_BUTTON_CLASS = 'kpxc-gray-button';
 
+const ALLOWED_OBSERVER_NODETYPES = [
+    Node.ELEMENT_NODE,
+    Node.DOCUMENT_NODE,
+    Node.DOCUMENT_FRAGMENT_NODE
+];
+
+const OBSERVER_OPTIONS = { attributes: true, attributeFilter: [ 'style' ] };
+
 const DatabaseState = {
     DISCONNECTED: 0,
     LOCKED: 1,
@@ -27,73 +35,15 @@ const $ = function(elem) {
     return document.querySelector(elem);
 };
 
-// Returns a string with 'px' for CSS styles
-const Pixels = function(value) {
-    return String(value) + 'px';
-};
-
-// Basic icon class
-class Icon {
-    constructor(field, databaseState = DatabaseState.DISCONNECTED, segmented = false) {
-        this.databaseState = databaseState;
-        this.icon = null;
-        this.inputField = null;
-        this.rtl = kpxcUI.isRTL(field);
-        this.segmented = segmented;
-
-        try {
-            this.observer = new IntersectionObserver((entries) => {
-                kpxcUI.updateFromIntersectionObserver(this, entries);
-            });
-        } catch (err) {
-            logError(err);
-        }
-    }
-
-    // Creates a wrapper div that has the icon in Shadow DOM
-    createWrapper(styleSheetFilename) {
-        const styleSheet = createStylesheet(styleSheetFilename);
-        const wrapper = document.createElement('div');
-        wrapper.style.all = 'unset';
-        wrapper.style.display = 'none';
-
-        // Make sure the wrapper is positioned correctly without CSS styles affecting to it
-        wrapper.style.position = 'absolute';
-        wrapper.style.top = Pixels(0);
-        wrapper.style.left = Pixels(0);
-
-        // Waits for stylesheet to load before displaying the element
-        styleSheet.addEventListener('load', () => wrapper.style.display = 'block');
-
-        this.shadowRoot = wrapper.attachShadow({ mode: 'closed' });
-        this.shadowRoot.append(styleSheet);
-        this.shadowRoot.append(this.icon);
-        document.body.append(wrapper);
-    }
-
-    switchIcon(state, uuid) {
-        if (!this.icon) {
-            return;
-        }
-
-        if (state === DatabaseState.UNLOCKED) {
-            this.icon.style.filter = kpxc.credentials.length === 0 && !uuid ? 'saturate(0%)' : 'saturate(100%)';
-        } else {
-            this.icon.style.filter = 'saturate(0%)';
-        }
-    }
-
-    removeIcon() {
-        this.shadowRoot.removeChild(this.icon);
-        document.body.removeChild(this.shadowRoot.host);
-    }
-}
-
 const kpxcUI = {};
 kpxcUI.mouseDown = false;
 
 if (document.body) {
-    kpxcUI.bodyRect = document.body.getBoundingClientRect();
+    const bodyRect = document.body.getBoundingClientRect();
+    kpxcUI.bodyRect = {
+        left: bodyRect.left + window.pageXOffset,
+        top: bodyRect.top + window.pageYOffset
+    };
     kpxcUI.bodyStyle = getComputedStyle(document.body);
 }
 
@@ -121,63 +71,6 @@ kpxcUI.createElement = function(type, classes, attributes, textContent) {
     return element;
 };
 
-kpxcUI.monitorIconPosition = function(iconClass) {
-    // Handle icon position on resize
-    window.addEventListener('resize', function(e) {
-        kpxcUI.updateIconPosition(iconClass);
-    });
-
-    // Handle icon position on scroll
-    window.addEventListener('scroll', function(e) {
-        kpxcUI.updateIconPosition(iconClass);
-    });
-
-    window.addEventListener('transitionend', function(e) {
-        if (matchesWithNodeName(e.target, 'INPUT') || matchesWithNodeName(e.target, 'TEXTAREA')) {
-            kpxcUI.updateIconPosition(iconClass);
-        }
-    });
-};
-
-kpxcUI.updateIconPosition = function(iconClass) {
-    if (iconClass.inputField && iconClass.icon) {
-        kpxcUI.setIconPosition(iconClass.icon, iconClass.inputField, iconClass.rtl, iconClass.segmented);
-    }
-};
-
-kpxcUI.calculateIconOffset = function(field, size) {
-    const offset = Math.floor((field.offsetHeight / 2) - (size / 2) - 1);
-    return (offset < 0) ? 0 : offset;
-};
-
-kpxcUI.setIconPosition = function(icon, field, rtl = false, segmented = false) {
-    const rect = field.getBoundingClientRect();
-    const size = Number(icon.getAttribute('size'));
-    const offset = kpxcUI.calculateIconOffset(field, size);
-    const zoom = kpxcUI.bodyStyle.zoom || 1;
-    let left = kpxcUI.getRelativeLeftPosition(rect) / zoom;
-    let top = kpxcUI.getRelativeTopPosition(rect) / zoom;
-
-    // Add more space for the icon to show it at the right side of the field if TOTP fields are segmented
-    if (segmented) {
-        left += size + 10;
-    }
-
-    // Adjusts the icon offset for certain sites
-    const iconOffset = kpxcSites.iconOffset(left, top, size, field?.getLowerCaseAttribute('type'));
-    if (iconOffset) {
-        left = iconOffset[0];
-        top = iconOffset[1];
-    }
-
-    const scrollTop = kpxcUI.getScrollTop() / zoom;
-    const scrollLeft = kpxcUI.getScrollLeft() / zoom;
-    icon.style.top = Pixels(top + scrollTop + offset + 1);
-    icon.style.left = rtl
-        ? Pixels(left + scrollLeft + offset)
-        : Pixels(left + scrollLeft + field.offsetWidth - size - offset);
-};
-
 kpxcUI.getScrollTop = function() {
     return document.defaultView?.scrollY ?? document.scrollingElement?.scrollTop ?? 0;
 };
@@ -192,32 +85,6 @@ kpxcUI.getRelativeLeftPosition = function(rect) {
 
 kpxcUI.getRelativeTopPosition = function(rect) {
     return kpxcUI.bodyStyle.position.toLowerCase() === 'relative' ? rect.top - kpxcUI.bodyRect.top : rect.top;
-};
-
-kpxcUI.deleteHiddenIcons = function(iconList) {
-    const deletedIcons = [];
-    for (const icon of iconList) {
-        if (icon.inputField && !kpxcFields.isVisible(icon.inputField)) {
-            const index = iconList.indexOf(icon);
-            icon.removeIcon();
-            iconList.splice(index, 1);
-            deletedIcons.push(icon.inputField);
-
-            // Delete the input field from detected fields so the icon can be detected again
-            const inputFieldIndex = kpxc.inputs.indexOf(icon.inputField);
-            if (inputFieldIndex >= 0) {
-                kpxc.inputs.splice(inputFieldIndex, 1);
-            }
-        }
-    }
-
-    // Remove the same icons from kpxcIcons.icons array
-    for (const input of deletedIcons) {
-        const index = kpxcIcons.icons.findIndex(e => e.field === input);
-        if (index >= 0) {
-            kpxcIcons.icons.splice(index, 1);
-        }
-    }
 };
 
 kpxcUI.isRTL = function(field) {
@@ -291,37 +158,18 @@ kpxcUI.makeBannerDraggable = function(banner) {
 };
 
 /**
-* Detects if the input field appears or disappears -> show/hide the icon
-* - boundingClientRect with slightly (< -10) negative values -> hidden
-* - intersectionRatio === 0 -> hidden
-* - isIntersecting === false -> hidden
-* - intersectionRatio > 0 -> shown
-* - isIntersecting === true -> shown
-*/
-kpxcUI.updateFromIntersectionObserver = function(iconClass, entries) {
-    for (const entry of entries) {
-        const rect = DOMRectToArray(entry.boundingClientRect);
-
-        if ((entry.intersectionRatio === 0 && !entry.isIntersecting) || (rect.some(x => x < -10))) {
-            iconClass.icon.style.display = 'none';
-        } else if (entry.intersectionRatio > 0 && entry.isIntersecting) {
-            iconClass.icon.style.display = 'block';
-
-            // Wait for possible DOM animations
-            setTimeout(() => {
-                kpxcUI.setIconPosition(iconClass.icon, entry.target, iconClass.rtl, iconClass.segmented);
-            }, 400);
-        }
-    }
-};
-
-/**
  * Creates a self-disappearing notification banner to DOM
  * @param {string} type     Notification type: (success, info, warning, error)
  * @param {string} message  The message shown
  */
-kpxcUI.createNotification = function(type, message) {
+kpxcUI.createNotification = async function(type, message) {
     if (!kpxc.settings.showNotifications || !type || !message) {
+        return;
+    }
+
+    // Send the notification to top window from iframe
+    if (window.self !== window.top) {
+        await sendMessage('frame_message', [ 'notification_from_frame', type, message ]);
         return;
     }
 
@@ -331,7 +179,7 @@ kpxcUI.createNotification = function(type, message) {
         let parentBody;
         try {
             parentBody = window.parent.document.body;
-        } catch(e) {
+        } catch(_e) {
             parentBody = window.document.body;
         }
 
@@ -353,7 +201,7 @@ kpxcUI.createNotification = function(type, message) {
     const notification = kpxcUI.createElement('div', 'kpxc-notification kpxc-notification-' + type, {});
     type = type.charAt(0).toUpperCase() + type.slice(1) + '!';
 
-    const className = (isFirefox() ? 'kpxc-banner-icon-moz' : 'kpxc-banner-icon');
+    const className = getIconClass('kpxc-banner-icon');
     const icon = kpxcUI.createElement('span', className, { 'alt': 'logo' });
     const label = kpxcUI.createElement('span', 'kpxc-label', {}, type);
     const msg = kpxcUI.createElement('span', '', {}, message);
@@ -394,8 +242,39 @@ kpxcUI.createButton = function(color, textContent, callback) {
     return button;
 };
 
-const DOMRectToArray = function(domRect) {
-    return [ domRect.bottom, domRect.height, domRect.left, domRect.right, domRect.top, domRect.width, domRect.x, domRect.y ];
+// Observe and prevent style changes to wrapper div elements
+kpxcUI.createWrapperObserver = function() {
+    kpxcUI.wrapperObserver = new MutationObserver(function(mutations, obs) {
+        for (const mut of mutations) {
+            if (mut?.target && mut.target.style?.cssText !== 'all: unset;') {
+                mut.target.removeAttribute('style');
+                mut.target.style.all = 'unset';
+            }
+        }
+    });
+};
+
+kpxcUI.observeWrapper = function(elem) {
+    kpxcUI.wrapperObserver?.observe(elem, OBSERVER_OPTIONS);
+};
+
+// Observer <html> and <body> style changes
+kpxcUI.createPageObserver = function() {
+    kpxcUI.pageObserver = new MutationObserver(function(mutations, obs) {
+        for (const mut of mutations) {
+            const currentStyle = getComputedStyle(mut?.target);
+            if (currentStyle.opacity && currentStyle.opacity < MIN_OPACITY) {
+                kpxc.clearAllFromPage();
+            }
+        }
+    });
+
+    if (document?.documentElement && ALLOWED_OBSERVER_NODETYPES.includes(document.documentElement.nodeType)) {
+        kpxcUI.pageObserver.observe(document.documentElement, OBSERVER_OPTIONS);
+    }
+    if (document?.body && ALLOWED_OBSERVER_NODETYPES.includes(document.body.nodeType)) {
+        kpxcUI.pageObserver.observe(document.body, OBSERVER_OPTIONS);
+    }
 };
 
 const initColorTheme = function(elem) {
@@ -423,6 +302,11 @@ const logDebug = function(message, extra) {
     }
 };
 
+const initObservers = function() {
+    kpxcUI.createWrapperObserver();
+    kpxcUI.createPageObserver();
+};
+
 document.addEventListener('mousedown', function(e) {
     if (!e.isTrusted) {
         return;
@@ -438,6 +322,12 @@ document.addEventListener('mouseup', function(e) {
 
     kpxcUI.mouseDown = false;
 });
+
+if (document.readyState === 'complete' || (document.readyState !== 'loading' && !document.documentElement.doScroll)) {
+    initObservers();
+} else {
+    document.addEventListener('DOMContentLoaded', initObservers);
+}
 
 HTMLDivElement.prototype.appendMultiple = function(...args) {
     for (const a of args) {

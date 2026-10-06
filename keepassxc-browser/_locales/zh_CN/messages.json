@@ -184,8 +184,8 @@
         "description": "Attestation not supported."
     },
     "errorMessagePasskeysCredentialIsExcluded": {
-        "message": "凭据已被排除。",
-        "description": "Credential is excluded."
+        "message": "未注册通行密钥，因为凭据已存在。移除已有的凭据以继续。",
+        "description": "Passkey not registered due to an existing credential. Remove the existing credential to continue."
     },
     "errorMessagePasskeysRequestCanceled": {
         "message": "通行密钥请求被取消。",
@@ -235,9 +235,25 @@
         "message": "user.id 不匹配所需长度。",
         "description": "user.id does not match the required length."
     },
+    "errorMessagePasskeysEvalByCredentialNotSupported": {
+        "message": "注册时不支持 evalByCredential。",
+        "description": "evalByCredential is not supported at registration."
+    },
+    "errorMessagePasskeysEvalByCredentialNotEmpty": {
+        "message": "evalByCredential 不为空，但 allowedCredentials 为空。",
+        "description": "evalByCredential is not empty, but allowedCredentials is."
+    },
+    "errorMessagePasskeysEvalByCredentialNotFound": {
+        "message": "未找到 evalByCredential 中提供的凭据 ID。",
+        "description": "Credential ID provided in evalByCredential not found."
+    },
     "errorMessagePasskeysContextIsNotSecure": {
         "message": "上下文不安全。",
         "description": "Context is not secure."
+    },
+    "errorMessageCannotUseReferences": {
+        "message": "用户名或密码不能包含引用。",
+        "description": "Username or password cannot contain references."
     },
     "errorNotConnected": {
         "message": "未连接到 KeePassXC。",
@@ -322,6 +338,10 @@
         "message": "字符串字段",
         "description": "Text for string field."
     },
+    "defineSubmitButton": {
+        "message": "提交按钮",
+        "description": "Text for Submit Button."
+    },
     "defineChooseUsername": {
         "message": "选择用户名字段",
         "description": "Choosing a username field text when choosing Custom Login Fields."
@@ -338,9 +358,13 @@
         "message": "选择字符串字段",
         "description": "Choose String Fields a selection text when choosing Custom Login Fields."
     },
+    "defineChooseSubmitButton": {
+        "message": "选择提交按钮",
+        "description": "Choose submit button selection text when choosing Custom Login Fields."
+    },
     "defineHelpText": {
         "message": "请确认您的选择，或选择更多字段作为字符串字段。",
-        "description": "Confirm a selection text when choosing Custom Login Fields which contains string fields."
+        "description": "Confirm a selection text when choosing Custom Login Fields which contains String Fields."
     },
     "defineKeyboardText": {
         "message": "您也可以使用键盘的数字键选择输入字段。",
@@ -362,6 +386,10 @@
         "message": "字符串字段",
         "description": "General text for a String Fields."
     },
+    "submitButton": {
+        "message": "提交按钮",
+        "description": "Custom Submit Button text."
+    },
     "credentialsNoUsername": {
         "message": "- 没有用户名 -",
         "description": "Shown when no username is set in the credentials."
@@ -369,6 +397,10 @@
     "credentialsNoLoginsFound": {
         "message": "未找到登录信息。",
         "description": "Shown when no credentials are found for the current page."
+    },
+    "credentialsBlockedInIframe": {
+        "message": "凭据填充在不受信任的 iframe 中被阻止。",
+        "description": "Alert message when filling credentials is blocked due to iframe restrictions."
     },
     "credentialsMultipleFound": {
         "message": "在 KeePassXC 中找到多条登录信息！",
@@ -389,6 +421,10 @@
     "credentialExpired": {
         "message": "已过期",
         "description": "If a credential is expired, this is appended to the title label."
+    },
+    "credentialsRetrieveButton": {
+        "message": "检索凭据",
+        "description": "Manual retrieve credentials button text."
     },
     "fieldsFill": {
         "message": "错误：无法找到可填写的字段。",
@@ -674,6 +710,10 @@
         "message": "网站设置",
         "description": "Site Preferences page header."
     },
+    "optionsSitePreferencesSettings": {
+        "message": "设置",
+        "description": "Site Preferences settings button text."
+    },
     "optionsMenuAbout": {
         "message": "关于",
         "description": "About page header."
@@ -725,6 +765,10 @@
     "optionsButtonExport": {
         "message": "导出配置",
         "description": "Export settings button text."
+    },
+    "optionsButtonResetSettings": {
+        "message": "重置所有设置",
+        "description": "Reset all settings button text."
     },
     "optionsLabelDefaultGroup": {
         "message": "保存新密码的默认群组：",
@@ -845,6 +889,22 @@
     "optionsCheckboxAutoFillAndSend": {
         "message": "允许填充 HTTP Basic 认证凭据",
         "description": "Allow filling HTTP Basic Auth credentials checkbox text."
+    },
+    "optionsConnectionMethod": {
+        "message": "连接方式",
+        "description": "Connection method selection text."
+    },
+    "optionsConnectionMethodHelpText": {
+        "message": "如果浏览器中的原生消息传递被阻止，您可以切换到直接 WebSocket 连接。必须从 KeePassXC 端启用该功能才能工作。需要重启浏览器。",
+        "description": "Connection method help text."
+    },
+    "optionsConnectionMethodNativeMessaging": {
+        "message": "原生消息传递",
+        "description": "Native messaging option for Connection method."
+    },
+    "optionsConnectionMethodWebSocket": {
+        "message": "WebSocket",
+        "description": "WebSocket option for Connection method."
     },
     "optionsDebugLogging": {
         "message": "调试日志",
@@ -1030,6 +1090,10 @@
         "message": "需要 KeePassXC 版本：$1",
         "description": "KeePassXC version requirement text."
     },
+    "optionsMinimumKeePassXCVersionRequired": {
+        "message": "该扩展需要 KeePassXC 版本：$1。早期版本可能会导致意外行为。",
+        "description": "KeePassXC minimum version requirement text."
+    },
     "optionsDefault": {
         "message": "默认值：$1",
         "description": "Default setting text."
@@ -1065,6 +1129,10 @@
     "optionsImportSettingsDialogText": {
         "message": "当前配置将会被覆盖，确定导入？",
         "description": "Import settings confirmation dialog help text."
+    },
+    "optionsResetSettingsDialogText": {
+        "message": "所有设置都将重置为默认。您确定吗？",
+        "description": "Reset all settings dialog text."
     },
     "optionsConnectedDatabasesText": {
         "message": "已连接到 KeePassXC-Browser 的数据库。",
@@ -1110,8 +1178,8 @@
         "message": "页面 URL",
         "description": "Site Preferences list column title."
     },
-    "optionsColumnIgnore": {
-        "message": "忽略",
+    "optionsColumnFeatures": {
+        "message": "功能",
         "description": "Site Preferences list column title."
     },
     "optionsColumnUsernameOnly": {
@@ -1140,6 +1208,10 @@
     },
     "optionsSelectionAutoSubmit": {
         "message": "禁用自动提交",
+        "description": "Site Preferences option selection."
+    },
+    "optionsSelectionPasskeys": {
+        "message": "禁用通行密钥",
         "description": "Site Preferences option selection."
     },
     "optionsSelectionFull": {

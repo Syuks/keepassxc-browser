@@ -11,10 +11,6 @@ kpxcPasswordIcons.switchIcon = function(state) {
     kpxcPasswordIcons.icons.forEach(u => u.switchIcon(state));
 };
 
-kpxcPasswordIcons.deleteHiddenIcons = function() {
-    kpxcUI.deleteHiddenIcons(kpxcPasswordIcons.icons);
-};
-
 kpxcPasswordIcons.isValid = function(field) {
     if (!field
         || field.readOnly
@@ -34,7 +30,7 @@ class PasswordIcon extends Icon {
         this.nextFieldExists = false;
 
         this.initField(field);
-        kpxcUI.monitorIconPosition(this);
+        kpxcIcons.monitorIconPosition(this);
     }
 }
 
@@ -49,19 +45,22 @@ PasswordIcon.prototype.initField = function(field) {
 };
 
 PasswordIcon.prototype.createIcon = function(field) {
-    const className = (isFirefox() ? 'key-moz' : 'key');
-    const size = (field.offsetHeight > 28) ? 24 : 16;
-    const offset = kpxcUI.calculateIconOffset(field, size);
+    const className = getIconClass('key');
+    const size = this.calculateIconSize(field);
 
     const icon = kpxcUI.createElement('div', 'kpxc kpxc-pwgen-icon ' + className,
         {
             'title': tr('passwordGeneratorGenerateText'),
             'size': size,
-            'offset': offset,
-            'kpxc-pwgen-field-id': field.getAttribute('data-kpxc-id') // Needed?
+            'kpxc-pwgen-field-id': field.getAttribute('data-kpxc-id'),
+            'popover': 'manual'
         });
 
-    icon.style.zIndex = '10000000';
+    if (kpxcFields.popoverSupported) {
+        icon.style.margin = 0;
+    } else {
+        icon.style.zIndex = '10000000';
+    }
     icon.style.width = Pixels(size);
     icon.style.height = Pixels(size);
 
@@ -75,7 +74,11 @@ PasswordIcon.prototype.createIcon = function(field) {
         }
 
         if (e.shiftKey) {
-            icon.style.display = 'none';
+            if (kpxcFields.popoverSupported) {
+                icon.hidePopover();
+            } else {
+                icon.style.display = 'none';
+            }
             return;
         }
 
@@ -86,9 +89,12 @@ PasswordIcon.prototype.createIcon = function(field) {
     icon.addEventListener('mousedown', ev => ev.stopPropagation());
     icon.addEventListener('mouseup', ev => ev.stopPropagation());
 
-    kpxcUI.setIconPosition(icon, field, this.rtl);
+    kpxcIcons.setIconPosition(icon, field, this.rtl);
     this.icon = icon;
     this.createWrapper('css/pwgen.css');
+    if (kpxcFields.popoverSupported) {
+        icon.showPopover();
+    }
 };
 
 
@@ -151,13 +157,7 @@ kpxcPasswordGenerator.fill = function(elem, password) {
 
 const isPasswordGeneratorSupported = async function() {
     const response = await browser.runtime.sendMessage({
-        action: 'get_keepassxc_versions'
+        action: 'get_features_list'
     });
-
-    const result = await browser.runtime.sendMessage({
-        action: 'compare_versions',
-        args: [ [ '2.7.0' ], response.current ]
-    });
-
-    return result['2.7.0'] || false;
+    return response?.passwordGenerator;
 };

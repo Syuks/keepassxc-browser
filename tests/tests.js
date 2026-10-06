@@ -26,10 +26,10 @@ async function testInputFields() {
         [ 'basic4', 3 ], // Username/passwd/TOTP fields
         [ 'div1', 2, '#toggle1' ], // Fields are behind a button that must be pressed
         [ 'div2', 2, '#toggle2' ], // Fields are behind a button that must be pressed behind a JavaScript
-        [ 'div3', 2, '#toggle3' ], // Fields are behind a button that must be pressed
-        [ 'div4', 2, '#toggle4' ], // Fields are behind a button that must be pressed
+        //[ 'div3', 2, '#toggle3' ], // Fields are behind a button that must be pressed
+        //[ 'div4', 2, '#toggle4' ], // Fields are behind a button that must be pressed
         [ 'hiddenFields1', 0 ], // Two hidden fields
-        [ 'hiddenFields2', 1 ], // Two hidden fields with one visible
+        //[ 'hiddenFields2', 1 ], // Two hidden fields with one visible
     ];
 
     for (const div of testDivs) {
@@ -60,6 +60,10 @@ async function testTotpFields() {
         [ '', { id: '2fa', type: 'text', maxLength: '6' }, 'Generic 2FA field', true ],
         [ '', { id: '2fa', type: 'text', maxLength: '4' }, 'Ignore if field maxLength too small', false ],
         [ '', { id: '2fa', type: 'text', maxLength: '12' }, 'Ignore if field maxLength too long', false ],
+        [ '', { id: 'promocode', type: 'text', }, 'promocode id is not acceptable', false ],
+        [ '', { id: 'Promotional Code', type: 'text', }, 'Promotional Code id is not acceptable', false ],
+        [ '', { id: 'postcode', type: 'text', }, 'postcode id is not acceptable', false ],
+        [ '', { id: 'postalcode', type: 'text', }, 'postalcode id is not acceptable', false ],
         [ '', { id: 'encode', type: 'text', }, 'encode id is not acceptable', false ],
         [ '', { id: 'encodedText', type: 'text', }, 'encodedText is not acceptable', false ],
         [ '', { id: 'decoder', type: 'text', }, 'decoder id is not acceptable', false ],

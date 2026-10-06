@@ -19,7 +19,7 @@
     <script src="options.js"></script>
     <script src="../common/translate.js" defer></script>
   </head>
-  <body class="pt-3 pb-5">
+  <body class="pt-3 pb-5 no-transitions">
     <div class="container-fluid">
       <div class="row">
         <nav class="col-md-3 col-lg-2 sidebar">
@@ -31,7 +31,7 @@
             <ul class="nav flex-column mb-2 text-uppercase">
               <li class="active nav-item">
                 <a class="nav-link text-light rounded-sm" href="#general-settings">
-                  <i class="fa fa-ellipsis-h fa-lg pe-2" aria-hidden="true"></i>
+                  <i class="fa fa-cog fa-lg pe-2" aria-hidden="true"></i>
                   <span class="menu-item" data-i18n="optionsMenuGeneral"></span>
                 </a>
               </li>
@@ -49,7 +49,7 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link text-light rounded-sm" href="#site-preferences">
-                  <i class="fa fa-wrench fa-lg pe-2" aria-hidden="true"></i>
+                  <i class="fa fa-list-alt fa-lg pe-2" aria-hidden="true"></i>
                   <span class="menu-item" data-i18n="optionsMenuSitePreferences"></span>
                 </a>
               </li>
@@ -67,7 +67,7 @@
         </nav>
 
         <main class="col-md-9 col-lg-10 offset-md-3 offset-lg-2 px-4 mt-5 mt-md-0">
-          <div class="content">
+          <div class="content" id="main-content">
 
             <!-- General Settings -->
             <div class="tab" id="tab-general-settings">
@@ -80,6 +80,12 @@
                   <span data-i18n="optionsUserInterfaceTitle"></span>
                 </div>
                 <div class="card-body">
+
+                  <!-- Version warning -->
+                  <div class="alert alert-warning mt-3 col-lg-9" role="alert" id="minimumVersionAlert" style="display: none;">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    <span data-i18n="optionsMinimumKeePassXCVersionRequired" data-i18n-placeholder="2.6.0"></span>
+                  </div>
 
                   <!-- Color theme -->
                   <div class="form-group col-sm-3 pb-2">
@@ -154,7 +160,7 @@
               </div>
 
               <!-- Keyboard shortcuts -->
-              <div class="card my-4 shadow">
+              <div class="card my-4 shadow" id="keyboardShortcuts">
                 <div class="card-header h6 rounded-0">
                   <i class="fa fa-keyboard-o" aria-hidden="true"></i>
                   <span data-i18n="optionsKeyboardShortcutsHeader"></span>
@@ -260,7 +266,7 @@
                       <input class="form-check-input" type="checkbox" name="autoFillSingleEntry" id="autoFillSingleEntry" value="true">
                       <label class="form-check-label" for="autoFillSingleEntry" data-i18n="optionsCheckboxAutoFillSingleEntry"></label>
                       <div class="form-text" data-i18n="optionsAutoFillSingleEntryHelpText"></div>
-                    
+
                       <div class="alert alert-warning mt-3 col-lg-9" role="alert">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                         <span data-i18n="optionsAutoFillSingleEntryWarning"></span>
@@ -278,7 +284,7 @@
                   </div>
 
                   <!-- Autofill HTTP Auth dialogs -->
-                  <div class="form-group pb-1">
+                  <div class="form-group pb-1" id="autoFillHttpAuth">
                     <div class="form-check form-switch">
                       <input class="form-check-input" type="checkbox" name="autoFillAndSend" id="autoFillAndSend" value="true">
                       <label class="form-check-label" for="autoFillAndSend" data-i18n="optionsCheckboxAutoFillAndSend"></label>
@@ -352,8 +358,8 @@
 
                   <!-- Number of allowed redirects -->
                   <div class="form-group w-50 pb-2">
-                    <label id="redirectAllowanceLabel" class="font-weight-normal" for="redirectAllowance" data-i18n="optionsRedirectAllowance" data-i18n-placeholder="1"></label>
-                    <input type="range" class="form-range" id="redirectAllowance" name="redirectAllowance" min="1" max="11" step="1" value="1">
+                    <label id="redirectAllowanceLabel" class="font-weight-normal" for="redirectAllowance" data-i18n="optionsRedirectAllowance" data-i18n-placeholder="3"></label>
+                    <input type="range" class="form-range" id="redirectAllowance" name="redirectAllowance" min="1" max="11" step="1" value="3">
                     <div class="form-text help-text" data-i18n="optionsRedirectAllowanceHelpText"></div>
                   </div>
 
@@ -531,6 +537,18 @@
                     <div class="form-text" data-i18n="optionsClearCredentialsTimeoutHelpText"></div>
                   </div>
 
+                  <!-- Connection method -->
+                  <div class="form-group col-sm-3 pb-2 py-2" id="connectionMethodOptions">
+                    <label for="connectionMethod" class="form-label" data-i18n="optionsConnectionMethod"></label>
+                    <select class="form-select form-select-sm col-md-3 col-lg-2" id="connectionMethod" data-i18n="[title]optionsConnectionMethodSelection">
+                      <option value="nativemessaging" data-i18n="optionsConnectionMethodNativeMessaging"></option>
+                      <option value="websocket" data-i18n="optionsConnectionMethodWebSocket"></option>
+                    </select>
+                  </div>
+                  <div>
+                    <span class="form-text text-muted" data-i18n="optionsConnectionMethodHelpText"></span>
+                  </div>
+
                   <!-- Debug logging -->
                   <div class="form-group mt-2 pb-1">
                     <div class="form-check form-switch">
@@ -559,6 +577,10 @@
                       <i class="fa fa-arrow-up" aria-hidden="true"></i>
                       <span data-i18n="optionsButtonExport"></span>
                     </button>
+                    <button class="btn btn-sm btn-danger ms-2" id="resetSettingsButton" data-i18n="[title]optionsButtonResetSettings">
+                      <i class="fa fa-undo" aria-hidden="true"></i>
+                      <span data-i18n="optionsButtonResetSettings"></span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -581,6 +603,30 @@
                       <button class="btn btn-sm yes btn-success">
                         <i class="fa fa-check" aria-hidden="true"></i>
                         <span data-i18n="optionsButtonImport"></span>
+                      </button>
+                  </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="dialogResetSettings" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel" data-i18n="optionsButtonResetSettings"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <p data-i18n="optionsResetSettingsDialogText"></p>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal" aria-hidden="true">
+                        <i class="fa fa-remove" aria-hidden="true"></i>
+                        <span data-i18n="optionsButtonCancel"></span>
+                      </button>
+                      <button class="btn btn-sm yes btn-danger">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        <span data-i18n="optionsButtonReset"></span>
                       </button>
                   </div>
                   </div>
@@ -761,16 +807,14 @@
                       <thead>
                         <tr>
                           <th scope="col"><span data-i18n="optionsColumnPageURL"></span></th>
-                          <th scope="col"><span data-i18n="optionsColumnIgnore"></span></th>
-                          <th scope="col"><span data-i18n="optionsColumnUsernameOnly"></span></th>
-                          <th scope="col"><span data-i18n="optionsColumnImprovedInputFieldDetection"></span></th>
-                          <th scope="col"><span data-i18n="optionsColumnAllowIframes"></span></th>
+                          <th scope="col"></th>
+                          <th scope="col"><span data-i18n="optionsColumnFeatures"></span></th>
                           <th scope="col"></th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr class="empty">
-                          <td colspan="5"><span data-i18n="optionsSitePreferencesNotFound"></span></td>
+                          <td colspan="4"><span data-i18n="optionsSitePreferencesNotFound"></span></td>
                         </tr>
                         <tr class="clone d-none">
                           <td class="text-nowrap">
@@ -790,17 +834,20 @@
                               </button>
                             </div>
                           </td>
-                          <td>
-                            <select class="form-select form-select-sm" name="ignore" data-i18n="[title]optionsSitePreferencesSelect">
+                          <td class="text-nowrap">
+                            <button type="button" class="btn btn-sm btn-primary container-fluid" id="settings-button">
+                              <span class="non-clickable" data-i18n="optionsSitePreferencesSettings"></span>
+                            </button>
+                          </td>
+                           <td>
+                            <select class="form-select form-select-sm" id="ignore-select" name="ignore" data-i18n="[title]optionsSitePreferencesSelect">
                               <option value="ignoreNothing" data-i18n="optionsSelectionNothing"></option>
                               <option value="ignoreNormal" data-i18n="optionsSelectionNormal"></option>
                               <option value="ignoreAutoSubmit" data-i18n="optionsSelectionAutoSubmit"></option>
+                              <option value="ignorePasskeys" data-i18n="optionsSelectionPasskeys"></option>
                               <option value="ignoreFull" data-i18n="optionsSelectionFull"></option>
                             </select>
                           </td>
-                          <td><input class="form-check-input" type="checkbox" name="usernameOnly" value="false" data-i18n="[title]optionsColumnUsernameOnly"></td>
-                          <td><input class="form-check-input" type="checkbox" name="improvedFieldDetection" value="false" data-i18n="[title]optionsColumnImprovedInputFieldDetection"></td>
-                          <td><input class="form-check-input" type="checkbox" name="allowIframes" value="false" data-i18n="[title]optionsColumnAllowIframes"></td>
                           <td class="text-nowrap">
                             <button class="btn btn-sm delete btn-danger" data-i18n="[title]removeSitePreferencesButtonTitle">
                               <i class="fa fa-remove" aria-hidden="true"></i>
@@ -836,6 +883,32 @@
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <!-- Settings dropdown -->
+              <div class="card settings-dropdown" style="display: none;">
+                <div class="card-body settings-dropdown-body">
+                  <!-- Username only detection -->
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="usernameOnly" name="usernameOnly" value="false" data-i18n="[title]optionsColumnUsernameOnly">
+                    <label class="form-check-label" for="usernameOnly" data-i18n="optionsColumnUsernameOnly"></label>
+                  </div>
+
+                  <!-- Improved input field detection -->
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="improvedFieldDetection" name="improvedFieldDetection" value="false" data-i18n="[title]optionsColumnImprovedInputFieldDetection">
+                    <label class="form-check-label" for="improvedFieldDetection" data-i18n="optionsColumnImprovedInputFieldDetection"></label>
+                  </div>
+
+                  <!-- Allow iFrames -->
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="allowIframes" name="allowIframes" value="false" data-i18n="[title]optionsColumnAllowIframes">
+                    <label class="form-check-label" for="allowIframes" data-i18n="optionsColumnAllowIframes"></label>
+                  </div>
+
+                  <!-- Add new options below -->
+                  <!--<hr class="dropdown-divider">-->
                 </div>
               </div>
             </div>

@@ -28,7 +28,7 @@ kpxcBanner.destroy = async function() {
         } else {
             window.parent.document.body.removeChild(window.parent.document.body.querySelector('#kpxc-banner'));
         }
-    } catch(e) {
+    } catch(_e) {
         kpxcBanner.wrapper.style.display = 'hidden';
     }
 
@@ -62,10 +62,10 @@ kpxcBanner.create = async function(credentials = {}) {
     const bannerInfo = kpxcUI.createElement('div', 'banner-info');
     const bannerButtons = kpxcUI.createElement('div', 'banner-buttons');
 
-    const className = (isFirefox() ? 'kpxc-banner-icon-moz' : 'kpxc-banner-icon');
+    const className = getIconClass('kpxc-banner-icon');
     const icon = kpxcUI.createElement('span', className, { 'alt': 'logo' });
 
-    const infoText = kpxcUI.createElement('span', '', {}, tr('rememberInfoText'));
+    const infoText = kpxcUI.createElement('span', 'banner-info-text', {}, tr('rememberInfoText'));
     const usernameText = kpxcUI.createElement('span', 'small', {}, tr('popupUsername') + ' ');
     const usernameSpan = kpxcUI.createElement('span', 'small info information-username', {}, credentials.username);
 
@@ -163,8 +163,10 @@ kpxcBanner.create = async function(credentials = {}) {
     this.shadowRoot.append(banner);
     kpxcBanner.wrapper = wrapper;
 
-    if (window.self === window.top && !kpxcBanner.created) {
-        window.parent.document.body.appendChild(wrapper);
+    // Always create the banner to the top document. Useful if we are inside an iframe.
+    if (!kpxcBanner.created) {
+        window.top.document.body.appendChild(wrapper);
+        kpxcUI.observeWrapper(wrapper);
         kpxcBanner.created = true;
     }
 };
@@ -367,21 +369,23 @@ kpxcBanner.updateCredentials = async function(credentials = {}) {
 };
 
 kpxcBanner.verifyResult = async function(code) {
-    if (code === 'error') {
+    if (code === CreationError.GENERAL) {
         kpxcUI.createNotification('error', tr('rememberErrorCannotSaveCredentials'));
-    } else if (code === 'created') {
+    } else if (code === CreationError.REFERENCES) {
+        kpxcUI.createNotification('error', tr('errorMessageCannotUseReferences'));
+    } else if (code === CreationError.CREATED) {
         kpxcUI.createNotification(
             'success',
             tr('rememberCredentialsSaved', kpxcBanner.credentials.username || tr('rememberEmptyUsername')),
         );
         await kpxc.retrieveCredentials(true); // Forced reload
-    } else if (code === 'updated') {
+    } else if (code === CreationError.UPDATED) {
         kpxcUI.createNotification(
             'success',
             tr('rememberCredentialsUpdated', kpxcBanner.credentials.username || tr('rememberEmptyUsername')),
         );
         await kpxc.retrieveCredentials(true); // Forced reload
-    } else if (code === 'canceled') {
+    } else if (code === CreationError.CANCELED) {
         kpxcUI.createNotification('warning', tr('rememberCredentialsNotSaved'));
     } else {
         kpxcUI.createNotification('error', tr('rememberErrorDatabaseClosed'));

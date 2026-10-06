@@ -100,7 +100,9 @@ class Autocomplete {
             styleSheet.addEventListener('load', () => (this.wrapper.style.display = 'block'));
             this.container = kpxcUI.createElement('div', 'kpxcAutocomplete-container', {
                 id: 'kpxcAutocomplete-container',
+                popover: 'manual',
             });
+            this.container.style.margin = 0;
 
             // Apply compact mode class
             if (kpxc.settings.useCompactMode) {
@@ -117,6 +119,7 @@ class Autocomplete {
             this.container.append(this.list);
             this.shadowRoot.append(this.container);
             document.body.append(this.wrapper);
+            kpxcUI.observeWrapper(this.wrapper);
 
             // Add a footer message for auto-submit
             if (this.autoSubmit) {
@@ -127,6 +130,9 @@ class Autocomplete {
 
         this.updateList();
         this.container.classList.add('kpxcAutocomplete-container--visible');
+        if (kpxcFields.popoverSupported) {
+            this.container.showPopover({ source: inputField });
+        }
         this.updatePosition();
     }
 
@@ -234,6 +240,9 @@ class Autocomplete {
         }
 
         this.container.classList.remove('kpxcAutocomplete-container--visible');
+        if (kpxcFields.popoverSupported) {
+            this.container.hidePopover();
+        }
     }
 
     getAllItems() {
@@ -337,7 +346,7 @@ class Autocomplete {
 
         // Get body zoom radio
         const zoom = kpxcUI.bodyStyle.zoom || 1;
-       
+
         // Calculate Y offset if menu does not fit to the bottom of the screen -> show it at the top of the input field
         const menuRect = this.container.getBoundingClientRect();
         const totalHeight = menuRect.height + rect.height;

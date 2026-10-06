@@ -32,7 +32,7 @@ kpxc.addToSitePreferences = async function(optionName, addWildcard = false) {
     let site;
     try {
         site = trimURL(window.top.location.href);
-    } catch (err) {
+    } catch (_err) {
         logDebug('Adding to Site Preferences denied from iframe.');
         return;
     }
@@ -62,10 +62,10 @@ kpxc.addToSitePreferences = async function(optionName, addWildcard = false) {
 
     await sendMessage('save_settings', kpxc.settings);
 
-    if (optionName === 'allowIframes') {
+    if (optionName === SitePreferences.ALLOW_IFRAMES) {
         await sendMessage('page_set_allow_iframes', [ true, site ]);
         await sendMessage('iframe_detected', false);
-    } else if (optionName === 'usernameOnly') {
+    } else if (optionName === SitePreferences.USERNAME_ONLY) {
         await sendMessage('username_field_detected', false);
     }
 };
@@ -81,8 +81,9 @@ kpxc.clearAllFromPage = function() {
         kpxcUserAutocomplete.closeList();
     }
 
-    // Switch back to default popup
-    sendMessage('get_status', [ true ]); // This is an internal function call
+    // Clear logins from background and switch back to default popup
+    sendMessage('page_clear_logins');
+    sendMessage('get_status', [ true, false, true ]); // This is an internal function call, forceShowDefault
 };
 
 // Creates a new combination manually from active element
@@ -207,6 +208,8 @@ kpxc.getSite = function(sites) {
 kpxc.identifyFormInputs = async function() {
     const forms = [];
     const documentForms = document.forms; // Cache the value just in case
+    // Used for overlay security detection
+    kpxcFields.discoverOverlays();
 
     for (const form of documentForms) {
         if (!kpxcFields.isVisible(form)) {
@@ -358,7 +361,7 @@ kpxc.initCredentialFields = async function() {
 
     // Search all remaining inputs from the page, ignore the previous input fields
     const pageInputs = await kpxcFields.getAllPageInputs(formInputs);
-    if (formInputs.length === 0 && pageInputs.length === 0 && !kpxcFields.isCustomLoginFieldsUsed()) {
+    if (formInputs.length === 0 && pageInputs.length === 0) {
         // Run 'redetect_credentials' manually if no fields are found after a page load
         setTimeout(async function() {
             if (_called.automaticRedetectCompleted) {
@@ -390,7 +393,7 @@ kpxc.initCredentialFields = async function() {
     }
 };
 
-// Intializes the login lists for popup and Autocomplete Menu
+// Initializes the login lists for popup and Autocomplete Menu
 kpxc.initLoginPopup = function() {
     if (kpxc.credentials.length === 0) {
         return;
@@ -515,7 +518,7 @@ kpxc.prepareCredentials = async function() {
     kpxc.initAutocomplete();
 
     if (kpxc.settings.autoFillRelevantCredential) {
-        const pageUuid = await sendMessage('page_get_login_id');
+        const pageUuid = await sendMessage('page_get_login_id', false);
         if (pageUuid) {
             const relevantCredential = kpxc.credentials.find(c => c.uuid === pageUuid);
             const combination = kpxc.combinations?.at(-1);
@@ -608,7 +611,7 @@ kpxc.rememberCredentials = async function(usernameValue, passwordValue, urlValue
     return true;
 };
 
-// Save credentials triggered fron the context menu
+// Save credentials triggered from the context menu
 kpxc.rememberCredentialsFromContextMenu = async function() {
     if (kpxc.databaseState === DatabaseState.LOCKED) {
         kpxcUI.createNotification('error', tr('rememberErrorDatabaseClosed'));
@@ -645,11 +648,14 @@ kpxc.rememberCredentialsFromContextMenu = async function() {
 // Credential Banner can force the retrieval for reloading new/modified credentials.
 kpxc.retrieveCredentials = async function(force = false) {
     if (!await isIframeAllowed()) {
-        return [];
+        return;
     }
 
     kpxc.url = document.location.href;
-    kpxc.submitUrl = kpxc.getFormActionUrl(kpxc.combinations[0]);
+
+    // Search for first combination that has username or password input set
+    const firstCombination = kpxc.combinations?.find((combination) => combination?.username || combination?.password);
+    kpxc.submitUrl = kpxc.getFormActionUrl(firstCombination);
 
     if (kpxc.settings.autoRetrieveCredentials && kpxc.url && kpxc.submitUrl) {
         await kpxc.retrieveCredentialsCallback(
@@ -714,52 +720,6 @@ kpxc.setPasswordFilled = async function(state) {
     await sendMessage('password_set_filled', state);
 };
 
-// Special handling for setting value to select and checkbox elements
-kpxc.setValue = function(field, value, forced = false) {
-    if (field.matches('select')) {
-        value = value.toLowerCase().trim();
-        const options = field.querySelectorAll('option');
-
-        for (const o of options) {
-            if (o.textContent.toLowerCase().trim() === value) {
-                kpxc.setValueWithChange(field, o.value);
-                return false;
-            }
-        }
-
-        return;
-    } else if (field.getLowerCaseAttribute('type') === 'checkbox' && value?.toLowerCase() === 'true') {
-        field.checked = true;
-    }
-
-    kpxc.setValueWithChange(field, value, forced);
-};
-
-// Sets a new value to input field and triggers necessary events
-kpxc.setValueWithChange = function(field, value, forced = false) {
-    if (!forced && field.readOnly) {
-        return;
-    }
-
-    const dispatchLegacyEvent = function(elem, eventName) {
-        const legacyEvent = elem.ownerDocument.createEvent('Event');
-        legacyEvent.initEvent(eventName, true, false);
-        elem.dispatchEvent(legacyEvent);
-    };
-
-    field.focus();
-    field.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: false }));
-    field.dispatchEvent(new KeyboardEvent('keypress', { bubbles: true, cancelable: false }));
-    field.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: false }));
-    field.dispatchEvent(new Event('input', { bubbles: true, cancelable: false }));
-    field.dispatchEvent(new Event('change', { bubbles: true, cancelable: false }));
-    field.value = value;
-
-    // Some pages will not accept the value change without dispatching events directly to the document
-    dispatchLegacyEvent(field, 'input');
-    dispatchLegacyEvent(field, 'change');
-};
-
 kpxc.showGroupNameInAutocomplete = function() {
     return !kpxc.settings.useCompactMode
         || (kpxc.settings.showGroupNameInAutocomplete && kpxc.getUniqueGroupCount(kpxc.credentials) > 1);
@@ -771,7 +731,7 @@ kpxc.siteIgnored = async function(condition) {
         let currentLocation;
         try {
             currentLocation = window.top.location.href;
-        } catch (err) {
+        } catch (_err) {
             // Cross-domain security error inspecting window.top.location.href.
             // This catches an error when an iframe is being accessed from another (sub)domain
             // -> use the iframe URL instead.
@@ -892,6 +852,7 @@ const initContentScript = async function() {
         }
 
         kpxc.settings = settings;
+        kpxc.isFirefox = await sendMessage('is_firefox');
 
         if (await kpxc.siteIgnored()) {
             logDebug('This site is ignored in Site Preferences.');
@@ -948,9 +909,9 @@ browser.runtime.onMessage.addListener(async function(req, sender) {
         if (req.action === 'activated_tab') {
             kpxc.triggerActivatedTab();
         } else if (req.action === 'add_allow_iframes_option') {
-            kpxc.addToSitePreferences('allowIframes');
+            kpxc.addToSitePreferences(SitePreferences.ALLOW_IFRAMES);
         } else if (req.action === 'add_username_only_option') {
-            kpxc.addToSitePreferences('usernameOnly', true);
+            kpxc.addToSitePreferences(SitePreferences.USERNAME_ONLY, true);
         } else if (req.action === 'check_database_hash' && 'hash' in req) {
             kpxc.detectDatabaseChange(req);
         } else if (req.action === 'choose_credential_fields') {
@@ -979,9 +940,14 @@ browser.runtime.onMessage.addListener(async function(req, sender) {
             kpxcFill.fillAttributeToActiveElementWith(req.args);
         } else if (req.action === 'frame_message') {
             if (req.args?.[0] === 'frame_request_to_frames' && window.self !== window.top) {
+                // Handle message from top window in iframe
                 kpxcCustomLoginFieldsBanner.handleParentWindowMessage(req.args);
             } else if (req.args?.[0] === 'frame_request_to_parent' && window.self === window.top) {
+                // Handle message from iframe in top window
                 kpxcCustomLoginFieldsBanner.handleTopWindowMessage(req.args);
+            } else if (req.args?.[0] === 'notification_from_frame' && window.self === window.top) {
+                // Handle notification from iframe in top window
+                kpxcUI.createNotification(req?.args[1], req?.args[2]);
             }
         } else if (req.action === 'ignore_site') {
             kpxc.ignoreSite(req.args);
@@ -995,9 +961,16 @@ browser.runtime.onMessage.addListener(async function(req, sender) {
             kpxc.initCredentialFields();
         } else if (req.action === 'reload_extension') {
             sendMessage('reconnect');
+        } else if (req.action === 'reopen_database') {
+            sendMessage(
+                'get_status',
+                [ false, true ] // Set forcePopup to true
+            );
+        } else if (req.action === 'lock_database') {
+            await sendMessage('lock_database');
         } else if (req.action === 'save_credentials') {
             kpxc.rememberCredentialsFromContextMenu();
-        } else if (req.action === 'retrive_credentials_forced') {
+        } else if (req.action === 'retrieve_credentials_forced') {
             await kpxc.retrieveCredentials(true);
         } else if (req.action === 'show_password_generator') {
             kpxcPasswordGenerator.showPasswordGenerator();
@@ -1027,19 +1000,19 @@ kpxc.reconnect = async function() {
 
 const isIframeAllowed = async function() {
     sendMessage('iframe_detected', false);
-    try {
-        // Check for Cross-domain security error when inspecting window.top.location.href
-        const currentLocation = window.top.location.href;
-        return true;
-    } catch (err) {
-        // Inspect iframe using TLD and the tab's original URL
-        const allowed = await sendMessage('is_iframe_allowed', [ window.location.href, window.location.hostname ]);
-        if (allowed) {
-            return true;
-        }
 
-        logDebug(`Error: Credential request ignored from another domain: ${window.self.location.host}`);
-        sendMessage('iframe_detected', true);
+    // Don't allow sandboxed iframes
+    if (self.origin === null || self.origin === 'null') {
+        logDebug('Error: Sandboxed iframes are not allowed');
         return false;
     }
+
+    const allowed = await sendMessage('is_iframe_allowed', [ window.location.href ]);
+    if (allowed) {
+        return true;
+    }
+
+    logDebug(`Error: Credential request ignored from another domain: ${window.self.location.host}`);
+    sendMessage('iframe_detected', true);
+    return false;
 };

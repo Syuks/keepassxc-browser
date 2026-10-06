@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import {
+    containsPlaceholder,
     compareVersion,
+    elementsOverlap,
     matchesWithNodeName,
     siteMatch,
     slashNeededForUrl,
@@ -88,4 +90,70 @@ test('Test trimURL()', async ({ page }) => {
     expect(trimURL('https://example.com/path/?login=yes')).toBe('https://example.com/path/');
     expect(trimURL('https://example.com/path/')).toBe('https://example.com/path/');
     expect(trimURL('https://example.com/path/#extra')).toBe('https://example.com/path/#extra');
+});
+
+// Check if different popups/overlays partially covers or touches the input field
+test('Test elementsOverlap()', async ({ page }) => {
+    const inputRect = { left: 0, top: 5, right: 200, bottom: 28 }
+
+    // Fully covered
+    expect(elementsOverlap(inputRect, { left: -2, top: 0, right: 220, bottom: 40 })).toBe(true);
+
+    // Top side is covered
+    expect(elementsOverlap(inputRect, { left: 0, top: 0, right: 220, bottom: 20 })).toBe(true);
+
+    // Bottom side is covered
+    expect(elementsOverlap(inputRect, { left: -2, top: 25, right: 220, bottom: 40 })).toBe(true);
+
+    // Left side is covered
+    expect(elementsOverlap(inputRect, { left: -2, top: 0, right: 100, bottom: 40 })).toBe(true);
+
+    // Right side is covered
+    expect(elementsOverlap(inputRect, { left: 100, top: 0, right: 220, bottom: 40 })).toBe(true);
+
+    // Top-left corner is covered
+    expect(elementsOverlap(inputRect, { left: -2, top: 0, right: 40, bottom: 10 })).toBe(true);
+
+    // Top-right corner is covered
+    expect(elementsOverlap(inputRect, { left: 180, top: 0, right: 220, bottom: 10 })).toBe(true);
+
+    // Bottom-left corner is covered
+    expect(elementsOverlap(inputRect, { left: -2, top: 10, right: 100, bottom: 40 })).toBe(true);
+
+    // Bottom-right corner is covered
+    expect(elementsOverlap(inputRect, { left: 180, top: 10, right: 220, bottom: 40 })).toBe(true);
+
+    // Input field is covered with identical size
+    expect(elementsOverlap(inputRect, { left: 0, top: 5, right: 200, bottom: 28 })).toBe(true);
+
+    // Overlay is inside the input field
+    expect(elementsOverlap(inputRect, { left: 2, top: 10, right: 180, bottom: 26 })).toBe(true);
+
+     // Overlay is partially inside the input field, comes outside from the left
+    expect(elementsOverlap(inputRect, { left: -2, top: 10, right: 180, bottom: 26 })).toBe(true);
+
+    // Overlay is outside the input field
+    expect(elementsOverlap(inputRect, { left: 210, top: 0, right: 240, bottom: 40 })).toBe(false);
+});
+
+test('Test containsPlaceholder()', async ({ page }) => {
+    // Dynamic placeholders
+    expect(containsPlaceholder('')).toBe(false);
+    expect(containsPlaceholder('testString{REF:nothing')).toBe(false); // Placeholder is not finished
+    expect(containsPlaceholder('testString{REF:P@T:Other Entry}something')).toBe(true);
+    expect(containsPlaceholder('{URL:USERNAME}yes')).toBe(true);
+    expect(containsPlaceholder('{URL:USERNAME}yes{REF:A@O:Attribute 1}')).toBe(true);
+    expect(containsPlaceholder('{NOTAREALPLACEHOLDER:USERNAME}yes')).toBe(false); // Unknown placeholder
+    expect(containsPlaceholder('yes{URL:PORT}')).toBe(true);
+    expect(containsPlaceholder('yes{S:KPEX_PASSKEYS_USER_ID}no')).toBe(true);
+
+    // Static placeholders
+    expect(containsPlaceholder('{TITLE}')).toBe(true);
+    expect(containsPlaceholder('{TITLE2}')).toBe(false);
+    expect(containsPlaceholder('{USERNAME}')).toBe(true);
+    expect(containsPlaceholder('{PASSWORD}')).toBe(true);
+    expect(containsPlaceholder('{URL}')).toBe(true);
+    expect(containsPlaceholder('{NOTES}')).toBe(true);
+    expect(containsPlaceholder('{TOTP}')).toBe(true);
+    expect(containsPlaceholder('\\{TOTP\\}')).toBe(true);
 });

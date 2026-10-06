@@ -370,6 +370,10 @@
         "message": "Chyba:\nNenalezena žádná uživatelská jména.",
         "description": "Shown when no credentials are found for the current page."
     },
+    "credentialsBlockedInIframe": {
+        "message": "Credential fill blocked in untrusted iframe.",
+        "description": "Alert message when filling credentials is blocked due to iframe restrictions."
+    },
     "credentialsMultipleFound": {
         "message": "Chyba:\nV KeePassXC nalezeno více než jedno uživateské jméno!\nKliknutím na ikonu KeePassXC-Browser zobrazíte další možnosti.",
         "description": "Alert message when trying to fill username and/or password when multiple credentials are found."

@@ -16,11 +16,11 @@
         "description": "Allow Cross-Origin iframes button title text."
     },
     "connectButtonTitle": {
-        "message": "Conectar la base de datos actual activa a KeePassXC-Browser.",
+        "message": "Conectar la base de datos activa actual a KeePassXC-Browser.",
         "description": "Connect button title text."
     },
     "copyDebugInfoButtonTitle": {
-        "message": "Copy debug info to clipboard",
+        "message": "Copiar información de depuración al portapapeles",
         "description": "Copy debug info button title text on About tab."
     },
     "dismissHttpAuthButtonTitle": {
@@ -28,7 +28,7 @@
         "description": "Dismiss HTTP Auth button title text."
     },
     "reconnectButtonTitle": {
-        "message": "Reconectar la base de datos actual activa a KeePassXC-Browser.",
+        "message": "Re‑conectar la base de datos activa actual a KeePassXC-Browser.",
         "description": "Reconnect button title text."
     },
     "redetectButtonTitle": {
@@ -36,7 +36,7 @@
         "description": "Redetect login fields button title text."
     },
     "reloadButtonTitle": {
-        "message": "Recarga la extisión y reconecta a KeePassXC.",
+        "message": "Recarga la extensión y re‑conecta a KeePassXC.",
         "description": "Reload button title text."
     },
     "removeConnectedDatabaseButtonTitle": {
@@ -44,7 +44,7 @@
         "description": "Remove button title on Connected Databases tab."
     },
     "removeCustomLoginFieldsButtonTitle": {
-        "message": "Elimina los Campos de Registro Personalizados para esta URL.",
+        "message": "Elimina los Campos de Registro Personalizado para esta URL.",
         "description": "Remove button title on Custom Login Fields tab."
     },
     "removeSitePreferencesButtonTitle": {
@@ -56,7 +56,7 @@
         "description": "Reopen database button title text."
     },
     "usernameButtonTitle": {
-        "message": "Añade la Detección de Solo-Usuario a la página actual.",
+        "message": "Añade la Detección de solo-usuario a la página actual.",
         "description": "Add Username-only detection button title text."
     },
     "contextMenuFillUsernameAndPassword": {
@@ -108,7 +108,7 @@
         "description": "Database hash not received."
     },
     "errorMessageClientPublicKey": {
-        "message": "Llave pública del cliente no recibida.",
+        "message": "Clave pública del cliente no recibida.",
         "description": "Client public key not received."
     },
     "errorMessageDecrypt": {
@@ -132,7 +132,7 @@
         "description": "KeePassXC association failed, try again."
     },
     "errorMessageKeyExchange": {
-        "message": "Intercambio de llave no fue correcto.",
+        "message": "Intercambio de clave no fue correcto.",
         "description": "Key exchange was not successful."
     },
     "errorMessageEncryptionKey": {
@@ -184,8 +184,8 @@
         "description": "Attestation not supported."
     },
     "errorMessagePasskeysCredentialIsExcluded": {
-        "message": "Se excluye la credencial.",
-        "description": "Credential is excluded."
+        "message": "Llave de acceso no registrada debido a credencial existente. Retire la credencial existente para continuar.",
+        "description": "Passkey not registered due to an existing credential. Remove the existing credential to continue."
     },
     "errorMessagePasskeysRequestCanceled": {
         "message": "Solicitud de claves de acceso cancelada.",
@@ -235,9 +235,25 @@
         "message": "El user.id no coincide con la longitud requerida.",
         "description": "user.id does not match the required length."
     },
+    "errorMessagePasskeysEvalByCredentialNotSupported": {
+        "message": "La función evalByCredential no está disponible durante el registro.",
+        "description": "evalByCredential is not supported at registration."
+    },
+    "errorMessagePasskeysEvalByCredentialNotEmpty": {
+        "message": "evalByCredential no está vacío, pero allowedCredentials sí lo está.",
+        "description": "evalByCredential is not empty, but allowedCredentials is."
+    },
+    "errorMessagePasskeysEvalByCredentialNotFound": {
+        "message": "No se ha encontrado el ID de credencial proporcionado en evalByCredential.",
+        "description": "Credential ID provided in evalByCredential not found."
+    },
     "errorMessagePasskeysContextIsNotSecure": {
         "message": "El contexto no es seguro.",
         "description": "Context is not secure."
+    },
+    "errorMessageCannotUseReferences": {
+        "message": "El nombre de usuario o la contraseña no pueden contener referencias.",
+        "description": "Username or password cannot contain references."
     },
     "errorNotConnected": {
         "message": "No conectado a KeePassXC.",
@@ -315,12 +331,16 @@
         "description": "A text shown when custom credentials fields are already set for the page."
     },
     "defineClearData": {
-        "message": "Limpiar datos guardados",
+        "message": "Vacía datos guardados",
         "description": "Clear save data button text when choosing Custom Login Fields."
     },
     "defineStringField": {
         "message": "Campo de cadena",
         "description": "Text for string field."
+    },
+    "defineSubmitButton": {
+        "message": "Botón Enviar",
+        "description": "Text for Submit Button."
     },
     "defineChooseUsername": {
         "message": "Elija un campo nombre de usuario",
@@ -338,16 +358,20 @@
         "message": "Elija Campos de Cadena",
         "description": "Choose String Fields a selection text when choosing Custom Login Fields."
     },
+    "defineChooseSubmitButton": {
+        "message": "Seleccione el botón enviar",
+        "description": "Choose submit button selection text when choosing Custom Login Fields."
+    },
     "defineHelpText": {
-        "message": "Confirme su selección o elija más campos como Campos de cadena.",
-        "description": "Confirm a selection text when choosing Custom Login Fields which contains string fields."
+        "message": "Confirme su selección o elija más campos como campos de cadena.",
+        "description": "Confirm a selection text when choosing Custom Login Fields which contains String Fields."
     },
     "defineKeyboardText": {
         "message": "También puede utilizar los números para elegir los campos de entrada desde el teclado.",
         "description": "Help text when choosing Custom Login Fields."
     },
     "defineChooseCustomLoginFieldText": {
-        "message": "Elija un campo de inicio de sesión personalizado",
+        "message": "Elija un campo personalizado de inicio de sesión",
         "description": "Help text for Custom Login Field banner."
     },
     "username": {
@@ -362,6 +386,10 @@
         "message": "Campos de Cadena",
         "description": "General text for a String Fields."
     },
+    "submitButton": {
+        "message": "Botón Enviar",
+        "description": "Custom Submit Button text."
+    },
     "credentialsNoUsername": {
         "message": "- sin nombre de usuario -",
         "description": "Shown when no username is set in the credentials."
@@ -369,6 +397,10 @@
     "credentialsNoLoginsFound": {
         "message": "No se encontraron inicios de sesión.",
         "description": "Shown when no credentials are found for the current page."
+    },
+    "credentialsBlockedInIframe": {
+        "message": "Relleno de credenciales bloqueado en iframe que no es de confianza.",
+        "description": "Alert message when filling credentials is blocked due to iframe restrictions."
     },
     "credentialsMultipleFound": {
         "message": "¡Se encontró más de un inicio de sesión en KeePassXC!",
@@ -389,6 +421,10 @@
     "credentialExpired": {
         "message": "Caducado",
         "description": "If a credential is expired, this is appended to the title label."
+    },
+    "credentialsRetrieveButton": {
+        "message": "Obtención de credenciales",
+        "description": "Manual retrieve credentials button text."
     },
     "fieldsFill": {
         "message": "Error: No se pueden encontrar campos para rellenar.",
@@ -627,7 +663,7 @@
         "description": "Dismiss button text when in HTTP Authentication popup."
     },
     "optionsDefaultSettingsTitle": {
-        "message": "Default settings",
+        "message": "Ajustes por defecto",
         "description": "Default settings title for Getting Started page."
     },
     "optionsWelcomeTitle": {
@@ -674,6 +710,10 @@
         "message": "Preferencias del sitio",
         "description": "Site Preferences page header."
     },
+    "optionsSitePreferencesSettings": {
+        "message": "Configuración",
+        "description": "Site Preferences settings button text."
+    },
     "optionsMenuAbout": {
         "message": "Acerca de",
         "description": "About page header."
@@ -699,7 +739,7 @@
         "description": "Add button text."
     },
     "optionsButtonEdit": {
-        "message": "Edit",
+        "message": "Editar",
         "description": "Edit button text."
     },
     "optionsButtonUpdate": {
@@ -725,6 +765,10 @@
     "optionsButtonExport": {
         "message": "Exportar configuración",
         "description": "Export settings button text."
+    },
+    "optionsButtonResetSettings": {
+        "message": "Restablecer todos los ajustes",
+        "description": "Reset all settings button text."
     },
     "optionsLabelDefaultGroup": {
         "message": "Grupo predeterminado para guardar nuevas contraseñas:",
@@ -827,11 +871,11 @@
         "description": "Show login notifications checkbox text."
     },
     "optionsDefaultPasswordManager": {
-        "message": "Set as default password manager",
+        "message": "Establecer como gestor de contraseñas predeterminado",
         "description": "Default password manager checkbox text."
     },
     "optionsDefaultPasswordManagerHelpText": {
-        "message": "Sets KeePassXC-Browser as the default password manager for the browser.",
+        "message": "Establecer KeePassXC-Browser como gestor de contraseñas predeterminado para el navegador.",
         "description": "Default password manager help text."
     },
     "optionsRedirectAllowance": {
@@ -845,6 +889,22 @@
     "optionsCheckboxAutoFillAndSend": {
         "message": "Permitir rellenar credenciales de autenticación básica HTTP",
         "description": "Allow filling HTTP Basic Auth credentials checkbox text."
+    },
+    "optionsConnectionMethod": {
+        "message": "Método de conexión",
+        "description": "Connection method selection text."
+    },
+    "optionsConnectionMethodHelpText": {
+        "message": "Si la mensajería nativa está bloqueada en su navegador, puede cambiar a una conexión WebSocket directa. Para que funcione, debe habilitar esta función desde KeePassXC. Es necesario reiniciar el navegador.",
+        "description": "Connection method help text."
+    },
+    "optionsConnectionMethodNativeMessaging": {
+        "message": "Comunicación nativa",
+        "description": "Native messaging option for Connection method."
+    },
+    "optionsConnectionMethodWebSocket": {
+        "message": "WebSocket",
+        "description": "WebSocket option for Connection method."
     },
     "optionsDebugLogging": {
         "message": "Trazas de depuración",
@@ -1030,6 +1090,10 @@
         "message": "Requiere la versión de KeePassXC:  $1",
         "description": "KeePassXC version requirement text."
     },
+    "optionsMinimumKeePassXCVersionRequired": {
+        "message": "La extensión requiere la versión de KeePassXC: $1. Las versiones anteriores pueden causar comportamiento indeseable.",
+        "description": "KeePassXC minimum version requirement text."
+    },
     "optionsDefault": {
         "message": "Por defecto: $1",
         "description": "Default setting text."
@@ -1065,6 +1129,10 @@
     "optionsImportSettingsDialogText": {
         "message": "La configuración actual será sobrescrita. ¿Desea importar el archivo de configuración?",
         "description": "Import settings confirmation dialog help text."
+    },
+    "optionsResetSettingsDialogText": {
+        "message": "Todos los ajustes se restablecerán a los valores predeterminados. ¿Está seguro?",
+        "description": "Reset all settings dialog text."
     },
     "optionsConnectedDatabasesText": {
         "message": "Las siguientes bases de datos KeePassXC están conectadas a KeePassXC-Browser.",
@@ -1110,8 +1178,8 @@
         "message": "URL de la página",
         "description": "Site Preferences list column title."
     },
-    "optionsColumnIgnore": {
-        "message": "Ignorar",
+    "optionsColumnFeatures": {
+        "message": "Características",
         "description": "Site Preferences list column title."
     },
     "optionsColumnUsernameOnly": {
@@ -1140,6 +1208,10 @@
     },
     "optionsSelectionAutoSubmit": {
         "message": "Deshabilitar autoenvío",
+        "description": "Site Preferences option selection."
+    },
+    "optionsSelectionPasskeys": {
+        "message": "Deshabilitar claves de acceso",
         "description": "Site Preferences option selection."
     },
     "optionsSelectionFull": {
@@ -1395,31 +1467,31 @@
         "description": "Lock database button title text."
     },
     "welcomeText": {
-        "message": "Welcome to KeePassXC-Browser!",
+        "message": "¡Bienvenido a KeePassXC-Browser!",
         "description": "Main title of Getting Started page."
     },
     "documentationGettingStarted": {
-        "message": "Our Getting Started Guide will get you up and running quickly.",
+        "message": "Nuestra Guía de inicio le permitirá empezar a trabajar rápidamente.",
         "description": "Getting Started document text."
     },
     "documentationUserGuide": {
-        "message": "Looking for more comprehensive documentation? Our User Guide is there to help.",
+        "message": "¿Busca una documentación más completa? Nuestra Guía del usuario está ahí para ayudarle.",
         "description": "User Guide text."
     },
     "documentationTroubleshootingGuide": {
-        "message": "Need help troubleshooting the browser integration? Check the Troubleshooting Guide.",
+        "message": "¿Necesitas ayuda para solucionar problemas de integración del navegador? Consulta la Guía de resolución de problemas.",
         "description": "Troubleshooting Guide text."
     },
     "gettingStartedWelcomeText": {
-        "message": "Welcome to KeePassXC-Browser, the official browser extension for KeePassXC.",
+        "message": "Bienvenido a KeePassXC-Browser, la extensión oficial del navegador para KeePassXC.",
         "description": "Welcome to KeePassXC-Browser, the official browser extension for KeePassXC."
     },
     "gettingStartedSecondWelcomeText": {
-        "message": "Please go through the default settings and check all your preferred options.",
+        "message": "Por favor, revise la configuración por defecto y marque todas sus opciones preferidas.",
         "description": "Please go through the default settings and check all your preferred options."
     },
     "gettingStartedNewUser": {
-        "message": "Are you a new user? Check links to our documentation.",
+        "message": "¿Es usted un usuario nuevo? Consulte los enlaces a nuestra documentación.",
         "description": "Are you a new user? Check links to our documentation."
     }
 }

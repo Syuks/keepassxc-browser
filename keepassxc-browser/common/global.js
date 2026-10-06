@@ -1,11 +1,13 @@
 'use strict';
 
 const EXTENSION_NAME = 'KeePassXC-Browser';
+const DEFINED_CUSTOM_FIELDS = 'defined-custom-fields';
 
 // Site Preferences ignore options
 const IGNORE_NOTHING = 'ignoreNothing';
 const IGNORE_NORMAL = 'ignoreNormal';
 const IGNORE_AUTOSUBMIT = 'ignoreAutoSubmit';
+const IGNORE_PASSKEYS = 'ignorePasskeys';
 const IGNORE_FULL = 'ignoreFull';
 
 // Credential sorting options
@@ -26,23 +28,6 @@ const URL_WILDCARD = '1kpxcwc1';
 const schemeSegment = '(\\*|http|https|ws|wss|ftp)';
 const hostSegment = '(\\*|(?:\\*\\.)?(?:[^/*]+))?';
 
-const isFirefox = function() {
-    return navigator.userAgent.indexOf('Firefox') !== -1 || navigator.userAgent.indexOf('Gecko/') !== -1;
-};
-
-const isEdge = function() {
-    return navigator.userAgent.indexOf('Edg') !== -1;
-};
-
-const showNotification = function(message) {
-    browser.notifications.create({
-        'type': 'basic',
-        'iconUrl': browser.runtime.getURL('icons/keepassxc_64x64.png'),
-        'title': 'KeePassXC-Browser',
-        'message': message
-    });
-};
-
 const AssociatedAction = {
     NOT_ASSOCIATED: 0,
     ASSOCIATED: 1,
@@ -55,10 +40,59 @@ const BannerPosition = {
     TOP: 1
 };
 
+const CreationError = {
+    CANCELED: 'canceled',
+    CREATED: 'created',
+    GENERAL: 'error',
+    REFERENCES: 'references',
+    UPDATED: 'updated'
+};
+
 const ManualFill = {
     NONE: 0,
     PASSWORD: 1,
     BOTH: 2
+};
+
+const SitePreferences = {
+    ALLOW_IFRAMES: 'allowIframes',
+    IMPROVED_FIELD_DETECTION: 'improvedFieldDetection',
+    USERNAME_ONLY: 'usernameOnly',
+};
+
+const isFirefox = function() {
+    return browser.runtime.getURL('')?.startsWith('moz-extension');
+};
+
+const isSafari = function() {
+    return browser.runtime.getURL('')?.startsWith('safari-web-extension');
+};
+
+const isEdge = function() {
+    return navigator.userAgent.indexOf('Edg') !== -1;
+};
+
+const getIconClass = function(className) {
+    if (isFirefox()) {
+        return className + '-moz';
+    } else if (isSafari()) {
+        return className + '-safari';
+    }
+    return className;
+};
+
+const showNotification = function(message) {
+    browser.notifications.create({
+        'type': 'basic',
+        'iconUrl': browser.runtime.getURL('icons/keepassxc_64x64.png'),
+        'title': 'KeePassXC-Browser',
+        'message': message
+    });
+};
+
+// Returns a string with 'px' for CSS styles
+const Pixels = function(value) {
+    return String(value) + 'px';
 };
 
 const compareVersion = function(minimum, current, canBeEqual = true) {
@@ -156,11 +190,55 @@ const trimURL = function(url) {
     return url.indexOf('?') !== -1 ? url.split('?')[0] : url;
 };
 
+const DYNAMIC_PLACEHOLDERS = [
+    'DT_',
+    'REF:',
+    'S:',
+    'T-CONV:',
+    'T-REPLACE-RX:',
+    'URL:'
+];
+
+const STATIC_PLACEHOLDERS = [
+    'DB_DIR',
+    'NOTES',
+    'PASSWORD',
+    'TITLE',
+    'TOTP',
+    'USERNAME',
+    'URL'
+];
+
+const containsPlaceholder = function(str) {
+    const placeholderRegex = new RegExp('{(.*?)}');
+
+    const placeholderFound = placeholderRegex.exec(str);
+    if (placeholderFound === null) {
+        return false;
+    }
+
+    let placeholder = placeholderFound[1];
+    if (placeholder.endsWith('\\')) {
+        // Remove escape if placeholder is used with \\{PLACEHOLDER\\}
+        placeholder = placeholder.slice(0, -1);
+    }
+
+    if (STATIC_PLACEHOLDERS.includes(placeholder)) {
+        return true;
+    }
+
+    if (DYNAMIC_PLACEHOLDERS.some((pl) => placeholder.startsWith(pl))) {
+        return true;
+    }
+
+    return false;
+};
+
 const debugLogMessage = function(message, extra) {
-    console.log(`[Debug ${getFileAndLine()}] ${EXTENSION_NAME} - ${message}`);
+    console.debug(`[Debug ${getFileAndLine()}] ${EXTENSION_NAME} - ${message}`);
 
     if (extra) {
-        console.log(extra);
+        console.debug(extra);
     }
 };
 
@@ -182,10 +260,21 @@ const getCurrentTab = async function() {
     return tabs?.length > 0 ? tabs[0] : undefined;
 };
 
+// Check if element b is inside a
+const isElementInside = (a, b) => (b.x >= a.x && b.right <= a.right) && (b.y >= a.y && b.bottom <= a.bottom);
+
+// Check if two elements overlap
+const elementsOverlap = function(rect1, rect2) {
+    const overlaps = (a, b) => !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
+    return isElementInside(rect1, rect2) || overlaps(rect1, rect2);
+};
+
 // Exports for tests
 if (typeof module === 'object') {
     module.exports = {
+        containsPlaceholder,
         compareVersion,
+        elementsOverlap,
         matchesWithNodeName,
         siteMatch,
         slashNeededForUrl,

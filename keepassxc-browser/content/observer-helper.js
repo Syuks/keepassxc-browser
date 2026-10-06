@@ -18,9 +18,31 @@ kpxcObserverHelper.ignoredNodeNames = [
     'A',
     'HEAD',
     'HTML',
+    'IMG',
     'LINK',
+    'META',
     'SCRIPT',
+    'TIME',
     'VIDEO',
+];
+
+kpxcObserverHelper.ignoredPartialNodeNames = [
+    'AC-PUBLISH',
+    'AC-TRACK',
+    'COMMENT-BODY-HEADER',
+    'CUJ-TRACKER',
+    'FACEPLATE-EXPANDABLE',
+    'FACEPLATE-LOADER',
+    'FACEPLATE-PARTIAL',
+    'FACEPLATE-TRACKER',
+    'REDDIT-CHAT',
+    'REDDIT-PDP',
+    'RENDER-TEMPLATE',
+    'SHREDDIT',
+];
+
+kpxcObserverHelper.ignoredClassNames = [
+    'faceplate-internal-input'
 ];
 
 kpxcObserverHelper.ignoredNodeTypes = [
@@ -72,15 +94,22 @@ kpxcObserverHelper.initObserver = async function() {
                 continue;
             }
 
+            if (kpxcFields.hasOverlay(mut.target)) {
+                kpxcFields.discoverOverlays();
+                kpxcFields.checkExistingFields();
+                continue;
+            }
+
             // Cache style mutations. We only need the last style mutation of the target.
             kpxcObserverHelper.cacheStyle(mut, styleMutations, mutations.length);
 
             if (mut.type === 'childList') {
-                if (mut.addedNodes.length > 0) {
-                    kpxcObserverHelper.handleObserverAdd(mut.addedNodes[0]);
-                } else if (mut.removedNodes.length > 0) {
-                    kpxcObserverHelper.handleObserverRemove(mut.removedNodes[0]);
-                }
+                mut.addedNodes.forEach(function (node) {
+                    kpxcObserverHelper.handleObserverAdd(node);
+                });
+                mut.removedNodes.forEach(function (node) {
+                    kpxcObserverHelper.handleObserverRemove(node);
+                });
             } else if (mut.type === 'attributes' && (mut.attributeName === 'class' || mut.attributeName === 'style')) {
                 // Only accept targets with forms
                 const forms = matchesWithNodeName(mut.target, 'FORM')
@@ -151,6 +180,7 @@ kpxcObserverHelper.getInputs = function(target, ignoreVisibility = false) {
     // Basic check for input element
     const inputAllowed = (elem) => !elem.disabled
         && elem.getLowerCaseAttribute('type') !== 'hidden'
+        && !hasIgnoredClassNames(elem)
         && !kpxcObserverHelper.alreadyIdentified(elem);
 
     // Ignores target element if it's not an element node
@@ -230,6 +260,31 @@ kpxcObserverHelper.findInputsFromShadowDOM = function(target) {
     return inputFields;
 };
 
+// Detects animations and transitions. Triggers handleObserverAdd() again on animationend/transitionend.
+kpxcObserverHelper.handleTransitions = function(target) {
+    const classList = target?.classList?.toString();
+    const targetHasAnimations = classList?.includes('animate');
+    const targetHasDurations = classList?.includes('duration') || classList?.includes('transform');
+
+    if (targetHasAnimations || targetHasDurations) {
+        const animations = target.getAnimations();
+        const transitionTime = animations[0]?.currentTime ?? 0;
+
+        // Animation found, but transition has not finished
+        if (animations && transitionTime === 0) {
+            target.addEventListener(
+                targetHasAnimations ? 'animationend' : 'transitionend',
+                () => {
+                    kpxcObserverHelper.handleObserverAdd(target);
+                },
+                {
+                    once: true,
+                },
+            );
+        }
+    }
+};
+
 // Adds elements to a monitor array. Identifies the input fields.
 kpxcObserverHelper.handleObserverAdd = async function(target) {
     if (kpxcObserverHelper.ignoredElement(target)) {
@@ -241,6 +296,8 @@ kpxcObserverHelper.handleObserverAdd = async function(target) {
         kpxc.init();
         return;
     }
+
+    kpxcObserverHelper.handleTransitions(target);
 
     const inputs = kpxcObserverHelper.getInputs(target);
     if (inputs.length === 0) {
@@ -259,7 +316,7 @@ kpxcObserverHelper.handleObserverAdd = async function(target) {
         kpxc.prepareCredentials();
     }
 
-    kpxcIcons.deleteHiddenIcons();
+    kpxcIcons.deleteAllHiddenIcons();
 };
 
 // Removes monitored elements
@@ -273,7 +330,7 @@ kpxcObserverHelper.handleObserverRemove = function(target) {
         return;
     }
 
-    kpxcIcons.deleteHiddenIcons();
+    kpxcIcons.deleteAllHiddenIcons();
 };
 
 // Handles CSS transitionend event
@@ -305,6 +362,7 @@ kpxcObserverHelper.ignoredNode = function(target) {
     if (!target
         || kpxcObserverHelper.ignoredNodeTypes.some(e => e === target.nodeType)
         || kpxcObserverHelper.ignoredNodeNames.some(e => e === target.nodeName)
+        || kpxcObserverHelper.ignoredPartialNodeNames.some(e => target.nodeName?.includes(e))
         || target.nodeName.startsWith('YTMUSIC')
         || target.nodeName.startsWith('YT-')) {
         return true;
@@ -321,7 +379,7 @@ const getShadowDOM = function(elem) {
 
     try {
         return elem.openOrClosedShadowRoot ? elem.openOrClosedShadowRoot : browser.dom.openOrClosedShadowRoot(elem);
-    } catch (e) {
+    } catch (_e) {
         return elem.shadowRoot;
     }
 };
@@ -330,7 +388,9 @@ const getShadowDOM = function(elem) {
 const treeWalkerFilter = function(node) {
     return !node ||
         node?.disabled ||
-        (typeof node?.getAttribute !== 'undefined' && node?.getLowerCaseAttribute('type') === 'hidden')
+        (node instanceof Element
+            && typeof node?.getAttribute === 'function'
+            && node?.getLowerCaseAttribute('type') === 'hidden')
         ? NodeFilter.FILTER_REJECT
         : NodeFilter.FILTER_ACCEPT;
 };
@@ -343,7 +403,8 @@ const traverseShadowDOM = function(target, inputFields) {
     while (currentNode) {
         if (!kpxcObserverHelper.ignoredNode(currentNode)
             && matchesWithNodeName(currentNode, 'input')
-            && !kpxcObserverHelper.alreadyIdentified(currentNode)) {
+            && !kpxcObserverHelper.alreadyIdentified(currentNode)
+            && !hasIgnoredClassNames(currentNode)) {
             inputFields.push(currentNode);
         }
 
@@ -362,3 +423,5 @@ const traverseShadowDOM = function(target, inputFields) {
         currentNode = treeWalker?.nextNode();
     }
 };
+
+const hasIgnoredClassNames = (elem) => kpxcObserverHelper.ignoredClassNames.some(e => elem.classList?.contains(e));

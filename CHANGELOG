@@ -1,3 +1,147 @@
+1.10.4.1 (2026-10-02)
+=========================
+- Add restrictions to cross-origin iframe handling [#3103]
+
+1.10.4 (2026-09-16)
+=========================
+- Add keyboard shortcut support for lock database (thanks a2kolbasov) [#3052]
+- Fix issues with Reddit [#2998]
+- Fix updating toolbar icons on every open tab in all windows [#3013]
+- Fix showing an error if translation placeholder is missing [#3017]
+- Fix a few TOTP identification issues [#3033]
+- Fix not to allow placeholders when creating or updating credentials [#3068]
+- Fix offering credential saving with Custom Login Fields [#3073]
+- Fix Apple School page password field identification [#3077]
+- Fix Fastmail login page password field [#3080]
+- Passkeys: Add support for PRF extension [#3048]
+- Passkeys: Add support for cross-origin iframes and permission policy (thanks a2kolbasov) [#2862]
+- Passkeys: Fix waiting for window focus (thanks a2kolbasov) [#2810]
+- Passkeys: Fix handling unhandled callbacks and wrong return types (thanks a2kolbasov) [#3054]
+- Passkeys: Fix null checks for passkey responses [#3083]
+- Passkeys: Use abort signal if available (thanks a2kolbasov) [#3065, #3092]
+- Refactor credential saving [#3074]
+
+1.10.3 (2026-06-01)
+=========================
+- Add support for WebSocket connection method (disabled until KeePassXC support) [#2576]
+- Fix creating Credential Banner [#2984]
+- Fix getting submitted username for Credential Banner [#2985]
+- Fix cloning tab objects [#2986]
+- Fix Atlassian login page [#2989]
+
+1.10.2 (2026-05-29)
+=========================
+- Fix wrapping publicKey to ArrayBuffer with passkeys [#2940]
+- Fix "Credential is excluded" error message (thanks goekce) [#2941]
+- Fix input field detection when label contains overlaying elements (thanks tiboroche) [#2948]
+- Fix sending context menu messages to current frame only [#2951]
+- Fix filling credentials with readonly username field [#2954]
+- Fix passkeys debug logging [#2959]
+- Fix use of old TOTP (thanks jknockel) [#2973]
+- Fix managed settings not applied on Chromium (thanks RGBCube) [#2969]
+- Refactor tab handling [#2944]
+
+1.10.1 (2026-04-03)
+=========================
+- Fix regression when returning Custom Login Fields [#2924]
+- Fix TOTP icon border with Firefox [#2928]
+- Fix loading non-discarded tabs only (thanks tanriol) [#2934]
+
+1.10.0.1 (2026-03-08)
+=========================
+- Remove webRequestBlocking permission from V3 manifests [#2893]
+- Fix dynamic password input detection when replacing username [#2896]
+
+1.10.0 (2026-03-04)
+=========================
+- Add preliminary support for Safari [#2800]
+- Add 'mfaCode' to accepted 2FA token fields (thanks hostops) [#2804]
+- Add "postcode" to ignored TOTP list (thanks JackDunnCodes) [#2793]
+- Add support for Related Origin Requests with passkeys [#2828]
+- Add support for features list [#2848]
+- Add support for publicKey in passkeys response [#2782]
+- Fix hiding form switch animation when options page loads (thanks stefansundin) [#2807]
+- Fix TOTP field detection with Microsoft sites [#2832]
+- Fix the ability to fake same-orogin with passkeys (thanks a2kolbasov) [#2849]
+- Fix detecting transitions [#2855]
+- Fix Google password input detection [#2861]
+- Fix Epic Games and Paypal password input detection [#2863]
+- Fix using invalid parameters with MutationObserver [#2784]
+- Fix ignoring partial nodeNames [#2745]
+- Fix incorrect error message on keyboard fill [#2814]
+- Fix reopen database shortcut (thanks a2kolbasov) [#2767]
+- Fix showing notifications always on the top window [#2789]
+- Fix missing digits in TOTP fill on some sites (thanks ElementW) [#2794]
+- Fix setting default redirect allowance to 3 (thanks SinnySupernova) [#2797]
+- Fix createObserver() check [#2873]
+- Fix retry on input field detection with Custom Login Fields [#2875]
+- Fix detecting new password input on forms [#2878]
+- Fix form submit to ignore password related buttons [#2882]
+- Refactor icon handling [#2791]
+- Update webextension-polyfill library [#2822]
+
+1.9.11 (2025-11-26)
+=========================
+- Add support for reseting all settings to defaults [#2720]
+- Add support for toJSON() with createPublicKeyCredential (passkeys) [#2734]
+- Add site exception for dei.gr [#2760]
+- Add submit button exception for Dubverse [#2759]
+- Add support for selecting a custom submit button with Custom Login Fields [#2756]
+- Fix check for Firefox browser [#2724, #2725]
+- Fix JavaScript error in console (thanks ygoe) [#2721]
+- Fix overlap check with labels [#2731]
+- Fix checking overlays before fill [#2733]
+- Fix requerying form if password input changed [#2738]
+- Fix incorrect fields variable [#2740]
+- Fix malformed page content with passkeys script injection (thanks a2kolbasov) [#2757]
+- Fix layout issues with banners [#2764]
+- Update Playwright libraries [#2727]
+
+1.9.10 (2025-10-05)
+=========================
+- Add Disable passkeys option to Site Preferences [#2694]
+- Add overlay exceptions feature to Predefined Sites [#2693]
+- Change DOM to use popover for icons and content [#2687]
+- Change some icons [#2706]
+- Fix detecting existing login combination [#2682]
+- Fix Mutation Observer to handle multiple element mutations (thanks mihai-vlc) [#2635]
+- Fix using popovers with Firefox ESR 115 [#2690]
+- Fix filling relevant entries [#2691]
+- Fix filling wrapped input fields [#2699]
+- Fix filling username to already filled field [#2700]
+- Fix ignore regex list (thanks EamonNerbonne) [#2711]
+- Fix is element inside function [#2714]
+- Fix handling window offsets for DOM content positioning [#2698]
+- Refactor Site Preferences options settings page [#2666]
+- Refactor browser information function [#2709]
+
+1.9.9.6 (2025-09-09)
+=========================
+- Add caching to overlay detection for improved performance [#2670]
+- Fix protection against form overlays [#2676]
+- Fix using custom functions with Elements in TreeWalker [#2677]
+
+1.9.9.5 (2025-09-03)
+=========================
+- Fix topmost input element check with labels [#2667]
+- Fix Custom Login Fields with topmost element check [#2673]
+
+1.9.9.4 (2025-08-29)
+=========================
+- Fix topmost element check with Shadow DOM [#2659]
+
+1.9.9.3 (2025-08-27)
+=========================
+- Add protection against style changes for wrapper div elements [#2646]
+- Add protection against for sandboxed iframes [#2648]
+- Add protection against overlays [#2651]
+- Add protection against html, body and form opacity [#2653]
+- Add error message for untrusted iframes during fill [#2649]
+
+1.9.9.2 (2025-08-21)
+=========================
+- Fix parent element opacity check for better clickjacking attempt prevention [#2641]
+
 1.9.9.1 (2025-07-03)
 =========================
 - Move privacy permission to optional permissions list [#2595, #2601]

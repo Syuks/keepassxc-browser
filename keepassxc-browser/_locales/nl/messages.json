@@ -184,8 +184,8 @@
         "description": "Attestation not supported."
     },
     "errorMessagePasskeysCredentialIsExcluded": {
-        "message": "Referentie is uitgesloten.",
-        "description": "Credential is excluded."
+        "message": "Passkey niet geregistreerd vanwege een bestaande inloggegevens. Verwijder de bestaande inloggegevens om door te gaan.",
+        "description": "Passkey not registered due to an existing credential. Remove the existing credential to continue."
     },
     "errorMessagePasskeysRequestCanceled": {
         "message": "Passkey-verzoek geannuleerd.",
@@ -235,9 +235,25 @@
         "message": "user.id voldoet niet aan de vereiste lengte.",
         "description": "user.id does not match the required length."
     },
+    "errorMessagePasskeysEvalByCredentialNotSupported": {
+        "message": "evalByCredential wordt niet ondersteund bij registratie.",
+        "description": "evalByCredential is not supported at registration."
+    },
+    "errorMessagePasskeysEvalByCredentialNotEmpty": {
+        "message": "evalByCredential is niet leeg, maar toegestaanCredentials wel.",
+        "description": "evalByCredential is not empty, but allowedCredentials is."
+    },
+    "errorMessagePasskeysEvalByCredentialNotFound": {
+        "message": "Credential ID verstrekt in evalByCredential niet gevonden.",
+        "description": "Credential ID provided in evalByCredential not found."
+    },
     "errorMessagePasskeysContextIsNotSecure": {
         "message": "Context is niet veilig.",
         "description": "Context is not secure."
+    },
+    "errorMessageCannotUseReferences": {
+        "message": "Gebruikersnaam of wachtwoord mag geen referenties bevatten.",
+        "description": "Username or password cannot contain references."
     },
     "errorNotConnected": {
         "message": "Niet verbonden met KeePassXC.",
@@ -322,6 +338,10 @@
         "message": "Tekenreeksveld",
         "description": "Text for string field."
     },
+    "defineSubmitButton": {
+        "message": "Knop Indienen",
+        "description": "Text for Submit Button."
+    },
     "defineChooseUsername": {
         "message": "Kies een gebruikersnaamveld",
         "description": "Choosing a username field text when choosing Custom Login Fields."
@@ -338,9 +358,13 @@
         "message": "Kies tekenreeksvelden",
         "description": "Choose String Fields a selection text when choosing Custom Login Fields."
     },
+    "defineChooseSubmitButton": {
+        "message": "Knop Indienen kiezen",
+        "description": "Choose submit button selection text when choosing Custom Login Fields."
+    },
     "defineHelpText": {
-        "message": "Bevestig je selectie of stel meerdere velden in als <em>tekenreeksvelden</em>.",
-        "description": "Confirm a selection text when choosing Custom Login Fields which contains string fields."
+        "message": "Bevestig de selectie of kies meer velden als tekenreeksvelden.",
+        "description": "Confirm a selection text when choosing Custom Login Fields which contains String Fields."
     },
     "defineKeyboardText": {
         "message": "Je kunt tevens gebruikmaken van de numerieke toetsen op je toetsenbord.",
@@ -362,6 +386,10 @@
         "message": "Tekenreeksvelden",
         "description": "General text for a String Fields."
     },
+    "submitButton": {
+        "message": "Knop Indienen",
+        "description": "Custom Submit Button text."
+    },
     "credentialsNoUsername": {
         "message": "- geen gebruikersnaam -",
         "description": "Shown when no username is set in the credentials."
@@ -369,6 +397,10 @@
     "credentialsNoLoginsFound": {
         "message": "Geen inloggegevens aangetroffen.",
         "description": "Shown when no credentials are found for the current page."
+    },
+    "credentialsBlockedInIframe": {
+        "message": "Invulling van de inloggegevens geblokkeerd in niet-vertrouwd iframe.",
+        "description": "Alert message when filling credentials is blocked due to iframe restrictions."
     },
     "credentialsMultipleFound": {
         "message": "Er zijn meerdere inloggegevens aangetroffen in KeePassXC!",
@@ -389,6 +421,10 @@
     "credentialExpired": {
         "message": "Verlopen",
         "description": "If a credential is expired, this is appended to the title label."
+    },
+    "credentialsRetrieveButton": {
+        "message": "Inloggegevens ophalen",
+        "description": "Manual retrieve credentials button text."
     },
     "fieldsFill": {
         "message": "Fout: geen invulvelden aangetroffen.",
@@ -674,6 +710,10 @@
         "message": "Websitevoorkeuren",
         "description": "Site Preferences page header."
     },
+    "optionsSitePreferencesSettings": {
+        "message": "Instellingen",
+        "description": "Site Preferences settings button text."
+    },
     "optionsMenuAbout": {
         "message": "Over",
         "description": "About page header."
@@ -725,6 +765,10 @@
     "optionsButtonExport": {
         "message": "Instellingen exporteren",
         "description": "Export settings button text."
+    },
+    "optionsButtonResetSettings": {
+        "message": "Alle instellingen opnieuw instellen",
+        "description": "Reset all settings button text."
     },
     "optionsLabelDefaultGroup": {
         "message": "Standaardgroep voor het opslaan van nieuwe wachtwoorden:",
@@ -845,6 +889,22 @@
     "optionsCheckboxAutoFillAndSend": {
         "message": "Invullen van HTTP Basic Auth-inloggegevens toestaan",
         "description": "Allow filling HTTP Basic Auth credentials checkbox text."
+    },
+    "optionsConnectionMethod": {
+        "message": "Verbindingsmethode",
+        "description": "Connection method selection text."
+    },
+    "optionsConnectionMethodHelpText": {
+        "message": "Als native messaging is geblokkeerd in uw browser, kunt u overschakelen naar een directe WebSocket-verbinding. Deze functie moet aan KeePassXC-kant zijn ingeschakeld om te werken. De browser moet opnieuw worden opgestart.",
+        "description": "Connection method help text."
+    },
+    "optionsConnectionMethodNativeMessaging": {
+        "message": "Native messaging",
+        "description": "Native messaging option for Connection method."
+    },
+    "optionsConnectionMethodWebSocket": {
+        "message": "WebSocket",
+        "description": "WebSocket option for Connection method."
     },
     "optionsDebugLogging": {
         "message": "Logboekregistratie voor foutopsporing",
@@ -1030,6 +1090,10 @@
         "message": "Vereiste KeePassXC-versie: $1",
         "description": "KeePassXC version requirement text."
     },
+    "optionsMinimumKeePassXCVersionRequired": {
+        "message": "De extensie vereist KeePassXC-versie: $1. Eerdere versies kunnen ongewenst gedrag veroorzaken.",
+        "description": "KeePassXC minimum version requirement text."
+    },
     "optionsDefault": {
         "message": "Standaard: $1",
         "description": "Default setting text."
@@ -1065,6 +1129,10 @@
     "optionsImportSettingsDialogText": {
         "message": "De huidige instellingen worden overschreven. Weet je zeker dat je het instellingenbestand wilt importeren?",
         "description": "Import settings confirmation dialog help text."
+    },
+    "optionsResetSettingsDialogText": {
+        "message": "Alle instellingen worden teruggezet naar standaardinstellingen. Weet je het zeker?",
+        "description": "Reset all settings dialog text."
     },
     "optionsConnectedDatabasesText": {
         "message": "Databases verbonden met KeePassXC-Browser.",
@@ -1110,8 +1178,8 @@
         "message": "Pagina-url",
         "description": "Site Preferences list column title."
     },
-    "optionsColumnIgnore": {
-        "message": "Negeren",
+    "optionsColumnFeatures": {
+        "message": "Functies",
         "description": "Site Preferences list column title."
     },
     "optionsColumnUsernameOnly": {
@@ -1140,6 +1208,10 @@
     },
     "optionsSelectionAutoSubmit": {
         "message": "Automatisch indienen uitschakelen",
+        "description": "Site Preferences option selection."
+    },
+    "optionsSelectionPasskeys": {
+        "message": "Passkeys uitschakelen",
         "description": "Site Preferences option selection."
     },
     "optionsSelectionFull": {

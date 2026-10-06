@@ -18,7 +18,7 @@ kpxcFill.fillAttributeToActiveElementWith = async function(attr) {
         return;
     }
 
-    kpxc.setValue(el, value[0]);
+    await kpxcFill.setValue(el, value[0]);
 };
 
 // Fill requested from the context menu. Active element is used for combination detection
@@ -170,20 +170,20 @@ kpxcFill.fillTOTPFromUuid = async function(el, uuid) {
             return;
         }
 
-        kpxcFill.setTOTPValue(el, totp);
+        await kpxcFill.setTOTPValue(el, totp);
     } else if (user.stringFields?.length > 0) {
         const stringFields = user.stringFields;
         for (const s of stringFields) {
             const val = s['KPH: {TOTP}'];
             if (val) {
-                kpxcFill.setTOTPValue(el, val);
+                await kpxcFill.setTOTPValue(el, val);
             }
         }
     }
 };
 
 // Set normal or segmented TOTP value
-kpxcFill.setTOTPValue = function(elem, val) {
+kpxcFill.setTOTPValue = async function(elem, val) {
     if (kpxc.credentials.length === 0) {
         logDebug('Error: Credential list is empty.');
         return;
@@ -191,22 +191,22 @@ kpxcFill.setTOTPValue = function(elem, val) {
 
     for (const comb of kpxc.combinations) {
         if (comb.totpInputs?.length > 0) {
-            kpxcFill.fillSegmentedTotp(elem, val, comb.totpInputs);
+            await kpxcFill.fillSegmentedTotp(elem, val, comb.totpInputs);
             return;
         }
     }
 
-    kpxc.setValue(elem, val);
+    await kpxcFill.setValue(elem, val);
 };
 
 // Fill TOTP in parts
-kpxcFill.fillSegmentedTotp = function(elem, val, totpInputs) {
+kpxcFill.fillSegmentedTotp = async function(elem, val, totpInputs) {
     if (!totpInputs.includes(elem) || val.length < totpInputs.length) {
         return;
     }
 
     for (let i = 0; i < totpInputs.length; ++i) {
-        kpxc.setValue(totpInputs[i], val[i]);
+        await kpxcFill.setValue(totpInputs[i], val[i]);
     }
 };
 
@@ -235,7 +235,7 @@ kpxcFill.fillFromUsernameIcon = async function(combination) {
  */
 kpxcFill.fillInCredentials = async function(combination, predefinedUsername, uuid, passOnly = false) {
     if (kpxc.credentials.length === 0) {
-        kpxcUI.createNotification('error', tr('credentialsNoLoginsFound'));
+        showErrorNotification(`${tr('credentialsNoLoginsFound')} ${document.location.origin}`);
         return;
     }
 
@@ -263,6 +263,10 @@ kpxcFill.fillInCredentials = async function(combination, predefinedUsername, uui
         skipAutoSubmit = selectedCredentials.skipAutoSubmit === 'true';
     }
 
+    // Additional checks
+    checkIdenticalPasswordFields(combination);
+    checkReadOnlyUsernameField(combination);
+
     // Fill password
     if (combination.password && matchesWithNodeName(combination.password, 'INPUT')) {
         // Show a notification if password length exceeds the length defined in input
@@ -278,28 +282,28 @@ kpxcFill.fillInCredentials = async function(combination, predefinedUsername, uui
             return;
         }
 
-        kpxc.setValueWithChange(combination.password, selectedCredentials.password);
+        await kpxcFill.setValueWithChange(combination.password, selectedCredentials.password);
         await kpxc.setPasswordFilled(true);
     }
 
     // Fill username
-    if (combination.username && usernameValue &&
+    if (combination.username && usernameValue && combination.username !== combination.password &&
         (!combination.username.value || combination.username.value !== usernameValue)) {
         if (!passOnly) {
-            kpxc.setValueWithChange(combination.username, usernameValue);
+            await kpxcFill.setValueWithChange(combination.username, usernameValue);
         }
     }
 
     // Fill StringFields
     if (selectedCredentials.stringFields?.length > 0) {
-        kpxcFill.fillInStringFields(combination.fields, selectedCredentials.stringFields);
+        await kpxcFill.fillInStringFields(combination.fields, selectedCredentials.stringFields);
     }
 
     // Fill TOTP
     if (kpxc.settings.autoFillSingleTotp && kpxc.entryHasTotp(selectedCredentials)) {
         const totpCombination = combination?.totp || kpxc.combinations?.find(c => c.totp);
         if (totpCombination?.totp) {
-            kpxcFill.fillTOTPFromUuid(totpCombination.totp, selectedCredentials.uuid);
+            await kpxcFill.fillTOTPFromUuid(totpCombination.totp, selectedCredentials.uuid);
         }
     }
 
@@ -313,7 +317,7 @@ kpxcFill.fillInCredentials = async function(combination, predefinedUsername, uui
 };
 
 // Fills StringFields defined in Custom Fields
-kpxcFill.fillInStringFields = function(fields, stringFields) {
+kpxcFill.fillInStringFields = async function(fields, stringFields) {
     const filledInFields = [];
     if (fields && stringFields && fields?.length > 0 && stringFields?.length > 0) {
         for (let i = 0; i < fields.length; i++) {
@@ -325,7 +329,7 @@ kpxcFill.fillInStringFields = function(fields, stringFields) {
             const currentField = fields[i];
 
             if (currentField && stringFieldValue[0]) {
-                kpxc.setValue(currentField, stringFieldValue[0], true);
+                await kpxcFill.setValue(currentField, stringFieldValue[0], true);
                 filledInFields.push(currentField);
             }
         }
@@ -347,7 +351,8 @@ kpxcFill.performAutoSubmit = async function(combination, skipAutoSubmit) {
     if (!skipAutoSubmit && !autoSubmitIgnoredForSite) {
         await sendMessage('page_set_autosubmit_performed');
 
-        const submitButton = kpxcForm.getFormSubmitButton(combination.form);
+        // Use submit button from Custom Login Fields or detect it from the form
+        const submitButton = combination?.submitButton ?? kpxcForm.getFormSubmitButton(combination.form);
         if (submitButton !== undefined) {
             submitButton.click();
         } else if (combination.form) {
@@ -357,6 +362,79 @@ kpxcFill.performAutoSubmit = async function(combination, skipAutoSubmit) {
         (combination.username || combination.password).focus();
     }
 };
+
+// Special handling for setting value to select and checkbox elements
+kpxcFill.setValue = async function(field, value, forced = false) {
+    if (field.matches('select')) {
+        value = value.toLowerCase().trim();
+        const options = field.querySelectorAll('option');
+
+        for (const o of options) {
+            if (o.textContent.toLowerCase().trim() === value) {
+                await kpxcFill.setValueWithChange(field, o.value);
+                return false;
+            }
+        }
+
+        return;
+    } else if (field.getLowerCaseAttribute('type') === 'checkbox' && value?.toLowerCase() === 'true') {
+        field.checked = true;
+    }
+
+    // Make sure the input is not wrapped inside another element (custom INPUT element)
+    if (field?.nodeName !== 'INPUT' && field?.nodeName?.includes('INPUT')) {
+        const childInput = field?.querySelector('input');
+        const fieldsFromShadowDOM = kpxcObserverHelper.findInputsFromShadowDOM(field);
+        field = childInput ?? fieldsFromShadowDOM[0];
+    }
+
+
+    await kpxcFill.setValueWithChange(field, value, forced);
+};
+
+// Sets a new value to input field and triggers necessary events
+kpxcFill.setValueWithChange = async function(field, value, forced = false) {
+    if (!field || (field?.readOnly && !forced)) {
+        return;
+    }
+
+    // Check for overlays before fill
+    kpxcFields.discoverOverlays();
+    const rect = field.getBoundingClientRect();
+    if (kpxcFields.isOverlayOnTop(rect)) {
+        return;
+    }
+
+    const dispatchLegacyEvent = function(elem, eventName) {
+        const legacyEvent = elem.ownerDocument.createEvent('Event');
+        legacyEvent.initEvent(eventName, true, false);
+        elem.dispatchEvent(legacyEvent);
+    };
+
+    field.focus();
+
+    // Use a delay to allow focus events to trigger and to give some
+    // breathing room to frameworks that rely on promises to update their
+    // state, like React. Not doing so can break OTP input, see issue #2215.
+    await Promise.resolve();
+
+    field.dispatchEvent(new FocusEvent('focus', { bubbles: false, cancelable: false }));
+    field.dispatchEvent(new FocusEvent('focusin', { bubbles: true, cancelable: false }));
+
+    // https://w3c.github.io/uievents/#keypress-event-order
+    field.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: false, key: value }));
+    field.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: false, inputType: 'insertText', data: value }));
+    field.dispatchEvent(new KeyboardEvent('keypress', { bubbles: true, cancelable: false, key: value }));
+    field.value = value;
+    field.dispatchEvent(new Event('input', { bubbles: true, cancelable: false }));
+    field.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: false, key: value }));
+    field.dispatchEvent(new Event('change', { bubbles: true, cancelable: false }));
+
+    // Some pages will not accept the value change without dispatching events directly to the document
+    dispatchLegacyEvent(field, 'input');
+    dispatchLegacyEvent(field, 'change');
+};
+
 
 // Check if password fill is done to a plain text field
 const passwordFillIsAllowed = function(elem) {
@@ -374,9 +452,67 @@ const passwordFillIsAllowed = function(elem) {
 // Show a specific error notification if current database is not connected
 const showErrorNotification = async function(errorMessage, notificationType = 'error') {
     const connectedDatabase = await sendMessage('get_connected_database');
-    if (!connectedDatabase?.identifier) {
+    if (!connectedDatabase?.identifier && kpxc.databaseState === DatabaseState.UNLOCKED) {
         kpxcUI.createNotification('error', tr('errorCurrentDatabaseNotConnected'));
+    } else if (!await isIframeAllowed()) {
+        // Special error if we are blocking due to iframe
+        kpxcUI.createNotification('error', tr('credentialsBlockedInIframe'));
     } else {
         kpxcUI.createNotification(notificationType, errorMessage);
     }
+};
+
+// Update the password field if form has been updated with a new identical element (Moodle).
+// If found, replace the new input field to the combination.
+const checkIdenticalPasswordFields = function(combination) {
+    if (combination?.form && combination?.password && !combination.form.contains(combination.password)) {
+        const newPasswordField = getPasswordFieldFromForm(combination);
+        if (newPasswordField && areNamedNodeMapsEqual(combination.password.attributes, newPasswordField.attributes)) {
+            combination.password = newPasswordField;
+        }
+    }
+};
+
+// Sometimes username field is changed to readOnly. Look for a password field instead inside the form.
+const checkReadOnlyUsernameField = function(combination) {
+    if (combination?.username && combination?.username?.readOnly && combination?.form && !combination?.password) {
+        const passwordField = getPasswordFieldFromForm(combination);
+        if (kpxcFields.isVisible(passwordField)) {
+            combination.password = passwordField;
+        }
+    }
+};
+
+// Checks if two NamedNodeMaps (attribute lists) are equal
+const areNamedNodeMapsEqual = function(currentNodeMap, newNodeMap) {
+    if (!currentNodeMap || !newNodeMap) {
+        return false;
+    }
+
+    const fieldAttributes = Array.from(currentNodeMap);
+    const newFieldAttributes = Array.from(newNodeMap);
+
+    if (fieldAttributes.length !== newFieldAttributes.length) {
+        return false;
+    }
+
+    for (const attr of fieldAttributes) {
+        const newAttr = newFieldAttributes.find((newAttr) => newAttr?.name === attr?.name);
+        if (!newAttr || newAttr?.value !== attr?.value) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+const getPasswordFieldFromForm = function(combination) {
+    if (!combination) {
+        return undefined;
+    }
+
+    const formInputs = kpxcObserverHelper.getInputs(combination.form);
+    return formInputs?.find(
+        formInput => formInput?.getLowerCaseAttribute('type') === 'password' && !formInput?.readOnly
+    );
 };

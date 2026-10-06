@@ -1,12 +1,13 @@
 {
   "name": "keepassxc-browser",
-  "version": "1.9.9.1",
+  "version": "1.10.4.1",
   "description": "KeePassXC-Browser",
   "main": "build.js",
   "devDependencies": {
-    "@playwright/test": "^1.45.1",
+    "@eslint/js": "^9.39.1",
+    "@playwright/test": "^1.60.0",
     "@types/node": "^20.14.10",
-    "eslint": "^8.49.0"
+    "eslint": "^9.39.1"
   },
   "dependencies": {
     "@npmcli/fs": "^2.1.0"
@@ -15,7 +16,7 @@
     "build": "node build.js",
     "debug:chromium": "cp dist/manifest_chromium.json keepassxc-browser/manifest.json",
     "debug:firefox": "cp dist/manifest_firefox.json keepassxc-browser/manifest.json",
-    "lint": "npx eslint keepassxc-browser/**/*.js",
+    "lint": "npx eslint --no-warn-ignored keepassxc-browser/**/*.js",
     "tests": "npx playwright test"
   },
   "repository": {

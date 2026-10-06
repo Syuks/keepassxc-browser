@@ -9,6 +9,7 @@ const MAX_SEGMENTED_FIELD_LENGTH = 100;
  * Provides methods for input field handling.
  */
 const kpxcFields = {};
+kpxcFields.popoverSupported = true;
 
 // Returns all username & password combinations detected from the inputs.
 // After username field is detected, first password field found after that will be saved as a combination.
@@ -29,7 +30,7 @@ kpxcFields.getAllCombinations = async function(inputs) {
                 form: input.form
             };
 
-            combinations.push(combination);
+            combinations.push(kpxcFields.getExistingCombination(combination));
             usernameField = null;
         } else if (kpxcTOTPIcons.isValid(input)) {
             // Dynamically added TOTP field
@@ -91,6 +92,32 @@ kpxcFields.getCombinationFromAllInputs = function() {
     }
 
     return kpxc.combinations[0];
+};
+
+// Checks if existing combination is found and recognized fields are added to it
+kpxcFields.getExistingCombination = function(combination) {
+    // Lookup existing combinations that use the same form
+    const existingCombination = kpxc.combinations?.find(c => c.form === combination?.form);
+    if (existingCombination) {
+        // Replace values to the existing combination
+        existingCombination.username ??= combination.username;
+        existingCombination.password ??= combination.password;
+        if (existingCombination.passwordInputs?.length === 0) {
+            existingCombination.passwordInputs = combination.passwordInputs;
+        } else if (combination?.password) {
+            // If password field is found in the current combination, force assign it to the existing combination
+            existingCombination.password = combination.password;
+        }
+
+        // Remove username field from combination with certain sites (replaced by password input)
+        if (kpxcSites.combinationExceptionFound(existingCombination)) {
+            existingCombination.username = null;
+        }
+
+        return existingCombination;
+    }
+
+    return combination;
 };
 
 // Adds segmented TOTP fields to the combination if found
@@ -302,7 +329,7 @@ kpxcFields.getIdFromXPath = function(target) {
     return xpath;
 };
 
-// Generate uniqe ID from properties (new method)
+// Generate unique ID from properties (new method)
 kpxcFields.getIdFromProperties = function(target) {
     if (target.name) {
         return `${target.nodeName} ${target.type} ${target.name} ${target.placeholder}`;
@@ -338,7 +365,7 @@ kpxcFields.getElementFromXPathId = function(xpath) {
 
 // Checks if inputs or combinations contain segmented TOTP fields
 kpxcFields.handleSegmentedTOTPFields = function(inputs, combinations) {
-    // Check for multiple segmented TOTP fields when there are no inputs, or combination contains the segemented fields
+    // Check for multiple segmented TOTP fields when there are no inputs, or combination contains the segmented fields
     const segmentedFields = combinations.filter(c => c.totp);
     if (combinations.length === 0
         || segmentedFields.length === DEFAULT_SEGMENTED_TOTP_FIELDS
@@ -411,8 +438,106 @@ kpxcFields.isSearchField = function(target) {
     return false;
 };
 
+// :popover-open selector is supported only with Firefox >= 125 and Chrome >= 114
+kpxcFields.discoverOverlays = function() {
+    try {
+        kpxcFields.overlays = document.querySelectorAll(':popover-open, [popover]');
+    } catch (e) {
+        // Ignore SyntaxError (e.g., unsupported selector)
+        if (!(e instanceof SyntaxError)) {
+            kpxcFields.popoverSupported = false;
+            logError(e);
+        }
+    }
+};
+
+// Checks if element has an overlay
+kpxcFields.hasOverlay = function(elem) {
+    try {
+        return elem?.hasAttribute('popover') || elem?.matches(':popover-open');
+    } catch (e) {
+        // Ignore SyntaxError (e.g., unsupported selector)
+        if (!(e instanceof SyntaxError)) {
+            kpxcFields.popoverSupported = false;
+            logError(e);
+        }
+    }
+};
+
+// Check the visibility of existing fields
+kpxcFields.checkExistingFields = function() {
+    if (kpxc.inputs?.some(input => !kpxcFields.isVisible(input))) {
+        kpxc.clearAllFromPage();
+        kpxc.combinations = [];
+    }
+};
+
+// Check for popup overlays
+kpxcFields.isOverlayOnTop = function(rect) {
+    for (const overlay of kpxcFields.overlays ?? []) {
+        if (kpxcSites.overlayExceptionFound(overlay)) {
+            continue;
+        }
+
+        const overlayRect = overlay?.getBoundingClientRect();
+        if (overlayRect && elementsOverlap(rect, overlayRect)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+/**
+ * Check if element is the topmost element
+ * @param {HTMLElement} elem    Element to be checked
+ * @param {DOMRect} rect        Precalculated DOMRect of the element
+ * @returns {boolean}           True if element is the topmost
+ */
+kpxcFields.isTopElement = function(elem, rect) {
+    if (!elem || !rect) {
+        return false;
+    }
+
+    const rootNode = elem.getRootNode() ?? document;
+
+    // Returns the topmost element from point x, height/2
+    // If the input has a label as the top element and it's inside the input, allow it.
+    // Also allows if the topmost element is a child of the label (e.g., span inside label).
+    const getTopmostElement = (element, x, elementRect) => {
+        const topElement = rootNode.elementFromPoint(x, elementRect.top + (elementRect.height / 2));
+        return element?.labels instanceof NodeList &&
+            element.labels[0]?.contains(topElement) &&
+            elementsOverlap(elementRect, topElement.getBoundingClientRect())
+            ? element
+            : topElement;
+    };
+
+    // Check topmost element from three points inside the input
+    if (matchesWithNodeName(elem, 'INPUT') && [
+        getTopmostElement(elem, rect.left + (rect.width / 4), rect), // First third
+        getTopmostElement(elem, rect.left + (rect.width / 2), rect), // Middle
+        getTopmostElement(elem, rect.left + (rect.width / 1.33), rect), // Last third
+    ].some((e) => e !== elem)) {
+        return false;
+    }
+
+    // Check if element has an overlay
+    if (kpxcFields.isOverlayOnTop(rect)) {
+        return false;
+    }
+
+    return true;
+};
+
 // Returns true if element is visible on the page
 kpxcFields.isVisible = function(elem) {
+    // Returns true if opacity is not set, otherwise check the limits
+    const isOpacityAllowed = (opacity) => {
+        const opac = Number(opacity);
+        return opacity === '' || (opac >= MIN_OPACITY && opac <= MAX_OPACITY);
+    };
+
     // Check element position and size
     const rect = elem.getBoundingClientRect();
     if (rect.x < 0
@@ -424,18 +549,21 @@ kpxcFields.isVisible = function(elem) {
         return false;
     }
 
+    if (!kpxcFields.isTopElement(elem, rect)) {
+        return false;
+    }
+
     // Check CSS visibility
     const elemStyle = getComputedStyle(elem);
-    const opacity = Number(elemStyle.opacity);
     if (elemStyle.visibility && (elemStyle.visibility === 'hidden' || elemStyle.visibility === 'collapse')
-        || (opacity < MIN_OPACITY || opacity > MAX_OPACITY)
+        || !isOpacityAllowed(elemStyle.opacity)
         || parseInt(elemStyle.width, 10) <= MIN_INPUT_FIELD_WIDTH_PX
         || parseInt(elemStyle.height, 10) <= MIN_INPUT_FIELD_WIDTH_PX) {
         return false;
     }
 
     // Check for parent opacity
-    if (kpxcFields.traverseParents(elem, f => f.style.opacity === '0')) {
+    if (kpxcFields.traverseParents(elem, f => !isOpacityAllowed(f.style.opacity))) {
         return false;
     }
 
@@ -447,7 +575,7 @@ kpxcFields.prepareId = function(id) {
 };
 
 /**
- * Returns the first parent element satifying the {@code predicate} mapped by {@code resultFn} or else {@code defaultVal}.
+ * Returns the first parent element satisfying the {@code predicate} mapped by {@code resultFn} or else {@code defaultVal}.
  * @param {HTMLElement} element     The start element (excluded, starting with the parents)
  * @param {function} predicate      Matcher for the element to find, type (HTMLElement) => boolean
  * @param {function} resultFn       Callback function of type (HTMLElement) => {*} called for the first matching element
@@ -467,14 +595,14 @@ kpxcFields.traverseParents = function(element, predicate, resultFn = () => true,
 kpxcFields.useCustomLoginFields = async function() {
     const location = kpxc.getDocumentLocation();
     const creds = kpxc.settings['defined-custom-fields'][location];
-    if (!creds.username && !creds.password && !creds.totp && creds.fields.length === 0) {
+    if (!creds.username && !creds.password && !creds.totp && creds.fields.length === 0 && !creds.submitButton) {
         return;
     }
 
-    // Finds the input field based on the stored ID
-    const findInputField = async function(inputFields, idArray) {
+    // Finds the element based on the stored ID
+    const findElement = async function(fields, idArray) {
         if (idArray) {
-            const input = inputFields.find(e => e === kpxcFields.getId(idArray, e));
+            const input = fields.find(e => e === kpxcFields.getId(idArray, e));
             if (input) {
                 return input;
             }
@@ -491,16 +619,24 @@ kpxcFields.useCustomLoginFields = async function() {
         }
     });
 
-    const [ username, password, totp ] = await Promise.all([
-        await findInputField(inputFields, creds.username),
-        await findInputField(inputFields, creds.password),
-        await findInputField(inputFields, creds.totp)
+    const buttons = [];
+    document.body.querySelectorAll('button, input[type=submit]').forEach(e => {
+        if (e.type !== 'hidden' && !e.disabled) {
+            buttons.push(e);
+        }
+    });
+
+    const [ username, password, totp, submitButton ] = await Promise.all([
+        await findElement(inputFields, creds.username),
+        await findElement(inputFields, creds.password),
+        await findElement(inputFields, creds.totp),
+        await findElement(buttons, creds.submitButton),
     ]);
 
     // Handle StringFields
     const stringFields = [];
     for (const sf of creds.fields) {
-        const field = await findInputField(inputFields, sf);
+        const field = await findElement(inputFields, sf);
         if (field) {
             stringFields.push(field);
         }
@@ -516,9 +652,11 @@ kpxcFields.useCustomLoginFields = async function() {
     combinations.push({
         username: username,
         password: password,
-        passwordInputs: [ password ],
+        passwordInputs: password ? [ password ] : [],
         totp: totp,
-        fields: stringFields
+        fields: stringFields,
+        submitButton: submitButton,
+        form: username?.form
     });
 
     return combinations;

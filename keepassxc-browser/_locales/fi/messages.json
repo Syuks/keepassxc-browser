@@ -184,8 +184,8 @@
         "description": "Attestation not supported."
     },
     "errorMessagePasskeysCredentialIsExcluded": {
-        "message": "Tietue on lisätty poikkeuksiin.",
-        "description": "Credential is excluded."
+        "message": "Pääsyavainta ei rekisteröity, koska se on jo olemassa. Poista vanha avain jatkaaksesi.",
+        "description": "Passkey not registered due to an existing credential. Remove the existing credential to continue."
     },
     "errorMessagePasskeysRequestCanceled": {
         "message": "Pääsyavainpyyntö on peruttu.",
@@ -235,9 +235,25 @@
         "message": "user.id on eri mittainen kuin vaadittu.",
         "description": "user.id does not match the required length."
     },
+    "errorMessagePasskeysEvalByCredentialNotSupported": {
+        "message": "evalByCredential is not supported at registration.",
+        "description": "evalByCredential is not supported at registration."
+    },
+    "errorMessagePasskeysEvalByCredentialNotEmpty": {
+        "message": "evalByCredential is not empty, but allowedCredentials is.",
+        "description": "evalByCredential is not empty, but allowedCredentials is."
+    },
+    "errorMessagePasskeysEvalByCredentialNotFound": {
+        "message": "Credential ID provided in evalByCredential not found.",
+        "description": "Credential ID provided in evalByCredential not found."
+    },
     "errorMessagePasskeysContextIsNotSecure": {
         "message": "Konteksti ei ole turvallinen.",
         "description": "Context is not secure."
+    },
+    "errorMessageCannotUseReferences": {
+        "message": "Käyttäjänimi tai salasana ei saa sisältää viittauksia",
+        "description": "Username or password cannot contain references."
     },
     "errorNotConnected": {
         "message": "Ei yhteyttä KeePassXC:hen.",
@@ -319,8 +335,12 @@
         "description": "Clear save data button text when choosing Custom Login Fields."
     },
     "defineStringField": {
-        "message": "Lisämerkkijonokenttä #",
+        "message": "Lisämerkkijonokenttä",
         "description": "Text for string field."
+    },
+    "defineSubmitButton": {
+        "message": "Lähetä-nappi",
+        "description": "Text for Submit Button."
     },
     "defineChooseUsername": {
         "message": "Valitse käyttäjätunnuksen kenttä",
@@ -338,9 +358,13 @@
         "message": "Valitse lisämerkkijonokentät",
         "description": "Choose String Fields a selection text when choosing Custom Login Fields."
     },
+    "defineChooseSubmitButton": {
+        "message": "Valitse lähetä-nappi",
+        "description": "Choose submit button selection text when choosing Custom Login Fields."
+    },
     "defineHelpText": {
-        "message": "Vahvista valintasi tai merkitse lisää kenttiä <em>lisämerkkijonokentiksi</em>.",
-        "description": "Confirm a selection text when choosing Custom Login Fields which contains string fields."
+        "message": "Vahvista valintasi tai merkitse lisää kenttiä lisämerkkijonokentiksi.",
+        "description": "Confirm a selection text when choosing Custom Login Fields which contains String Fields."
     },
     "defineKeyboardText": {
         "message": "Voit myös valita kenttiä käyttämällä näppäimistön numeroita.",
@@ -362,6 +386,10 @@
         "message": "Lisämerkkijonokentät",
         "description": "General text for a String Fields."
     },
+    "submitButton": {
+        "message": "Lähetä-nappi",
+        "description": "Custom Submit Button text."
+    },
     "credentialsNoUsername": {
         "message": "- ei käyttäjätunnusta -",
         "description": "Shown when no username is set in the credentials."
@@ -369,6 +397,10 @@
     "credentialsNoLoginsFound": {
         "message": "Virhe:\nTunnuksia ei löydy.",
         "description": "Shown when no credentials are found for the current page."
+    },
+    "credentialsBlockedInIframe": {
+        "message": "Tietueiden täyttö estettiin epäluotettavaan iframe-upotukseen.",
+        "description": "Alert message when filling credentials is blocked due to iframe restrictions."
     },
     "credentialsMultipleFound": {
         "message": "Virhe:\nKeePassXC löysi useampia tilitietoja!\nPaina selainlaajennuksen ikonia nähdäksesi lisävalinnat.",
@@ -389,6 +421,10 @@
     "credentialExpired": {
         "message": "Vanhentunut",
         "description": "If a credential is expired, this is appended to the title label."
+    },
+    "credentialsRetrieveButton": {
+        "message": "Hae tietueet",
+        "description": "Manual retrieve credentials button text."
     },
     "fieldsFill": {
         "message": "Virhe:\nTäytön tarvitsemia kenttiä ei löydy.",
@@ -674,6 +710,10 @@
         "message": "Sivustokohtaiset asetukset",
         "description": "Site Preferences page header."
     },
+    "optionsSitePreferencesSettings": {
+        "message": "Asetukset",
+        "description": "Site Preferences settings button text."
+    },
     "optionsMenuAbout": {
         "message": "Tietoja",
         "description": "About page header."
@@ -725,6 +765,10 @@
     "optionsButtonExport": {
         "message": "Vie asetukset",
         "description": "Export settings button text."
+    },
+    "optionsButtonResetSettings": {
+        "message": "Palauta kaikki asetukset oletuksiin",
+        "description": "Reset all settings button text."
     },
     "optionsLabelDefaultGroup": {
         "message": "Oletusryhmä johon uudet salasanat tallennetaan:",
@@ -845,6 +889,22 @@
     "optionsCheckboxAutoFillAndSend": {
         "message": "Salli HTTP Basic Auth -tietueiden täyttäminen",
         "description": "Allow filling HTTP Basic Auth credentials checkbox text."
+    },
+    "optionsConnectionMethod": {
+        "message": "Yhteystapa",
+        "description": "Connection method selection text."
+    },
+    "optionsConnectionMethodHelpText": {
+        "message": "Jos native messaging -rajapinta on estetty selaimessasi, voit käyttää suoraa WebSocket-yhteyttä. Toiminnallisuuden täytyy olla aktivoitu myös KeePassXC:n puolella. Selain täytyy käynnistää uudelleen.",
+        "description": "Connection method help text."
+    },
+    "optionsConnectionMethodNativeMessaging": {
+        "message": "Native messaging",
+        "description": "Native messaging option for Connection method."
+    },
+    "optionsConnectionMethodWebSocket": {
+        "message": "WebSocket",
+        "description": "WebSocket option for Connection method."
     },
     "optionsDebugLogging": {
         "message": "Virheenkorjausloki",
@@ -1030,6 +1090,10 @@
         "message": "Vaatii KeePassXC:n version: $1",
         "description": "KeePassXC version requirement text."
     },
+    "optionsMinimumKeePassXCVersionRequired": {
+        "message": "Tämä selainlaajennus vaatii KeePassXC-version: $1. Aiemmat versiot voivat aiheuttaa epätoivottua käytöstä.",
+        "description": "KeePassXC minimum version requirement text."
+    },
     "optionsDefault": {
         "message": "Oletus: $1",
         "description": "Default setting text."
@@ -1065,6 +1129,10 @@
     "optionsImportSettingsDialogText": {
         "message": "Nykyiset asetukset ylikirjoitetaan. Oletko varma, että haluat tuoda asetustiedoston?",
         "description": "Import settings confirmation dialog help text."
+    },
+    "optionsResetSettingsDialogText": {
+        "message": "Kaikki asetukset palautetaan oletuksiin. Oletko varma?",
+        "description": "Reset all settings dialog text."
     },
     "optionsConnectedDatabasesText": {
         "message": "Seuraavat KeePassXC:n tietokannat ovat yhdistettynä selainlaajennukseen.",
@@ -1110,8 +1178,8 @@
         "message": "Sivun URL",
         "description": "Site Preferences list column title."
     },
-    "optionsColumnIgnore": {
-        "message": "Älä huomioi",
+    "optionsColumnFeatures": {
+        "message": "Ominaisuudet",
         "description": "Site Preferences list column title."
     },
     "optionsColumnUsernameOnly": {
@@ -1140,6 +1208,10 @@
     },
     "optionsSelectionAutoSubmit": {
         "message": "Automattisyöttö pois päältä",
+        "description": "Site Preferences option selection."
+    },
+    "optionsSelectionPasskeys": {
+        "message": "Poista pääsyavaimet käytöstä",
         "description": "Site Preferences option selection."
     },
     "optionsSelectionFull": {

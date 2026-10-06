@@ -12,10 +12,6 @@ kpxcUsernameIcons.switchIcon = function(state) {
     kpxcUsernameIcons.icons.forEach(u => u.switchIcon(state));
 };
 
-kpxcUsernameIcons.deleteHiddenIcons = function() {
-    kpxcUI.deleteHiddenIcons(kpxcUsernameIcons.icons);
-};
-
 kpxcUsernameIcons.isValid = function(field) {
     if (!field
         || field.offsetWidth < MIN_INPUT_FIELD_OFFSET_WIDTH
@@ -34,7 +30,7 @@ class UsernameFieldIcon extends Icon {
         super(field, databaseState);
 
         this.initField(field);
-        kpxcUI.monitorIconPosition(this);
+        kpxcIcons.monitorIconPosition(this);
     }
 
     switchIcon(state) {
@@ -68,9 +64,7 @@ UsernameFieldIcon.prototype.initField = function(field) {
 
 UsernameFieldIcon.prototype.createIcon = function(field) {
     const className = getIconClassName(this.databaseState);
-
-    // Size the icon dynamically, but not greater than 24 or smaller than 14
-    const size = Math.max(Math.min(24, field.offsetHeight - 4), 14);
+    const size = this.calculateIconSize(field);
 
     // Don't create the icon if the input field is too small
     if (field.offsetWidth < (size * 1.5) || field.offsetHeight < size) {
@@ -78,16 +72,19 @@ UsernameFieldIcon.prototype.createIcon = function(field) {
         return;
     }
 
-    const offset = kpxcUI.calculateIconOffset(field, size);
-
     const icon = kpxcUI.createElement('div', 'kpxc kpxc-username-icon ' + className,
         {
             'title': getIconText(this.databaseState),
             'size': size,
-            'offset': offset,
-            'kpxc-pwgen-field-id': field.getAttribute('data-kpxc-id')
+            'kpxc-pwgen-field-id': field.getAttribute('data-kpxc-id'),
+            'popover': 'manual'
         });
-    icon.style.zIndex = '10000000';
+
+    if (kpxcFields.popoverSupported) {
+        icon.style.margin = 0;
+    } else {
+        icon.style.zIndex = '10000000';
+    }
     icon.style.width = Pixels(size);
     icon.style.height = Pixels(size);
 
@@ -97,7 +94,11 @@ UsernameFieldIcon.prototype.createIcon = function(field) {
         }
 
         if (e.shiftKey) {
-            icon.style.display = 'none';
+            if (kpxcFields.popoverSupported) {
+                icon.hidePopover();
+            } else {
+                icon.style.display = 'none';
+            }
             return;
         }
 
@@ -108,9 +109,12 @@ UsernameFieldIcon.prototype.createIcon = function(field) {
     icon.addEventListener('mousedown', ev => ev.stopPropagation());
     icon.addEventListener('mouseup', ev => ev.stopPropagation());
 
-    kpxcUI.setIconPosition(icon, field, this.rtl);
+    kpxcIcons.setIconPosition(icon, field, this.rtl);
     this.icon = icon;
     this.createWrapper('css/username.css');
+    if (kpxcFields.popoverSupported) {
+        icon.showPopover();
+    }
 };
 
 const iconClicked = async function(field, icon) {
@@ -139,12 +143,12 @@ const iconClicked = async function(field, icon) {
 
 const getIconClassName = function(state = DatabaseState.UNLOCKED) {
     if (state === DatabaseState.LOCKED) {
-        return (isFirefox() ? 'lock-moz' : 'lock');
+        return getIconClass('lock');
     } else if (state === DatabaseState.DISCONNECTED) {
-        return (isFirefox() ? 'disconnected-moz' : 'disconnected');
+        return getIconClass('disconnected');
     }
 
-    return (isFirefox() ? 'unlock-moz' : 'unlock');
+    return getIconClass('unlock');
 };
 
 const getIconText = function(state) {

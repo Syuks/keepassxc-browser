@@ -184,11 +184,11 @@
         "description": "Attestation not supported."
     },
     "errorMessagePasskeysCredentialIsExcluded": {
-        "message": "Данните за удостоверяване са изключени.",
-        "description": "Credential is excluded."
+        "message": "Ключът за достъп не е регистриран поради съществуваща регистрация. За да продължите я премахнете.",
+        "description": "Passkey not registered due to an existing credential. Remove the existing credential to continue."
     },
     "errorMessagePasskeysRequestCanceled": {
-        "message": "Заявката за Passkeys е отказана.",
+        "message": "Заявката за ключ за достъп е отказана.",
         "description": "Passkeys request canceled."
     },
     "errorMessagePasskeysInvalidUserVerification": {
@@ -224,7 +224,7 @@
         "description": "Wait for timer to expire."
     },
     "errorMessagePasskeysUnknownError": {
-        "message": "Неочаквана грешка на Passkeys.",
+        "message": "Неочаквана грешка на ключ за достъп.",
         "description": "Unknown passkeys error."
     },
     "errorMessagePasskeysInvalidChallenge": {
@@ -235,9 +235,25 @@
         "message": "user.id не отговаря на изискваната дължина.",
         "description": "user.id does not match the required length."
     },
+    "errorMessagePasskeysEvalByCredentialNotSupported": {
+        "message": "evalByCredential is not supported at registration.",
+        "description": "evalByCredential is not supported at registration."
+    },
+    "errorMessagePasskeysEvalByCredentialNotEmpty": {
+        "message": "evalByCredential is not empty, but allowedCredentials is.",
+        "description": "evalByCredential is not empty, but allowedCredentials is."
+    },
+    "errorMessagePasskeysEvalByCredentialNotFound": {
+        "message": "Credential ID provided in evalByCredential not found.",
+        "description": "Credential ID provided in evalByCredential not found."
+    },
     "errorMessagePasskeysContextIsNotSecure": {
         "message": "Контекстът не е сигурен.",
         "description": "Context is not secure."
+    },
+    "errorMessageCannotUseReferences": {
+        "message": "Потребителското име и парола не трябва да съдържат референция.",
+        "description": "Username or password cannot contain references."
     },
     "errorNotConnected": {
         "message": "Няма връзка с KeePassXC.",
@@ -319,8 +335,12 @@
         "description": "Clear save data button text when choosing Custom Login Fields."
     },
     "defineStringField": {
-        "message": "Поле за низ",
+        "message": "Текстово поле",
         "description": "Text for string field."
+    },
+    "defineSubmitButton": {
+        "message": "Изпращащ бутон",
+        "description": "Text for Submit Button."
     },
     "defineChooseUsername": {
         "message": "Избиране поле за потребителското име",
@@ -338,9 +358,13 @@
         "message": "Избиране на поле за низ",
         "description": "Choose String Fields a selection text when choosing Custom Login Fields."
     },
+    "defineChooseSubmitButton": {
+        "message": "Избиране на изпращащ бутон",
+        "description": "Choose submit button selection text when choosing Custom Login Fields."
+    },
     "defineHelpText": {
-        "message": "Потвърдете избора си или изберете повече полета като полета за низ.",
-        "description": "Confirm a selection text when choosing Custom Login Fields which contains string fields."
+        "message": "Потвърдете избора си или изберете повече полета като текстови полета.",
+        "description": "Confirm a selection text when choosing Custom Login Fields which contains String Fields."
     },
     "defineKeyboardText": {
         "message": "Също можете да използвате цифрите, за да избирате полета посредством клавиатурата.",
@@ -362,6 +386,10 @@
         "message": "Полета за низове",
         "description": "General text for a String Fields."
     },
+    "submitButton": {
+        "message": "Изпращащ бутон",
+        "description": "Custom Submit Button text."
+    },
     "credentialsNoUsername": {
         "message": "- без потребителско име -",
         "description": "Shown when no username is set in the credentials."
@@ -369,6 +397,10 @@
     "credentialsNoLoginsFound": {
         "message": "Не са намерени данни за вход.",
         "description": "Shown when no credentials are found for the current page."
+    },
+    "credentialsBlockedInIframe": {
+        "message": "Попълването на регистрации е спряно в несигурна рамка.",
+        "description": "Alert message when filling credentials is blocked due to iframe restrictions."
     },
     "credentialsMultipleFound": {
         "message": "Повече от една регистрация е намерена в KeePassXC!",
@@ -389,6 +421,10 @@
     "credentialExpired": {
         "message": "Изтекъл",
         "description": "If a credential is expired, this is appended to the title label."
+    },
+    "credentialsRetrieveButton": {
+        "message": "Получаване на регистрации",
+        "description": "Manual retrieve credentials button text."
     },
     "fieldsFill": {
         "message": "Грешка: Не са намерени полета, които да бъдат попълнени.",
@@ -674,6 +710,10 @@
         "message": "Предпочитания за сайтове",
         "description": "Site Preferences page header."
     },
+    "optionsSitePreferencesSettings": {
+        "message": "Настройки",
+        "description": "Site Preferences settings button text."
+    },
     "optionsMenuAbout": {
         "message": "Относно",
         "description": "About page header."
@@ -726,6 +766,10 @@
         "message": "Изнасяне на настройки",
         "description": "Export settings button text."
     },
+    "optionsButtonResetSettings": {
+        "message": "Нулиране на настройките",
+        "description": "Reset all settings button text."
+    },
     "optionsLabelDefaultGroup": {
         "message": "Група по подразбиране при добавяне на регистрации:",
         "description": "Default group options text."
@@ -735,7 +779,7 @@
         "description": "Default group help text."
     },
     "optionsLabelDefaultPasskeyGroup": {
-        "message": "Група по подразбиране при добавяне на Passkeys:",
+        "message": "Група по подразбиране при добавяне на ключ за достъп:",
         "description": "Default passkey group options text."
     },
     "optionsLabelDefaultGroupCheckboxText": {
@@ -845,6 +889,22 @@
     "optionsCheckboxAutoFillAndSend": {
         "message": "Разрешава попълване на регистрации на HTTP Basic Auth",
         "description": "Allow filling HTTP Basic Auth credentials checkbox text."
+    },
+    "optionsConnectionMethod": {
+        "message": "Метод на свързване",
+        "description": "Connection method selection text."
+    },
+    "optionsConnectionMethodHelpText": {
+        "message": "Ако присъщата обмяна на съобщения е забранена в мрежовия четец можете да използвате директна връзка през WebSocket. За да работи тази възможност трябва да бъде разрешена от страната на KeePassXC. Необходимо е рестарт на мрежовия четец.",
+        "description": "Connection method help text."
+    },
+    "optionsConnectionMethodNativeMessaging": {
+        "message": "Присъща обмяна на съобщения",
+        "description": "Native messaging option for Connection method."
+    },
+    "optionsConnectionMethodWebSocket": {
+        "message": "WebSocket",
+        "description": "WebSocket option for Connection method."
     },
     "optionsDebugLogging": {
         "message": "Дневник за отстраняване на грешки",
@@ -1030,6 +1090,10 @@
         "message": "Изисква KeePassXC издание: $1",
         "description": "KeePassXC version requirement text."
     },
+    "optionsMinimumKeePassXCVersionRequired": {
+        "message": "Разширението изисква KeePassXC издание $1. По-ранни издания могат да доведат до нежелано поведение.",
+        "description": "KeePassXC minimum version requirement text."
+    },
     "optionsDefault": {
         "message": "По подразбиране: $1",
         "description": "Default setting text."
@@ -1065,6 +1129,10 @@
     "optionsImportSettingsDialogText": {
         "message": "Текущите настройки ще бъдат презаписани. Наистина ли желаете да бъдат внесени настройките от файла?",
         "description": "Import settings confirmation dialog help text."
+    },
+    "optionsResetSettingsDialogText": {
+        "message": "Желаете ли настройките да бъдат нулирани до подразбираните стойности?",
+        "description": "Reset all settings dialog text."
     },
     "optionsConnectedDatabasesText": {
         "message": "Хранилища, свързани с KeePassXC-Browser.",
@@ -1110,8 +1178,8 @@
         "message": "Адрес на страница",
         "description": "Site Preferences list column title."
     },
-    "optionsColumnIgnore": {
-        "message": "Пренебрегване",
+    "optionsColumnFeatures": {
+        "message": "Възможности",
         "description": "Site Preferences list column title."
     },
     "optionsColumnUsernameOnly": {
@@ -1140,6 +1208,10 @@
     },
     "optionsSelectionAutoSubmit": {
         "message": "Изключване на автоматично изпращане",
+        "description": "Site Preferences option selection."
+    },
+    "optionsSelectionPasskeys": {
+        "message": "Изключване на ключове за достъп",
         "description": "Site Preferences option selection."
     },
     "optionsSelectionFull": {
@@ -1359,23 +1431,23 @@
         "description": "Extension title in settings page"
     },
     "optionsPasskeysTitle": {
-        "message": "Passkeys",
+        "message": "Ключове за достъп",
         "description": "Passkeys settings title in settings page."
     },
     "optionsPasskeysEnable": {
-        "message": "Включване на Passkeys",
+        "message": "Включване на ключове за достъп",
         "description": "Enabled passkeys option text."
     },
     "optionsPasskeysEnableHelpText": {
-        "message": "Поддръжане на Web Authentication.",
+        "message": "Поддържане на Web Authentication.",
         "description": "Passkeys option help text."
     },
     "optionsPasskeysEnableFallback": {
-        "message": "Резервен вариант на Passkeys",
+        "message": "Резервен вариант на ключ за достъп",
         "description": "Enabled passkeys fallback option text."
     },
     "optionsPasskeysEnableFallbackHelpText": {
-        "message": "Когато е отметнато, грешна или отказана заявка към KeePassXC ще задейства вградената в четеца заявка за Passkeys. Ако не е отметнато, връзка към KeePassXC е задължителна и отказаната заявка ще води до грешка. По подразбиране: отметнато.",
+        "message": "Когато е отметнато, грешна или отказана заявка към KeePassXC ще задейства вградената в четеца заявка за ключ за достъп. Ако не е отметнато, връзка към KeePassXC е задължителна и отказаната заявка ще води до грешка. По подразбиране: отметнато.",
         "description": "Passkeys fallback option help text."
     },
     "openNewTab": {

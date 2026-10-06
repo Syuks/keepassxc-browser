@@ -184,8 +184,8 @@
         "description": "Attestation not supported."
     },
     "errorMessagePasskeysCredentialIsExcluded": {
-        "message": "Credential is excluded.",
-        "description": "Credential is excluded."
+        "message": "Passkey not registered due to an existing credential. Remove the existing credential to continue.",
+        "description": "Passkey not registered due to an existing credential. Remove the existing credential to continue."
     },
     "errorMessagePasskeysRequestCanceled": {
         "message": "Passkeys request canceled.",
@@ -235,9 +235,25 @@
         "message": "user.id does not match the required length.",
         "description": "user.id does not match the required length."
     },
+    "errorMessagePasskeysEvalByCredentialNotSupported": {
+        "message": "evalByCredential is not supported at registration.",
+        "description": "evalByCredential is not supported at registration."
+    },
+    "errorMessagePasskeysEvalByCredentialNotEmpty": {
+        "message": "evalByCredential is not empty, but allowedCredentials is.",
+        "description": "evalByCredential is not empty, but allowedCredentials is."
+    },
+    "errorMessagePasskeysEvalByCredentialNotFound": {
+        "message": "Credential ID provided in evalByCredential not found.",
+        "description": "Credential ID provided in evalByCredential not found."
+    },
     "errorMessagePasskeysContextIsNotSecure": {
         "message": "Context is not secure.",
         "description": "Context is not secure."
+    },
+    "errorMessageCannotUseReferences": {
+        "message": "Username or password cannot contain references.",
+        "description": "Username or password cannot contain references."
     },
     "errorNotConnected": {
         "message": "Not connected to KeePassXC.",
@@ -319,8 +335,12 @@
         "description": "Clear save data button text when choosing Custom Login Fields."
     },
     "defineStringField": {
-        "message": "String field",
+        "message": "String Field",
         "description": "Text for string field."
+    },
+    "defineSubmitButton": {
+        "message": "Submit Button",
+        "description": "Text for Submit Button."
     },
     "defineChooseUsername": {
         "message": "Choose a username field",
@@ -338,9 +358,13 @@
         "message": "Choose String Fields",
         "description": "Choose String Fields a selection text when choosing Custom Login Fields."
     },
+    "defineChooseSubmitButton": {
+        "message": "Choose submit button",
+        "description": "Choose submit button selection text when choosing Custom Login Fields."
+    },
     "defineHelpText": {
-        "message": "Please confirm your selection or choose more fields as String fields.",
-        "description": "Confirm a selection text when choosing Custom Login Fields which contains string fields."
+        "message": "Please confirm your selection or choose more fields as String Fields.",
+        "description": "Confirm a selection text when choosing Custom Login Fields which contains String Fields."
     },
     "defineKeyboardText": {
         "message": "You can also use the numbers to choose the input fields from keyboard.",
@@ -362,6 +386,10 @@
         "message": "String Fields",
         "description": "General text for a String Fields."
     },
+    "submitButton": {
+        "message": "Submit Button",
+        "description": "Custom Submit Button text."
+    },
     "credentialsNoUsername": {
         "message": "- no username -",
         "description": "Shown when no username is set in the credentials."
@@ -369,6 +397,10 @@
     "credentialsNoLoginsFound": {
         "message": "No logins found.",
         "description": "Shown when no credentials are found for the current page."
+    },
+    "credentialsBlockedInIframe": {
+        "message": "Credential fill blocked in untrusted iframe.",
+        "description": "Alert message when filling credentials is blocked due to iframe restrictions."
     },
     "credentialsMultipleFound": {
         "message": "More than one login was found in KeePassXC!",
@@ -389,6 +421,10 @@
     "credentialExpired": {
         "message": "Expired",
         "description": "If a credential is expired, this is appended to the title label."
+    },
+    "credentialsRetrieveButton": {
+        "message": "Retrieve credentials",
+        "description": "Manual retrieve credentials button text."
     },
     "fieldsFill": {
         "message": "Error: Cannot find fields to fill in.",
@@ -674,6 +710,10 @@
         "message": "Site Preferences",
         "description": "Site Preferences page header."
     },
+    "optionsSitePreferencesSettings": {
+        "message": "Settings",
+        "description": "Site Preferences settings button text."
+    },
     "optionsMenuAbout": {
         "message": "About",
         "description": "About page header."
@@ -725,6 +765,10 @@
     "optionsButtonExport": {
         "message": "Export settings",
         "description": "Export settings button text."
+    },
+    "optionsButtonResetSettings": {
+        "message": "Reset all settings",
+        "description": "Reset all settings button text."
     },
     "optionsLabelDefaultGroup": {
         "message": "Default group for saving new passwords:",
@@ -845,6 +889,22 @@
     "optionsCheckboxAutoFillAndSend": {
         "message": "Allow filling HTTP Basic Auth credentials",
         "description": "Allow filling HTTP Basic Auth credentials checkbox text."
+    },
+    "optionsConnectionMethod": {
+        "message": "Connection method",
+        "description": "Connection method selection text."
+    },
+    "optionsConnectionMethodHelpText": {
+        "message": "If native messaging is blocked in your browser, you can switch to a direct WebSocket sonnection. The feature must be enabled from KeePassXC side to work. Browser restart is required.",
+        "description": "Connection method help text."
+    },
+    "optionsConnectionMethodNativeMessaging": {
+        "message": "Native messaging",
+        "description": "Native messaging option for Connection method."
+    },
+    "optionsConnectionMethodWebSocket": {
+        "message": "WebSocket",
+        "description": "WebSocket option for Connection method."
     },
     "optionsDebugLogging": {
         "message": "Debug logging",
@@ -1030,6 +1090,10 @@
         "message": "Requires KeePassXC version: $1",
         "description": "KeePassXC version requirement text."
     },
+    "optionsMinimumKeePassXCVersionRequired": {
+        "message": "The extension requires KeePassXC version: $1. Earlier versions can cause unwanted behavior.",
+        "description": "KeePassXC minimum version requirement text."
+    },
     "optionsDefault": {
         "message": "Default: $1",
         "description": "Default setting text."
@@ -1065,6 +1129,10 @@
     "optionsImportSettingsDialogText": {
         "message": "Current settings will be overridden. Do you really want to import the settings file?",
         "description": "Import settings confirmation dialog help text."
+    },
+    "optionsResetSettingsDialogText": {
+        "message": "All settings will be reset to defaults. Are you sure?",
+        "description": "Reset all settings dialog text."
     },
     "optionsConnectedDatabasesText": {
         "message": "Databases connected to KeePassXC-Browser.",
@@ -1110,8 +1178,8 @@
         "message": "Page URL",
         "description": "Site Preferences list column title."
     },
-    "optionsColumnIgnore": {
-        "message": "Ignore",
+    "optionsColumnFeatures": {
+        "message": "Features",
         "description": "Site Preferences list column title."
     },
     "optionsColumnUsernameOnly": {
@@ -1140,6 +1208,10 @@
     },
     "optionsSelectionAutoSubmit": {
         "message": "Disable Auto-Submit",
+        "description": "Site Preferences option selection."
+    },
+    "optionsSelectionPasskeys": {
+        "message": "Disable passkeys",
         "description": "Site Preferences option selection."
     },
     "optionsSelectionFull": {

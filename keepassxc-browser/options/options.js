@@ -1,6 +1,8 @@
 'use strict';
 
 const options = {};
+options.dropdownButton = null;
+options.isFirefox = false;
 
 const $ = function(elem) {
     return document.querySelector(elem);
@@ -206,7 +208,7 @@ options.initGeneralSettings = async function() {
     });
 
     $('#configureCommands').addEventListener('click', function() {
-        if (isFirefox()) {
+        if (options.isFirefox) {
             if (typeof(browser.commands.openShortcutSettings) === 'function') {
                 browser.commands.openShortcutSettings();
             } else {
@@ -222,6 +224,13 @@ options.initGeneralSettings = async function() {
         browser.tabs.create({
             url: `${scheme}://extensions/shortcuts`
         });
+    });
+
+    // Connection method
+    $('#tab-general-settings select#connectionMethod').value = options.settings['connectionMethod'];
+    $('#tab-general-settings select#connectionMethod').addEventListener('change', async function(e) {
+        options.settings['connectionMethod'] = e.currentTarget.value;
+        await options.saveSettings();
     });
 
     // Default group
@@ -285,7 +294,7 @@ options.initGeneralSettings = async function() {
                     // Verify the import
                     temporarySettings = contents;
                     dialogImportSettingsModal.show();
-                } catch (err) {
+                } catch (_err) {
                     console.log('Error loading JSON settings file.');
                 }
             };
@@ -309,6 +318,24 @@ options.initGeneralSettings = async function() {
             options.settings = temporarySettings;
             options.saveSettings();
         }
+    });
+
+    // Reset all settings modal
+    const dialogResetSettingsModal = new bootstrap.Modal('#dialogResetSettings',
+        { keyboard: true, focus: false, backdrop: true });
+
+    $('#dialogResetSettings').addEventListener('shown.bs.modal', function(modalEvent) {
+        modalEvent.currentTarget.querySelector('.modal-footer button.yes').focus();
+    });
+
+    $('#resetSettingsButton').addEventListener('click', function() {
+        dialogResetSettingsModal.show();
+    });
+
+    $('#dialogResetSettings .modal-footer button.yes').addEventListener('click', function(e) {
+        dialogResetSettingsModal.hide();
+        browser.runtime.sendMessage({ action: 'reset_all_settings' });
+        location.reload();
     });
 
     $('#copyVersionToClipboard').addEventListener('click', function () {
@@ -346,39 +373,28 @@ options.showKeePassXCVersions = async function(response) {
     $('#tab-about span.kpxcVersion').textContent = response.current;
     $('#tab-general-settings button.checkUpdateKeePassXC').disabled = false;
 
-    const versionResults = await browser.runtime.sendMessage({
-        action: 'compare_versions',
-        args: [
-            [
-                '2.6.0',
-                '2.7.0',
-                '2.7.7',
-                '2.7.10'
-            ],
-            response.current
-        ],
-    });
-
-    // Hide/disable certain options with older KeePassXC versions than 2.6.0
-    if (versionResults['2.6.0']) {
+    const featureList = await browser.runtime.sendMessage({ action: 'get_features_list' });
+    if (featureList?.requiredKeePassXCVersionFound) {
         $('#tab-general-settings #versionRequiredAlert').hide();
     } else {
         $('#tab-general-settings #showGroupNameInAutocomplete').disabled = true;
+        $('#tab-general-settings #minimumVersionAlert').show();
     }
 
-    // Hide certain options with older KeePassXC versions than 2.7.0
-    if (!versionResults['2.7.0']) {
+    if (!featureList?.downloadFaviconAfterSave) {
         $('#tab-general-settings #downloadFaviconAfterSaveFormGroup').hide();
     }
 
-    // Hide certain options with older KeePassXC versions than 2.7.7
-    if (!versionResults['2.7.7']) {
+    if (!featureList?.passkeys) {
         $('#tab-general-settings #passkeysOptionsCard').hide();
     }
 
-    // Hide passkeys default group option with KeePassXC version < 2.7.10
-    if (!versionResults['2.7.10']) {
+    if (!featureList?.passkeysDefaultGroup) {
         $('#tab-general-settings #passkeysDefaultGroup').hide();
+    }
+
+    if (!featureList?.webSocket) {
+        $('#tab-general-settings #connectionMethodOptions').hide();
     }
 };
 
@@ -536,6 +552,43 @@ options.initSitePreferences = function() {
         modalEvent.currentTarget.querySelector('.modal-footer button.yes').focus();
     });
 
+    const settingsButtonClicked = function(e) {
+        e.preventDefault();
+
+        const closestTr = e.target.closest('tr');
+        const url = closestTr.getAttribute('url');
+        const sitePreferences = options.settings['sitePreferences']?.find((pref) => pref?.url === url);
+        const usernameOnly = sitePreferences.usernameOnly;
+        const improvedFieldDetection = sitePreferences.improvedFieldDetection;
+        const allowIframes = sitePreferences.allowIframes;
+
+        const dropdown = $('.settings-dropdown');
+        if (dropdown?.style?.display !== 'block'
+            || (dropdown?.style?.display === 'block' && e.target !== options.dropdownButton)) {
+            if (options.dropdownButton) {
+                options.dropdownButton.classList.remove('active');
+                // Update number of enabled settings to the old Settings button
+                const checkboxValues = Array.from(dropdown?.querySelectorAll('input[type=checkbox]')).map(c => c.checked);
+                updateSettingsButtonText(options.dropdownButton, checkboxValues);
+            }
+
+            // Apply current settings to the dropdown
+            dropdown.querySelector('#usernameOnly').checked = usernameOnly;
+            dropdown.querySelector('#improvedFieldDetection').checked = improvedFieldDetection;
+            dropdown.querySelector('#allowIframes').checked = allowIframes;
+
+            dropdown?.show();
+            updateDropdownPosition(e, dropdown);
+            options.dropdownButton = e.target;
+            options.dropdownButton.classList.add('active');
+        } else {
+            dropdown?.hide();
+            options.dropdownButton.classList.remove('active');
+            updateSettingsButtonText(options.dropdownButton, [ usernameOnly, improvedFieldDetection, allowIframes ]);
+            options.dropdownButton = null;
+        }
+    };
+
     const removeButtonClicked = function(e) {
         e.preventDefault();
 
@@ -601,18 +654,18 @@ options.initSitePreferences = function() {
         }
     };
 
-    const checkboxClicked = function() {
-        const closestTr = this.closest('tr');
+    const checkboxClicked = async function(e) {
+        const closestTr = options?.dropdownButton?.closest('tr');
         const url = closestTr.getAttribute('url');
 
         for (const site of options.settings['sitePreferences']) {
             if (site.url === url) {
-                if (this.name === 'usernameOnly') {
-                    site.usernameOnly = this.checked;
-                } else if (this.name === 'improvedFieldDetection') {
-                    site.improvedFieldDetection = this.checked;
-                } else if (this.name === 'allowIframes') {
-                    site.allowIframes = this.checked;
+                if (e.target.name === SitePreferences.USERNAME_ONLY) {
+                    site.usernameOnly = e.target.checked;
+                } else if (e.target.name === SitePreferences.IMPROVED_FIELD_DETECTION) {
+                    site.improvedFieldDetection = e.target.checked;
+                } else if (e.target.name === SitePreferences.ALLOW_IFRAMES) {
+                    site.allowIframes = e.target.checked;
                 }
             }
         }
@@ -632,6 +685,11 @@ options.initSitePreferences = function() {
 
         options.saveSettings();
     };
+
+    const dropdown = $('.settings-dropdown');
+    dropdown.querySelector('#usernameOnly').addEventListener('change', checkboxClicked);
+    dropdown.querySelector('#improvedFieldDetection').addEventListener('change',checkboxClicked);
+    dropdown.querySelector('#allowIframes').addEventListener('change', checkboxClicked);
 
     const addNewRow = function(rowClone, newIndex, url, ignore, usernameOnly, improvedFieldDetection, allowIframes) {
         const row = rowClone.cloneNode(true);
@@ -662,19 +720,25 @@ options.initSitePreferences = function() {
             saveModifiedUrl(e, row, inputField, editButton, cancelButton, saveButton)
         );
 
+        // Page URL
         row.children[0].children[0].children[0].value = url;
-        row.children[0].children[0]?.addEventListener('dblclick', (e) => 
+        row.children[0].children[0]?.addEventListener('dblclick', (e) =>
             enterEditMode(e, row, inputField, editButton, cancelButton, saveButton)
         );
-        row.children[1].children[0].value = ignore;
-        row.children[1].children[0].addEventListener('change', selectionChanged);
-        row.children[2].children['usernameOnly'].checked = usernameOnly;
-        row.children[2].children['usernameOnly'].addEventListener('change', checkboxClicked);
-        row.children[3].children['improvedFieldDetection'].checked = improvedFieldDetection;
-        row.children[3].children['improvedFieldDetection'].addEventListener('change', checkboxClicked);
-        row.children[4].children['allowIframes'].checked = allowIframes;
-        row.children[4].children['allowIframes'].addEventListener('change', checkboxClicked);
-        row.children[5].addEventListener('click', removeButtonClicked);
+
+        // Settings
+        const settings = row.children[1];
+        updateSettingsButtonText(settings.querySelector('#settings-button'),
+            [ usernameOnly, improvedFieldDetection, allowIframes ]);
+        settings.querySelector('#settings-button').addEventListener('click', (e) => settingsButtonClicked(e));
+
+        // Ignore
+        const ignoreSelect = row.children[2];
+        ignoreSelect.querySelector('#ignore-select').value = ignore;
+        ignoreSelect.querySelector('#ignore-select').addEventListener('change', selectionChanged);
+
+        // Remove button
+        row.children[3].addEventListener('click', removeButtonClicked);
 
         $('#tab-site-preferences table tbody').append(row);
     };
@@ -738,11 +802,11 @@ options.initSitePreferences = function() {
         $('#tab-site-preferences table tbody tr.empty').hide();
 
         options.settings['sitePreferences'].push({
-            url: value,
-            ignore: IGNORE_NOTHING,
-            usernameOnly: false,
-            improvedFieldDetection: false,
             allowIframes: false,
+            ignore: IGNORE_NOTHING,
+            improvedFieldDetection: false,
+            url: value,
+            usernameOnly: false,
         });
         options.saveSettings();
         manualUrl.value = '';
@@ -777,7 +841,7 @@ options.initAbout = function() {
     $('#tab-about span.versionCIP').textContent = version;
     $('#tab-about span.kpxcbrVersion').textContent = version;
     $('#tab-about span.kpxcbrOS').textContent = platform;
-    $('#tab-about span.kpxcbrBrowser').textContent = getBrowserId();
+    $('#tab-about span.kpxcbrBrowser').textContent = getBrowserId(navigator.userAgent);
 };
 
 options.updateTheme = function() {
@@ -805,23 +869,109 @@ options.createWarning = function(elem, text) {
     }, 5000);
 };
 
-const getBrowserId = function() {
-    if (navigator.userAgent.indexOf('Firefox') > -1) {
-        return 'Mozilla Firefox ' + navigator.userAgent.substr(navigator.userAgent.lastIndexOf('/') + 1);
-    } else if (navigator.userAgent.indexOf('Edg') > -1) {
-        let startPos = navigator.userAgent.indexOf('Edg');
-        startPos = navigator.userAgent.indexOf('/', startPos) + 1;
-        const version = navigator.userAgent.substring(startPos);
-        return 'Microsoft Edge ' + version;
-    } else if (navigator.userAgent.indexOf('Chrome') > -1) {
-        let startPos = navigator.userAgent.indexOf('Chrome');
-        startPos = navigator.userAgent.indexOf('/', startPos) + 1;
-        const version = navigator.userAgent.substring(startPos, navigator.userAgent.indexOf('Safari'));
-        return 'Chrome/Chromium ' + version;
+options.hideUnsupportedFeatures = function() {
+    if (isSafari()) {
+        $('#tab-general-settings div#keyboardShortcuts').hide();
+        $('#tab-general-settings div#autoFillHttpAuth').hide();
+    }
+};
+
+const getBrowserId = function(userAgent) {
+    const browserQueries = [
+        { findStr: 'Firefox', name: 'Mozilla Firefox' },
+        { findStr: 'Edg', name: 'Microsoft Edge' },
+        { findStr: 'OPR', name: 'Opera' },
+        { findStr: 'Chrome', name: 'Chrome/Chromium' },
+        { findStr: 'Version/', name: 'Safari' }
+    ];
+
+    const getVersion = (agent, findStr) => {
+        const match = agent?.match(new RegExp(`(?:${findStr})\/([\\d.]+)`));
+        return match ? match[1] : 'Unknown version';
+    };
+
+    for (const query of browserQueries) {
+        if (userAgent?.indexOf(query.findStr) > -1) {
+            return `${query.name} ${getVersion(userAgent, query.findStr)}`;
+        }
     }
 
     return 'Other/Unknown';
 };
+
+// Update the number of enabled settings to the button text
+const updateSettingsButtonText = function(buttonElement, enabledOptions = []) {
+    const numberOfEnabledOptions = enabledOptions.filter(o => o === true).length;
+    const buttonText = buttonElement.querySelector('span');
+
+    if (numberOfEnabledOptions > 0) {
+        buttonText.textContent =
+            `${browser.i18n.getMessage('optionsSitePreferencesSettings')} (${numberOfEnabledOptions})`;
+    } else {
+        buttonText.textContent = browser.i18n.getMessage('optionsSitePreferencesSettings');
+    }
+};
+
+// Updates settings dropdown menu position
+const updateDropdownPosition = function(e, dropdown) {
+    if (!dropdown) {
+        dropdown = $('.settings-dropdown');
+    }
+
+    const settingsButton = e?.target ?? options.dropdownButton;
+    const rect = settingsButton?.getClientRects()?.[0];
+    if (!rect) {
+        return;
+    }
+
+    const zoom = getComputedStyle(document.body).zoom || 1;
+    const scrollTop = document.defaultView.scrollY / zoom;
+    const scrollLeft = document.defaultView?.scrollX / zoom;
+
+    // If dropdown does not fit to the bottom of the screen -> show it at the top of the settings button
+    const dropdownRect = dropdown.getBoundingClientRect();
+    const totalHeight = dropdownRect.height + rect.height;
+    const offset = (totalHeight + rect.y) / zoom > window.self.visualViewport.height ? totalHeight / zoom : 0;
+
+    dropdown.style.left = Pixels(rect.left / zoom + scrollLeft);
+    dropdown.style.top = Pixels(rect.bottom / zoom + scrollTop - offset);
+};
+
+// Hides the settings dropdown when clicked outside of it
+document.addEventListener('mouseup', function(e) {
+    if (!e.isTrusted) {
+        return;
+    }
+
+    const dropdown = $('.settings-dropdown');
+    if (dropdown?.style?.display !== 'block') {
+        return;
+    }
+
+    const rect = dropdown?.getClientRects()?.[0];
+    if (!rect) {
+        return;
+    }
+
+    if ((e.x > rect.right || e.x < rect.x) || (e.y > rect.bottom || e.y < rect.y)
+        && e.target.nodeName !== 'BUTTON') {
+        dropdown?.hide();
+        const checkboxValues = Array.from(dropdown?.querySelectorAll('input[type=checkbox]')).map(c => c.checked);
+        updateSettingsButtonText(options.dropdownButton, checkboxValues);
+        options.dropdownButton.classList.remove('active');
+        options.dropdownButton = null;
+    }
+});
+
+// Handle dropdown position on window resize
+window.addEventListener('resize', function() {
+    updateDropdownPosition();
+});
+
+// Handle dropdown position on scroll
+window.addEventListener('scroll', function() {
+    updateDropdownPosition();
+});
 
 (async() => {
     try {
@@ -837,13 +987,22 @@ const getBrowserId = function() {
 
         const keyRing = await browser.runtime.sendMessage({ action: 'load_keyring' });
         options.keyRing = keyRing;
+        options.isFirefox = isFirefox();
+
         options.initMenu();
         await options.initGeneralSettings();
         options.initConnectedDatabases();
         options.initCustomLoginFields();
         options.initSitePreferences();
         options.initAbout();
+        options.hideUnsupportedFeatures();
+
+        // The form-switch transitions should complete in 150 ms
+        setTimeout(() => {
+            document.body.classList.remove('no-transitions');
+        }, 200);
     } catch (err) {
         console.log('Error loading options page: ' + err);
+        $('#main-content').hide();
     }
 })();

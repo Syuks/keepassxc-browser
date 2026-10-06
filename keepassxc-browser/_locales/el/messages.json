@@ -184,8 +184,8 @@
         "description": "Attestation not supported."
     },
     "errorMessagePasskeysCredentialIsExcluded": {
-        "message": "Τα Διαπιστευτήρια εξαιρούνται.",
-        "description": "Credential is excluded."
+        "message": "Passkey not registered due to an existing credential. Remove the existing credential to continue.",
+        "description": "Passkey not registered due to an existing credential. Remove the existing credential to continue."
     },
     "errorMessagePasskeysRequestCanceled": {
         "message": "Το αίτημα για Passkeys ακυρώθηκε.",
@@ -235,9 +235,25 @@
         "message": "Το user.id δεν αντιστοιχεί στο απαιτούμενο μήκος.",
         "description": "user.id does not match the required length."
     },
+    "errorMessagePasskeysEvalByCredentialNotSupported": {
+        "message": "evalByCredential is not supported at registration.",
+        "description": "evalByCredential is not supported at registration."
+    },
+    "errorMessagePasskeysEvalByCredentialNotEmpty": {
+        "message": "evalByCredential is not empty, but allowedCredentials is.",
+        "description": "evalByCredential is not empty, but allowedCredentials is."
+    },
+    "errorMessagePasskeysEvalByCredentialNotFound": {
+        "message": "Credential ID provided in evalByCredential not found.",
+        "description": "Credential ID provided in evalByCredential not found."
+    },
     "errorMessagePasskeysContextIsNotSecure": {
         "message": "Ο περιβάλλοντος χώρος δεν είναι ασφαλής.",
         "description": "Context is not secure."
+    },
+    "errorMessageCannotUseReferences": {
+        "message": "Username or password cannot contain references.",
+        "description": "Username or password cannot contain references."
     },
     "errorNotConnected": {
         "message": "Δεν είναι συνδεδεμένο με το KeePassXC.",
@@ -319,8 +335,12 @@
         "description": "Clear save data button text when choosing Custom Login Fields."
     },
     "defineStringField": {
-        "message": "Πεδίο String",
+        "message": "String Field",
         "description": "Text for string field."
+    },
+    "defineSubmitButton": {
+        "message": "Submit Button",
+        "description": "Text for Submit Button."
     },
     "defineChooseUsername": {
         "message": "Επιλέξτε ένα πεδίο ονόματος χρήστη",
@@ -338,9 +358,13 @@
         "message": "Επιλέξτε Πεδία Strings",
         "description": "Choose String Fields a selection text when choosing Custom Login Fields."
     },
+    "defineChooseSubmitButton": {
+        "message": "Choose submit button",
+        "description": "Choose submit button selection text when choosing Custom Login Fields."
+    },
     "defineHelpText": {
-        "message": "Επιβεβαιώστε την επιλογή σας ή επιλέξτε περισσότερα πεδία ως πεδία String.",
-        "description": "Confirm a selection text when choosing Custom Login Fields which contains string fields."
+        "message": "Please confirm your selection or choose more fields as String Fields.",
+        "description": "Confirm a selection text when choosing Custom Login Fields which contains String Fields."
     },
     "defineKeyboardText": {
         "message": "Μπορείτε επίσης να χρησιμοποιήσετε τους αριθμούς για να επιλέξετε τα πεδία εισαγωγής από το πληκτρολόγιο.",
@@ -362,6 +386,10 @@
         "message": "Πεδία Strings",
         "description": "General text for a String Fields."
     },
+    "submitButton": {
+        "message": "Submit Button",
+        "description": "Custom Submit Button text."
+    },
     "credentialsNoUsername": {
         "message": "- χωρίς όνομα χρήστη -",
         "description": "Shown when no username is set in the credentials."
@@ -369,6 +397,10 @@
     "credentialsNoLoginsFound": {
         "message": "Δεν βρέθηκαν συνδέσεις.",
         "description": "Shown when no credentials are found for the current page."
+    },
+    "credentialsBlockedInIframe": {
+        "message": "Credential fill blocked in untrusted iframe.",
+        "description": "Alert message when filling credentials is blocked due to iframe restrictions."
     },
     "credentialsMultipleFound": {
         "message": "Περισσότερες από μία συνδέσεις βρέθηκαν στο KeePassXC!",
@@ -389,6 +421,10 @@
     "credentialExpired": {
         "message": "Έληξε",
         "description": "If a credential is expired, this is appended to the title label."
+    },
+    "credentialsRetrieveButton": {
+        "message": "Retrieve credentials",
+        "description": "Manual retrieve credentials button text."
     },
     "fieldsFill": {
         "message": "Σφάλμα: Δεν είναι δυνατή η εύρεση πεδίων για συμπλήρωση.",
@@ -674,6 +710,10 @@
         "message": "Site Preferences",
         "description": "Site Preferences page header."
     },
+    "optionsSitePreferencesSettings": {
+        "message": "Settings",
+        "description": "Site Preferences settings button text."
+    },
     "optionsMenuAbout": {
         "message": "Σχετικά με",
         "description": "About page header."
@@ -725,6 +765,10 @@
     "optionsButtonExport": {
         "message": "Ρυθμίσεις εξαγωγής",
         "description": "Export settings button text."
+    },
+    "optionsButtonResetSettings": {
+        "message": "Reset all settings",
+        "description": "Reset all settings button text."
     },
     "optionsLabelDefaultGroup": {
         "message": "Προεπιλεγμένη ομάδα για την αποθήκευση νέων κωδικών πρόσβασης:",
@@ -845,6 +889,22 @@
     "optionsCheckboxAutoFillAndSend": {
         "message": "Allow filling HTTP Basic Auth credentials",
         "description": "Allow filling HTTP Basic Auth credentials checkbox text."
+    },
+    "optionsConnectionMethod": {
+        "message": "Connection method",
+        "description": "Connection method selection text."
+    },
+    "optionsConnectionMethodHelpText": {
+        "message": "If native messaging is blocked in your browser, you can switch to a direct WebSocket sonnection. The feature must be enabled from KeePassXC side to work. Browser restart is required.",
+        "description": "Connection method help text."
+    },
+    "optionsConnectionMethodNativeMessaging": {
+        "message": "Native messaging",
+        "description": "Native messaging option for Connection method."
+    },
+    "optionsConnectionMethodWebSocket": {
+        "message": "WebSocket",
+        "description": "WebSocket option for Connection method."
     },
     "optionsDebugLogging": {
         "message": "Καταγραφή εντοπισμού σφαλμάτων",
@@ -1030,6 +1090,10 @@
         "message": "Απαιτείται έκδοση KeePassXC: $1",
         "description": "KeePassXC version requirement text."
     },
+    "optionsMinimumKeePassXCVersionRequired": {
+        "message": "The extension requires KeePassXC version: $1. Earlier versions can cause unwanted behavior.",
+        "description": "KeePassXC minimum version requirement text."
+    },
     "optionsDefault": {
         "message": "Προεπιλογή: $1",
         "description": "Default setting text."
@@ -1065,6 +1129,10 @@
     "optionsImportSettingsDialogText": {
         "message": "Οι τρέχουσες ρυθμίσεις θα παρακαμφθούν. Θέλετε πραγματικά να εισαγάγετε το αρχείο ρυθμίσεων;",
         "description": "Import settings confirmation dialog help text."
+    },
+    "optionsResetSettingsDialogText": {
+        "message": "All settings will be reset to defaults. Are you sure?",
+        "description": "Reset all settings dialog text."
     },
     "optionsConnectedDatabasesText": {
         "message": "Συνδεδεμένες βάσεις δεδομένων με το KeePassXC-Browser.",
@@ -1110,8 +1178,8 @@
         "message": "Διεύθυνση URL σελίδας",
         "description": "Site Preferences list column title."
     },
-    "optionsColumnIgnore": {
-        "message": "Αγνοήστε",
+    "optionsColumnFeatures": {
+        "message": "Features",
         "description": "Site Preferences list column title."
     },
     "optionsColumnUsernameOnly": {
@@ -1140,6 +1208,10 @@
     },
     "optionsSelectionAutoSubmit": {
         "message": "Απενεργοποίηση Αυτόματης Υποβολής",
+        "description": "Site Preferences option selection."
+    },
+    "optionsSelectionPasskeys": {
+        "message": "Disable passkeys",
         "description": "Site Preferences option selection."
     },
     "optionsSelectionFull": {

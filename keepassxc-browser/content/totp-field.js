@@ -1,7 +1,7 @@
 'use strict';
 
-const ignoreRegex = /(bank|coupon|postal|user|zip).*code|(en|de)code(d|r)*|comment|author|error/i;
-const ignoredTypes = [ 'email', 'password', 'username' ];
+const ignoreRegex = /(bank|bar|coupon|post(al)?|user|zip|promo).*code|(en|de)code(d|r)*|comment|author|error/i;
+const ignoredTypes = [ 'email', 'username' ];
 const allowedInputTypes = [ 'number', 'password', 'tel', 'text' ];
 
 const acceptedOTPFields = [
@@ -13,12 +13,16 @@ const acceptedOTPFields = [
     'idvpin',
     'mfa',
     'one_time_password',
+    'one-time password',
+    'otc-confirmation-input',
     'otp',
+    'otppw',
     'token',
     'twofa',
     'two-factor',
     'twofactor',
-    'verification_pin'
+    'verification_pin',
+    'mfaCode'
 ];
 
 const acceptedParents = [
@@ -34,10 +38,6 @@ kpxcTOTPIcons.newIcon = function(field, databaseState = DatabaseState.DISCONNECT
 
 kpxcTOTPIcons.switchIcon = function(state, uuid) {
     kpxcTOTPIcons.icons.forEach(u => u.switchIcon(state, uuid));
-};
-
-kpxcTOTPIcons.deleteHiddenIcons = function() {
-    kpxcUI.deleteHiddenIcons(kpxcTOTPIcons.icons);
 };
 
 kpxcTOTPIcons.autoCompleteIsOneTimeCode = function(field) {
@@ -109,7 +109,7 @@ class TOTPFieldIcon extends Icon {
         super(field, databaseState, segmented);
 
         this.initField(field, segmented);
-        kpxcUI.monitorIconPosition(this);
+        kpxcIcons.monitorIconPosition(this);
     }
 }
 
@@ -139,19 +139,21 @@ TOTPFieldIcon.prototype.initField = async function(field, segmented) {
 };
 
 TOTPFieldIcon.prototype.createIcon = function(field, segmented = false) {
-    const className = (isFirefox() ? 'moz' : 'default');
-
-    // Size the icon dynamically, but not greater than 24 or smaller than 14
-    const size = Math.max(Math.min(24, field.offsetHeight - 4), 14);
-    const offset = kpxcUI.calculateIconOffset(field, size);
+    const className = getIconClass('kpxc-totp-icon');
+    const size = this.calculateIconSize(field);
 
     const icon = kpxcUI.createElement('div', 'kpxc kpxc-totp-icon ' + className,
         {
             'title': tr('totpFieldText'),
             'size': size,
-            'offset': offset
+            'popover': 'manual'
         });
-    icon.style.zIndex = '10000000';
+
+    if (kpxcFields.popoverSupported) {
+        icon.style.margin = 0;
+    } else {
+        icon.style.zIndex = '10000000';
+    }
     icon.style.width = Pixels(size);
     icon.style.height = Pixels(size);
 
@@ -167,7 +169,11 @@ TOTPFieldIcon.prototype.createIcon = function(field, segmented = false) {
         }
 
         if (e.shiftKey) {
-            icon.style.display = 'none';
+            if (kpxcFields.popoverSupported) {
+                icon.hidePopover();
+            } else {
+                icon.style.display = 'none';
+            }
             return;
         }
 
@@ -179,7 +185,10 @@ TOTPFieldIcon.prototype.createIcon = function(field, segmented = false) {
     icon.addEventListener('mousedown', ev => ev.stopPropagation());
     icon.addEventListener('mouseup', ev => ev.stopPropagation());
 
-    kpxcUI.setIconPosition(icon, field, this.rtl, segmented);
+    kpxcIcons.setIconPosition(icon, field, this.rtl, segmented);
     this.icon = icon;
     this.createWrapper('css/totp.css');
+    if (kpxcFields.popoverSupported) {
+        icon.showPopover();
+    }
 };

@@ -1,6 +1,6 @@
 {
     "extensionDescription": {
-        "message": "Integracja KeePassXC z nowoczesnymi przeglądarkami internetowymi",
+        "message": "Integracja KeePassXC z nowoczesnymi przeglądarkami internetowymi",
         "description": "Name of the extension."
     },
     "addSitePreferenceButtonTitle": {
@@ -184,8 +184,8 @@
         "description": "Attestation not supported."
     },
     "errorMessagePasskeysCredentialIsExcluded": {
-        "message": "Dane uwierzytelniające są wyłączone.",
-        "description": "Credential is excluded."
+        "message": "Klucz dostępu nie został zarejestrowany z powodu istniejących danych uwierzytelniających. Usuń istniejące dane uwierzytelniające, aby kontynuować.",
+        "description": "Passkey not registered due to an existing credential. Remove the existing credential to continue."
     },
     "errorMessagePasskeysRequestCanceled": {
         "message": "Żądanie kluczy dostępu zostało anulowane.",
@@ -235,9 +235,25 @@
         "message": "user.id nie ma wymaganej długości.",
         "description": "user.id does not match the required length."
     },
+    "errorMessagePasskeysEvalByCredentialNotSupported": {
+        "message": "evalByCredential nie jest obsługiwany podczas rejestracji.",
+        "description": "evalByCredential is not supported at registration."
+    },
+    "errorMessagePasskeysEvalByCredentialNotEmpty": {
+        "message": "evalByCredential nie jest pusty, ale permittedCredentials jest pusty.",
+        "description": "evalByCredential is not empty, but allowedCredentials is."
+    },
+    "errorMessagePasskeysEvalByCredentialNotFound": {
+        "message": "Nie znaleziono identyfikatora danych uwierzytelniających podanych w evalByCredential.",
+        "description": "Credential ID provided in evalByCredential not found."
+    },
     "errorMessagePasskeysContextIsNotSecure": {
         "message": "Kontekst nie jest bezpieczny.",
         "description": "Context is not secure."
+    },
+    "errorMessageCannotUseReferences": {
+        "message": "Nazwa użytkownika i hasło nie mogą zawierać odwołań.",
+        "description": "Username or password cannot contain references."
     },
     "errorNotConnected": {
         "message": "Brak podłączenia do KeePassXC.",
@@ -322,6 +338,10 @@
         "message": "Pole ciągu",
         "description": "Text for string field."
     },
+    "defineSubmitButton": {
+        "message": "Przycisk przesyłania",
+        "description": "Text for Submit Button."
+    },
     "defineChooseUsername": {
         "message": "Wybierz pole nazwy użytkownika",
         "description": "Choosing a username field text when choosing Custom Login Fields."
@@ -338,9 +358,13 @@
         "message": "Wybierz pola ciągów",
         "description": "Choose String Fields a selection text when choosing Custom Login Fields."
     },
+    "defineChooseSubmitButton": {
+        "message": "Wybierz przycisk przesyłania",
+        "description": "Choose submit button selection text when choosing Custom Login Fields."
+    },
     "defineHelpText": {
         "message": "Potwierdź swój wybór lub wybierz więcej pól jako pola ciągów.",
-        "description": "Confirm a selection text when choosing Custom Login Fields which contains string fields."
+        "description": "Confirm a selection text when choosing Custom Login Fields which contains String Fields."
     },
     "defineKeyboardText": {
         "message": "Możesz także użyć liczb, aby wybrać pola wprowadzania z klawiatury.",
@@ -362,6 +386,10 @@
         "message": "Pola ciągów",
         "description": "General text for a String Fields."
     },
+    "submitButton": {
+        "message": "Przycisk przesyłania",
+        "description": "Custom Submit Button text."
+    },
     "credentialsNoUsername": {
         "message": "- brak nazwy użytkownika -",
         "description": "Shown when no username is set in the credentials."
@@ -369,6 +397,10 @@
     "credentialsNoLoginsFound": {
         "message": "Nie znaleziono danych logowania.",
         "description": "Shown when no credentials are found for the current page."
+    },
+    "credentialsBlockedInIframe": {
+        "message": "Wypełnienie danych uwierzytelniających zablokowane w niezaufanej ramce iframe.",
+        "description": "Alert message when filling credentials is blocked due to iframe restrictions."
     },
     "credentialsMultipleFound": {
         "message": "Znaleziono więcej niż jedne dane logowania w KeePassXC!",
@@ -389,6 +421,10 @@
     "credentialExpired": {
         "message": "Wygasłe",
         "description": "If a credential is expired, this is appended to the title label."
+    },
+    "credentialsRetrieveButton": {
+        "message": "Pobierz dane uwierzytelniające",
+        "description": "Manual retrieve credentials button text."
     },
     "fieldsFill": {
         "message": "Błąd:\nNie można znaleźć pól do wypełnienia.",
@@ -674,6 +710,10 @@
         "message": "Ustawienia witryn",
         "description": "Site Preferences page header."
     },
+    "optionsSitePreferencesSettings": {
+        "message": "Ustawienia",
+        "description": "Site Preferences settings button text."
+    },
     "optionsMenuAbout": {
         "message": "Informacje",
         "description": "About page header."
@@ -725,6 +765,10 @@
     "optionsButtonExport": {
         "message": "Eksportuj ustawienia",
         "description": "Export settings button text."
+    },
+    "optionsButtonResetSettings": {
+        "message": "Resetuj wszystkie ustawienia",
+        "description": "Reset all settings button text."
     },
     "optionsLabelDefaultGroup": {
         "message": "Domyślna grupa do zapisywania nowych haseł:",
@@ -846,6 +890,22 @@
         "message": "Zezwalaj na wypełnianie danych uwierzytelniających podstawowego uwierzytelniania HTTP",
         "description": "Allow filling HTTP Basic Auth credentials checkbox text."
     },
+    "optionsConnectionMethod": {
+        "message": "Metoda połączenia",
+        "description": "Connection method selection text."
+    },
+    "optionsConnectionMethodHelpText": {
+        "message": "Jeśli komunikacja natywana jest zablokowana w przeglądarce, możesz przełączyć się na bezpośrednie połączenie WebSocket. Aby funkcja działała, musi być włączona po stronie KeePassXC. Wymagane jest ponowne uruchomienie przeglądarki.",
+        "description": "Connection method help text."
+    },
+    "optionsConnectionMethodNativeMessaging": {
+        "message": "Komunikacja natywna",
+        "description": "Native messaging option for Connection method."
+    },
+    "optionsConnectionMethodWebSocket": {
+        "message": "WebSocket",
+        "description": "WebSocket option for Connection method."
+    },
     "optionsDebugLogging": {
         "message": "Rejestrowanie debugowania",
         "description": "Debug logging checkbox text."
@@ -935,7 +995,7 @@
         "description": "Hide icons alert text text."
     },
     "optionsAutoRetrieveCredentialsHelpText": {
-        "message": "KeePassXC-Browser natychmiast odbierze dane uwierzytelniające po aktywowaniu karty.",
+        "message": "KeePassXC-Browser natychmiast pobierze dane uwierzytelniające po aktywowaniu karty.",
         "description": "Auto-Retrive Credentials option help text."
     },
     "optionsAutomaticReconnectHelpText": {
@@ -1030,6 +1090,10 @@
         "message": "Wymaga KeePassXC w wersji: $1",
         "description": "KeePassXC version requirement text."
     },
+    "optionsMinimumKeePassXCVersionRequired": {
+        "message": "Rozszerzenie wymaga KeePassXC w wersji $1. Starsze wersje mogą powodować niepożądane zachowania.",
+        "description": "KeePassXC minimum version requirement text."
+    },
     "optionsDefault": {
         "message": "Domyślne: $1",
         "description": "Default setting text."
@@ -1065,6 +1129,10 @@
     "optionsImportSettingsDialogText": {
         "message": "Bieżące ustawienia zostaną zastąpione. Czy na pewno chcesz zaimportować plik ustawień?",
         "description": "Import settings confirmation dialog help text."
+    },
+    "optionsResetSettingsDialogText": {
+        "message": "Wszystkie ustawienia zostaną przywrócone do wartości domyślnych. Czy na pewno chcesz to zrobić?",
+        "description": "Reset all settings dialog text."
     },
     "optionsConnectedDatabasesText": {
         "message": "Bazy danych podłączone do KeePassXC-Browser.",
@@ -1110,8 +1178,8 @@
         "message": "Adres URL strony",
         "description": "Site Preferences list column title."
     },
-    "optionsColumnIgnore": {
-        "message": "Ignorowanie",
+    "optionsColumnFeatures": {
+        "message": "Funkcje",
         "description": "Site Preferences list column title."
     },
     "optionsColumnUsernameOnly": {
@@ -1140,6 +1208,10 @@
     },
     "optionsSelectionAutoSubmit": {
         "message": "Wyłącz automatyczne przesyłanie",
+        "description": "Site Preferences option selection."
+    },
+    "optionsSelectionPasskeys": {
+        "message": "Wyłącz klucze dostępu",
         "description": "Site Preferences option selection."
     },
     "optionsSelectionFull": {

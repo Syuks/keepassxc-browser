@@ -13,7 +13,7 @@ div.kpxc-banner {
     margin: 0 auto !important;
     min-height: 2em !important;
     max-height: 4em !important;
-    overflow-x: hidden !important;
+    overflow-x: auto !important;
     padding: 4px !important;
     position: fixed !important;
     width: 100% !important;
@@ -49,6 +49,10 @@ div.kpxc-banner .banner-info > span {
     margin: 4px;
 }
 
+div.kpxc-banner .banner-info-text {
+    text-wrap: nowrap;
+}
+
 div.kpxc-banner div.banner-info, div.banner-buttons {
     display: inline-flex;
     align-items: center;
@@ -77,6 +81,14 @@ div.kpxc-banner .kpxc-banner-icon-moz {
     background-size: contain;
 }
 
+div.kpxc-banner .kpxc-banner-icon-safari {
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    background: url('safari-web-extension://__MSG_@@extension_id__/icons/keepassxc.svg') right no-repeat;
+    background-size: contain;
+}
+
 div.kpxc-banner .kpxc-help-icon {
     width: 24px;
     height: 24px;
@@ -90,6 +102,14 @@ div.kpxc-banner .kpxc-help-icon-moz {
     height: 24px;
     overflow: hidden;
     background: url('moz-extension://__MSG_@@extension_id__/icons/help.svg') right no-repeat;
+    background-size: contain;
+}
+
+div.kpxc-banner .kpxc-help-icon-safari {
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    background: url('safari-web-extension://__MSG_@@extension_id__/icons/help.svg') right no-repeat;
     background-size: contain;
 }
 
@@ -113,6 +133,7 @@ div.kpxc-banner label {
     font-size: 12px !important;
     font-weight: normal !important;
     margin: 4px !important;
+    text-wrap: nowrap;
 }
 
 div.kpxc-banner-dialog {
